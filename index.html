@@ -4525,13 +4525,10 @@
         playerSerieCapa.src = serie.capa;
         playerSerieCapa.alt = serie.nome;
 
-                // Classificação Indicativa
-        // Garante que serie.contentRating não é undefined antes de usar .replace()
-        const serieContentRatingValue = serie.contentRating ? serie.contentRating : 'L'; // Usa 'L' (Livre) se contentRating não existir
-        const ratingBadgeClass = `rating-${serieContentRatingValue.replace('+', '')}`; // Agora, serieContentRatingValue nunca será undefined
+        // Classificação Indicativa
+        const ratingBadgeClass = `rating-${serie.contentRating.replace('+', '')}`; // Remove '+' para classe CSS
         playerSerieContentRating.className = `content-rating-badge ${ratingBadgeClass}`;
-        playerSerieContentRating.textContent = serieContentRatingValue; // Atualiza aqui também
-
+        playerSerieContentRating.textContent = serie.contentRating;
 
         // Gêneros
         playerSerieGeneros.innerHTML = serie.generos.map(g => `<span>${g}</span>`).join(', ');
@@ -5550,20 +5547,3 @@
                         
 
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

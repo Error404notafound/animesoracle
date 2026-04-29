@@ -18,9 +18,11 @@
     <style>
         /* Estilos Globais e do Tema */
         :root { 
-            --bg: #0f0f0f; 
-            --card: #1a1a1a; 
-            --text: #ffffff; 
+          --bg: #0f0f0f; 
+          --card: #1a1a1a; 
+          --text: #ffffff; 
+          --header-height: 60px; /* Altura do seu header */
+          --azcatalog-height: 35px; /* Altura aproximada do seu catálogo A-Z. Ajuste este valor se ficar muito apertado ou com muito espaço após os testes. */ 
             --primary: #6200ea; /* Roxo */
             --primary-light: #9c27b0; /* Roxo mais claro para hover/focus */
             --secondary-bg: #222;
@@ -82,17 +84,17 @@
 
         /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
         header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 0 15px; 
-            background: #000; 
-            height: 60px; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            border-bottom: 1px solid #333; 
-        }
+          display: flex; 
+          align-items: center; 
+          justify-content: space-between; 
+          padding: 0 15px; 
+          background: #000; 
+          height: var(--header-height); /* Usando a variável CSS */
+          position: sticky; 
+          top: 0; 
+          z-index: 1000; /* Z-index alto para ficar sempre por cima de tudo */
+          border-bottom: 1px solid #333; 
+      }
         .logo { 
             font-weight: bold; 
             color: var(--primary); 
@@ -166,18 +168,18 @@
 
                 /* Catálogo A-Z */
         #azCatalog {
-            display: flex;
-            flex-wrap: nowrap; /* Impede quebras de linha */
-            overflow-x: auto; /* Permite rolagem horizontal */
-            -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
-            justify-content: flex-start; /* Alinha o conteúdo à esquerda */
-            padding: 5px 15px; /* Reduz padding */
-            background: var(--bg);
-            border-bottom: 1px solid #333;
-            z-index: 998;
-            gap: 2px; /* Reduz espaçamento entre as letras */
-            font-size: 0.9em; /* Reduz tamanho da fonte */
-        }
+          display: flex;
+          flex-wrap: nowrap; /* Impede quebras de linha */
+          overflow-x: auto; /* Permite rolagem horizontal */
+          -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
+          justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+          padding: 5px 15px; /* Reduz padding */
+          background: var(--bg);
+          border-bottom: 1px solid #333;
+          z-index: 998;
+          gap: 2px; /* Reduz espaçamento entre as letras */
+          font-size: 0.9em; /* Reduz tamanho da fonte */
+      }
 
 
                 /* Ajuste do top para quando a searchbar estiver escondida */

@@ -81,52 +81,18 @@
         .gap-4 { gap: 16px; }
 
         /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
-header { 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 15px; 
-    background: #000; 
-    height: 60px; 
-    position: sticky; 
-    top: 0; 
-    z-index: 5001; /* Aumentado para ficar acima de tudo */
-    border-bottom: 1px solid #333; 
-}
-
-/* Catálogo A-Z */
-#azCatalog {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    justify-content: flex-start;
-    padding: 5px 15px;
-    background: var(--bg);
-    border-bottom: 1px solid #333;
-    z-index: 5000; /* Aumentado para ficar acima da página do vídeo */
-    gap: 2px;
-    font-size: 0.9em;
-    position: sticky; /* Garante que ele continue no topo */
-    top: 60px; /* Abaixo do header principal */
-}
-/* Remova ou ajuste o #azCatalog.top-60 se houver conflito */
-#azCatalog.top-60 { /* Mantenha se ainda for usado por searchbar oculta, mas verifique o comportamento */
-    top: 60px;
-}
-
-
-/* Estilos Comuns para Modais (pop-ups que agora se comportam como páginas) */
-.modal-page { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: var(--bg); 
-    z-index: 4999; /* Reduzido para ficar abaixo do header e azSem resposta
-
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 15px; 
+            background: #000; 
+            height: 60px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid #333; 
+        }
         .logo { 
             font-weight: bold; 
             color: var(--primary); 

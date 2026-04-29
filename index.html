@@ -2532,7 +2532,7 @@
     }
 
     // Função para abrir o menu do usuário (Drawer)
-    async function toggleUserMenu() {
+        async function toggleUserMenu() {
         const userMenu = document.getElementById('userMenu');
         const userMenuContent = document.getElementById('userMenu-content');
         if (!userMenu || !userMenuContent) {
@@ -2541,24 +2541,40 @@
         }
 
         if (userMenu.classList.contains('open')) {
+            // Se o menu está aberto, vamos fechá-lo
             userMenu.classList.remove('open');
-            // userMenu.style.display = 'none'; // Não precisa, a transição CSS já lida
             userMenuContent.style.transform = 'translateX(-100%)';
-            pageStack.pop(); // Remove userMenu da pilha
+            // Garante que o menu principal seja ocultado completamente após a transição
+            userMenuContent.addEventListener('transitionend', function handler() {
+                userMenu.style.display = 'none'; // Explicitamente define display: none para o container
+                userMenuContent.removeEventListener('transitionend', handler);
+            }, { once: true });
+            // Apenas remove da pilha se estiver no topo (defensivo)
+            if (pageStack[pageStack.length - 1] === 'userMenu') {
+                pageStack.pop();
+            }
         } else {
+            // Se o menu está fechado, vamos abri-lo
             const user = auth.currentUser;
             if (user) {
                 await carregarDadosUsuario(user.uid);
-                userMenu.style.display = 'flex'; // Torna visível para a transição
-                setTimeout(() => userMenu.classList.add('open'), 10); // Pequeno delay para CSS transition
-                userMenuContent.style.transform = 'translateX(0)';
-                pageStack.push('userMenu'); // Adiciona userMenu à pilha
+                userMenu.style.display = 'flex'; // Torna visível para a transição CSS
+                // Um pequeno atraso é adicionado para garantir que a transição CSS de `transform` seja aplicada
+                setTimeout(() => {
+                    userMenu.classList.add('open');
+                    userMenuContent.style.transform = 'translateX(0)';
+                }, 10);
+                // Adiciona à pilha apenas se ainda não estiver (defensivo)
+                if (pageStack[pageStack.length - 1] !== 'userMenu') {
+                    pageStack.push('userMenu');
+                }
             } else {
                 openModal('authModal'); // Abre o modal de login se não estiver logado
             }
         }
         console.log("Pilha de páginas:", pageStack);
     }
+
 
     // Helper para exibir mensagens de erro/sucesso (mantido)
     function showMessage(message, type = 'alert') {

@@ -3821,7 +3821,63 @@
     }
 
 
-    // Função para exibir animes com base no filtro (agora para séries)
+        // Função para Salvar/Remover Anime da Lista de Salvos
+    async function toggleSalvarAnime() {
+        if (!auth.currentUser) {
+            showMessage("Você precisa estar logado para salvar animes.");
+            openModal('authModal');
+            return;
+        }
+        if (!currentPlayingSerie) {
+            showMessage("Nenhuma série selecionada para salvar.");
+            return;
+        }
+
+        const serieId = currentPlayingSerie.id;
+        const userId = auth.currentUser.uid;
+        const userRef = db.collection("users").doc(userId);
+
+        try {
+            await db.runTransaction(async (transaction) => {
+                const userDoc = await transaction.get(userRef);
+                if (!userDoc.exists) {
+                    console.warn("Documento do usuário não encontrado. Não é possível salvar anime.");
+                    throw new Error("Documento do usuário não encontrado.");
+                }
+
+                let animesSalvos = userDoc.data().animesSalvos || [];
+                const btnSalvarAnime = document.getElementById('btnSalvarAnime');
+                if (!btnSalvarAnime) {
+                     console.error("Erro: Elemento 'btnSalvarAnime' não encontrado no DOM.");
+                     return;
+                }
+
+                if (animesSalvos.includes(serieId)) {
+                    // Anime já salvo, remover
+                    animesSalvos = animesSalvos.filter(id => id !== serieId);
+                    btnSalvarAnime.querySelector('span').textContent = "Salvar Anime";
+                    btnSalvarAnime.classList.remove('saved');
+                    showMessage("Anime removido da sua lista.");
+                } else {
+                    // Anime não salvo, adicionar
+                    animesSalvos.push(serieId);
+                    btnSalvarAnime.querySelector('span').textContent = "Remover da Lista";
+                    btnSalvarAnime.classList.add('saved');
+                    showMessage("Anime salvo na sua lista!");
+                }
+                transaction.update(userRef, { animesSalvos: animesSalvos });
+                
+                // Atualiza o currentUserData localmente
+                if (currentUserData) {
+                    currentUserData.animesSalvos = animesSalvos;
+                }
+            });
+        } catch (error) {
+            console.error("Erro ao salvar/remover anime:", error);
+            showMessage("Erro ao salvar/remover anime: " + error.message);
+        }
+    }
+// Função para exibir animes com base no filtro (agora para séries)
     async function filterAnimesByStatus(filtro) { // 'legendado', 'dublado', 'assistidos', 'salvos' etc
         if (!auth.currentUser || !currentUserData) {
             showMessage("Você precisa estar logado para ver esta seção.");

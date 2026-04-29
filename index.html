@@ -2435,8 +2435,21 @@
     // 2. INICIALIZAÇÃO DO FIREBASE
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const auth = firebase.auth(); 
-    const storage = firebase.storage(); // Inicializa o Firebase Storage
+const auth = firebase.auth();
+const storage = firebase.storage();
+
+// Lista de gêneros válidos
+const allGeneros = [
+    'Ação', 'Aventura', 'Comédia', 'Drama', 'Fantasia', 'Ficção Científica',
+    'Horror', 'Mistério', 'Romance', 'Slice of Life', 'Esportes', 'Musical',
+    'Seinen', 'Shoujo', 'Shounen', 'Kodomomuke', 'Mecha', 'Militar', 'Policial',
+    'Psicológico', 'Sobrenatural', 'Thriller', 'Vampiros', 'Harem', 'Isekai',
+    'Magia', 'Artes Marciais', 'Histórico', 'Escolar', 'Superpoderes',
+    // Adicione mais gêneros conforme necessário para o seu aplicativo
+];
+
+let currentUserData = null;
+// ... o resto do seu script
 
     // Persistência de Login: Adiciona o Firebase Auth para usar a persistência local
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -3175,96 +3188,85 @@
 
     // 5. LÓGICA DO MENU DO USUÁRIO E OUTRAS FUNCIONALIDADES
 
-    async function carregarDadosUsuario(uid) {
+        async function carregarDadosUsuario(uid) {
         try {
-            const userDoc = await db.collection("users").doc(uid).get();
+            const userDocRef = db.collection("users").doc(uid); // Obter a referência do documento
+            const userDoc = await userDocRef.get(); // Tentar buscar o documento
+
             if (userDoc.exists) {
+                // Se o documento existe, carregamos os dados normalmente
                 currentUserData = userDoc.data();
-                
-                const userInfoDisplay = document.getElementById('userInfoDisplay');
-                if (!userInfoDisplay) {
-                    console.error("Erro: Elemento 'userInfoDisplay' não encontrado no DOM.");
-                    return;
-                }
-                userInfoDisplay.innerHTML = ''; // Limpa o conteúdo anterior
-
-                // Upload de foto de perfil
-                const profilePicArea = document.createElement('div');
-                profilePicArea.className = 'profile-pic-upload-area';
-                profilePicArea.innerHTML = `
-                    <div class="profile-pic-preview" onclick="openSettingsPage()">
-                        <img id="profileImage" src="${currentUserData.photoURL || 'https://via.placeholder.com/80?text=' + (currentUserData.displayName ? currentUserData.displayName.charAt(0).toUpperCase() : currentUserData.email.charAt(0).toUpperCase())}" alt="Foto de Perfil">
-                    </div>
-                    <!-- Não teremos mais o botão de upload aqui, apenas na página de configurações -->
-                `;
-                userInfoDisplay.appendChild(profilePicArea);
-
-                const pName = document.createElement('p');
-                pName.className = 'user-name';
-                pName.textContent = currentUserData.displayName || currentUserData.email;
-                userInfoDisplay.appendChild(pName);
-
-                const pEmail = document.createElement('p');
-                pEmail.className = 'user-email';
-                pEmail.textContent = currentUserData.email;
-                userInfoDisplay.appendChild(pEmail);
-
-                // Exibe status do usuário
-                let userStatus = currentUserData.status || 'fantasma'; // Padrão
-                let statusIcon = '😶';
-                let statusClass = 'status-fantasma';
-
-                // Lógica para atualização do status (simplificada aqui)
-                if (userStatus === 'novo') {
-                    statusIcon = '🙂';
-                    statusClass = 'status-novo';
-                    if (currentUserData.statusExpiration && currentUserData.statusExpiration.toDate() < new Date()) {
-                        userStatus = 'espectador';
-                        db.collection("users").doc(uid).update({ status: userStatus, statusExpiration: null });
-                        currentUserData.status = userStatus;
-                    }
-                } else if (userStatus === 'espectador') {
-                    statusIcon = '😐';
-                    statusClass = 'status-espectador';
-                } else if (userStatus === 'colaborador') {
-                    statusIcon = '🤝';
-                    statusClass = 'status-colaborador';
-                } else if (userStatus === 'comentador') {
-                    statusIcon = '🤯';
-                    statusClass = 'status-comentador';
-                } else if (userStatus === 'especialista') {
-                    statusIcon = '🤓';
-                    statusClass = 'status-especialista';
-                } else if (userStatus === 'exigente') {
-                    statusIcon = '🤔';
-                    statusClass = 'status-exigente';
-                } else if (userStatus === 'critico') {
-                    statusIcon = '🧐';
-                    statusClass = 'status-critico';
-                }
-                const statusBadge = document.createElement('div');
-                statusBadge.className = `user-status-badge ${statusClass}`;
-                statusBadge.innerHTML = `${statusIcon} ${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}`;
-                userInfoDisplay.appendChild(statusBadge);
-
-                // Atualiza o estado dos toggles no menu
-                const modoAdultoToggle = document.getElementById('modoAdultoToggle');
-                if (modoAdultoToggle) modoAdultoToggle.checked = currentUserData.modoAdulto;
-                else console.warn("Elemento 'modoAdultoToggle' não encontrado.");
-
-                const themeToggle = document.getElementById('themeToggle');
-                if (themeToggle) themeToggle.checked = (currentUserData.theme === 'light');
-                else console.warn("Elemento 'themeToggle' não encontrado.");
-
-                // Aplica o tema imediatamente
-                aplicarTema(currentUserData.theme);
-
+                // ... (o restante do seu código para exibir os dados do usuário)
+            } else {
+                // Se o documento NÃO existe, vamos criá-lo com dados padrão
+                console.log("Documento de usuário não encontrado no Firestore. Criando um novo.");
+                currentUserData = {
+                    email: auth.currentUser.email, // Pega o email da autenticação
+                    photoURL: 'https://via.placeholder.com/60?text=AP',
+                    animesSalvos: [],
+                    animesAssistidos: [],
+                    modoAdulto: false,
+                    theme: 'dark',
+                    displayName: auth.currentUser.email.split('@')[0],
+                    notifications: [],
+                    // Adicione outros campos padrão se houver
+                };
+                await userDocRef.set(currentUserData); // Cria o documento no Firestore
+                showMessage("Perfil de usuário criado com dados padrão no Firestore.");
             }
+
+            // Agora que currentUserData está garantido, podemos exibir as informações
+            const userInfoDisplay = document.getElementById('userInfoDisplay');
+            if (!userInfoDisplay) {
+                console.error("Erro: Elemento 'userInfoDisplay' não encontrado no DOM.");
+                return;
+            }
+            userInfoDisplay.innerHTML = ''; // Limpa o conteúdo anterior
+
+            // ... (o restante do seu código para exibir photoURL, displayName, email, status, toggles, etc.)
+            // Tudo que está abaixo da linha `if (userDoc.exists)` no seu código original deve vir para cá.
+
+            // Exemplo de como ficaria a parte de photoURL e displayName:
+            const profilePicArea = document.createElement('div');
+            profilePicArea.className = 'profile-pic-upload-area';
+            profilePicArea.innerHTML = `
+                <div class="profile-pic-preview" onclick="openSettingsPage()">
+                    <img id="profileImage" src="${currentUserData.photoURL || 'https://via.placeholder.com/80?text=' + (currentUserData.displayName ? currentUserData.displayName.charAt(0).toUpperCase() : currentUserData.email.charAt(0).toUpperCase())}" alt="Foto de Perfil">
+                </div>
+            `;
+            userInfoDisplay.appendChild(profilePicArea);
+
+            const pName = document.createElement('p');
+            pName.className = 'user-name';
+            pName.textContent = currentUserData.displayName || currentUserData.email;
+            userInfoDisplay.appendChild(pName);
+
+            const pEmail = document.createElement('p');
+            pEmail.className = 'user-email';
+            pEmail.textContent = currentUserData.email;
+            userInfoDisplay.appendChild(pEmail);
+
+            // ... (o resto do código para status, toggles, etc.)
+
+            // Atualiza o estado dos toggles no menu
+            const modoAdultoToggle = document.getElementById('modoAdultoToggle');
+            if (modoAdultoToggle) modoAdultoToggle.checked = currentUserData.modoAdulto;
+            else console.warn("Elemento 'modoAdultoToggle' não encontrado.");
+
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.checked = (currentUserData.theme === 'light');
+            else console.warn("Elemento 'themeToggle' não encontrado.");
+
+            // Aplica o tema imediatamente
+            aplicarTema(currentUserData.theme);
+
+
         } catch (error) {
-            console.error("Erro ao carregar dados do usuário:", error);
+            console.error("Erro ao carregar/criar dados do usuário:", error);
             showMessage("Erro ao carregar dados do usuário: " + error.message);
         }
     }
+
 
     async function uploadProfilePicture(event) {
         const file = event.target.files[0];

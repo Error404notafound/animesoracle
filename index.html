@@ -3214,6 +3214,7 @@
 
 
         // 5. LÓGICA DO MENU DO USUÁRIO E OUTRAS FUNCIONALIDADES
+        // Função para marcar um episódio como assistido
     async function marcarEpisodioComoAssistido(serieId, episodeId) {
         if (!auth.currentUser) {
             console.log("Usuário não logado. Não é possível marcar episódio como assistido.");
@@ -3226,37 +3227,77 @@
         try {
             await db.runTransaction(async (transaction) => {
                 const userDoc = await transaction.get(userRef);
-                if (!userDoc.exists) {
-                    console.warn("Documento do usuário não encontrado ao tentar marcar episódio como assistido.");
-                    return;
-                }
-
-                let animesAssistidos = userDoc.data().animesAssistidos || [];
-                const newWatchedItem = {
-                    serieId: serieId,
-                    episodeId: episodeId,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // Remove entradas antigas para o mesmo serieId e episodeId
-                // Isso garante que apenas a última visualização seja registrada, ou que a ordem seja atualizada.
-                animesAssistidos = animesAssistidos.filter(item =>
-                    !(item.serieId === serieId && item.episodeId === episodeId)
-                );
-
-                // Adiciona o novo item (ou o item atualizado)
-                animesAssistidos.push(newWatchedItem);
-
-                transaction.update(userRef, { animesAssistidos: animesAssistidos });
                 
-                // Atualiza o currentUserData localmente
-                if (currentUserData) {
-                    currentUserData.animesAssistidos = animesAssistidos;
+                let animesAssistidos = [];
+
+                if (!userDoc.exists) {
+                    // Se o documento do usuário não existe, isso pode ser um problema.
+                    // O `carregarDadosUsuario` tenta criar um, mas em um cenário de corrida, talvez não esteja lá a tempo.
+                    // Adicionei uma inicialização completa aqui para evitar erros se o documento for realmente novo.
+                    console.warn("Documento do usuário não encontrado para o UID: " + userId + ". Criando um novo com dados padrão.");
+                    
+                    const newUserData = {
+                        email: auth.currentUser.email,
+                        photoURL: auth.currentUser.photoURL || 'https://via.placeholder.com/60?text=AP',
+                        animesSalvos: [],
+                        animesAssistidos: [], // Inicia vazio
+                        modoAdulto: false,
+                        theme: 'dark',
+                        displayName: auth.currentUser.displayName || (auth.currentUser.email ? auth.currentUser.email.split('@')[0] : 'Usuário'),
+                        notifications: [],
+                        status: 'novo',
+                        statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
+                    };
+                    transaction.set(userRef, newUserData); // Cria o documento
+                    
+                    // Depois de criar, vamos adicionar o primeiro item assistido
+                    const newWatchedItem = {
+                        serieId: serieId,
+                        episodeId: episodeId,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    animesAssistidos.push(newWatchedItem);
+
+                    // Atualiza o documento recém-criado com a lista de assistidos
+                    transaction.update(userRef, { animesAssistidos: animesAssistidos });
+
+                    // Atualiza o currentUserData localmente
+                    if (currentUserData) {
+                        Object.assign(currentUserData, newUserData, { animesAssistidos: animesAssistidos });
+                    }
+
+                } else {
+                    // Documento do usuário existe, continue com a lógica original
+                    animesAssistidos = userDoc.data().animesAssistidos || [];
+                    const newWatchedItem = {
+                        serieId: serieId,
+                        episodeId: episodeId,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    // Remove entradas antigas para o mesmo serieId e episodeId
+                    animesAssistidos = animesAssistidos.filter(item =>
+                        !(item.serieId === serieId && item.episodeId === episodeId)
+                    );
+
+                    // Adiciona o novo item (ou o item atualizado)
+                    animesAssistidos.push(newWatchedItem);
+
+                    // --- ADICIONE ESTA LINHA PARA DEPURAR O CONTEÚDO DA ARRAY ---
+                    console.log("Array 'animesAssistidos' prestes a ser salvo:", animesAssistidos);
+                    // --- FIM DA LINHA DE DEPURAGEM ---
+
+                    transaction.update(userRef, { animesAssistidos: animesAssistidos });
+                    
+                    // Atualiza o currentUserData localmente
+                    if (currentUserData) {
+                        currentUserData.animesAssistidos = animesAssistidos;
+                    }
                 }
             });
             console.log(`Episódio ${episodeId} da série ${serieId} marcado como assistido para o usuário ${userId}.`);
             // Opcional: Recarregar a seção de histórico se estiver visível
-            if (document.getElementById('watchedAnimesSection').style.display !== 'none') {
+            if (document.getElementById('watchedAnimesSection') && document.getElementById('watchedAnimesSection').style.display !== 'none') {
                  loadWatchedAnimes();
             }
         } catch (error) {
@@ -3264,6 +3305,7 @@
             // showMessage("Erro ao registrar seu histórico de visualização: " + error.message); // Removido para evitar alerts excessivos
         }
     }
+
 
 
     async function carregarDadosUsuario(uid) {

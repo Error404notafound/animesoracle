@@ -3438,6 +3438,8 @@
         try {
             const snapshot = await profilePicRef.put(file);
             const downloadURL = await snapshot.ref.getDownloadURL();
+console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIONE ESTA LINHA
+
 
             // Atualiza no Firebase Auth
             await auth.currentUser.updateProfile({ photoURL: downloadURL });

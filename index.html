@@ -4602,7 +4602,7 @@
                     querySnapshot = await db.collection("series")
                                             .where('nomeLowerCase', '>=', param.toLowerCase())
                                             .where('nomeLowerCase', '<=', param.toLowerCase() + '\uf8ff')
-                                            .where('isAdult', '==', false) // Não inclui +18 aqui
+                                            //.where('isAdult', '==', false) // Não inclui +18 aqui
                                             .get();
                     break;
                 case 'filteredByGenero':

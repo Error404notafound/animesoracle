@@ -2146,11 +2146,18 @@
 
 <!-- Página do Player de Vídeo -->
 <div id="videoPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage('videoPage')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title">AnimesOracle</div>
+        <div></div> <!-- Espaço para centralizar o título -->
+    </div>
+
     <div id="videoPlayerContainer">
         <div id="videoSkeleton">Carregando Vídeo...</div>
         <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
+        <!-- Botão de fechar antigo REMOVIDO daqui -->
     </div>
 
     <div class="player-nav-buttons">

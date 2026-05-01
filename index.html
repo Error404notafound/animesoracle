@@ -210,19 +210,18 @@
             color: var(--text);
         }
 
-                        /* Hero Slider */
+                /* Hero Slider */
         #heroSlider {
             position: relative;
             width: 100%;
             max-width: 1280px; 
             margin: 0 auto;
             overflow: hidden;
-            border-radius: 12px; /* Aumentado de 8px para 12px */
-            aspect-ratio: 1280 / 650; /* Aumentado a altura para dar sensação de "cinema" */
+            border-radius: 8px; 
+            aspect-ratio: 1280 / 574; 
             border-bottom: 1px solid #333;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             margin-top: 15px; /* Espaçamento após AZ Catalog */
-            margin-bottom: 25px; /* Adicionado para melhor separação das seções abaixo */
         }
         .hero-slide {
             position: absolute;
@@ -233,7 +232,8 @@
             background-size: cover;
             background-position: center;
             display: flex;
-            /* align-items e justify-content são agora controlados pelo overlay */
+            align-items: flex-end;
+            justify-content: center;
             opacity: 0;
             transition: opacity 1s ease-in-out;
             cursor: pointer;
@@ -241,97 +241,66 @@
         .hero-slide.active {
             opacity: 1;
         }
-                .hero-slide-overlay {
+        .hero-slide-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Gradiente combinado para escurecer o lado esquerdo e a base, mais escurecimento geral */
-            background: 
-                linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%), /* Fade do preto para transparente (esquerda para direita) */
-                linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.9) 100%), /* Fade do transparente para preto (topo para baixo) */
-                rgba(0,0,0,0.3); /* Escurecimento geral sutil para equalizar o brilho da imagem */
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.9) 100%); 
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Alinha o conteúdo (texto) na parte inferior */
-            align-items: center; /* ALINHA O BLOCO INTERNO AO CENTRO HORIZONTALMENTE */
-            padding: 30px 15px; /* Ajuste o padding horizontal para que o conteúdo não encoste nas bordas em telas menores */
-            box-sizing: border-box; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+            justify-content: center; /* Centralizado verticalmente */
+            align-items: flex-start; 
+            padding: 20px;
+            box-sizing: border-box;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
-
-                .hero-slide-meta {
-            font-size: 1.0em; 
-            margin-bottom: 8px; /* Mais espaçamento entre o meta e o título */
-            text-transform: capitalize; /* Mantém a primeira letra maiúscula */
-            max-width: 100%; 
+        .hero-slide-meta {
+            font-size: 0.9em; 
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            text-transform: capitalize;
+            max-width: 90%; /* Limita para caber na tela */
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            display: flex; /* Transforma em flex para alinhar os spans */
-            align-items: center; /* Alinha verticalmente os itens no centro */
-            font-weight: bold; /* Mantém o negrito para todo o meta */
         }
-        .meta-primary-tag {
-            color: var(--warning); /* Amarelo para o tópico principal, como solicitado */
-        }
-        .meta-separator {
-            color: var(--text-secondary); /* Cinza para o separador */
-            margin: 0 4px; /* Espaço antes e depois do separador */
-        }
-        .meta-genre {
-            color: var(--text-secondary); /* Cinza para o gênero */
-        }
-
         .hero-slide-title {
-            font-size: clamp(2.0em, 6vw, 3.5em); /* Fonte maior e mais responsiva, para maior impacto */
-            color: #FFFFFF; /* Branco puro para o título */
-            font-weight: 900; /* Extra bold */
-            text-transform: uppercase; /* Título em caixa alta */
-            margin: 0 0 10px 0; /* Ajusta a margem inferior do título */
-            line-height: 1.1; /* Linhas mais justas para títulos grandes */
+            font-size: clamp(1.5em, 5vw, 2.5em); 
+            color: white;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.2;
             text-align: left; 
-            max-height: none; /* Permite que o texto quebre naturalmente em múltiplas linhas */
-            overflow: visible; /* Não esconde o texto que ultrapassar */
-            display: block; /* Garante que o elemento se comporte como um bloco */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra adicionada diretamente ao título */
+            max-height: 2.4em; /* Ajustado para 2 linhas de texto */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limita a 2 linhas */
+            -webkit-box-orient: vertical;
             width: 100%;
         }
-                .hero-overlay-content {
-            width: 100%;
-            max-width: 600px; /* Limita a largura do bloco de texto e bolinhas */
-            text-align: left; /* Garante que o texto dentro deste bloco se alinhe à esquerda */
+        .hero-slider-pagination {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            align-items: flex-start; /* Alinha os itens dentro deste contêiner à esquerda */
-            position: relative; /* Para que as bolinhas (dots) possam se posicionar em relação a ele */
-        }
-
-                .hero-slider-pagination {
-            /* Removendo posicionamento absoluto para que ele flua com o hero-overlay-content */
-            position: relative; /* Pode ser static também, mas relative é mais seguro */
-            margin-top: 15px; /* Espaço entre o título e os dots */
-            display: flex;
-            gap: 10px; /* Aumenta o espaçamento entre os pontos */
+            gap: 8px;
             z-index: 10;
-            /* Não precisa de left, bottom, transform aqui, pois ele estará dentro do hero-overlay-content que já alinha flex-start */
         }
         .pagination-dot {
-            width: 8px; /* Largura padrão */
+            width: 8px;
             height: 8px;
             background-color: rgba(255, 255, 255, 0.5);
             border-radius: 50%;
             cursor: pointer;
-            transition: background-color 0.3s, width 0.3s, border-radius 0.3s; /* Adicionada transição para largura e border-radius */
+            transition: background-color 0.3s;
         }
         .pagination-dot.active {
-            background-color: var(--primary); /* Cor roxa (primary) para o ponto ativo */
-            width: 20px; /* Alongado para o ponto ativo */
-            border-radius: 4px; /* Formato de retângulo arredondado para o ponto ativo */
+            background-color: white;
         }
-
-
         /* Conteúdo principal - Seções */
         .content-section {
             padding: 20px 15px;
@@ -5687,17 +5656,15 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
         // Função para iniciar o Hero Slider
     async function loadHeroSlider() {
-                const heroSlider = document.getElementById('heroSlider');
-        // REMOVEMOS A BUSCA DO heroSliderPagination AQUI, POIS VAMOS RECRIA-LO POR SLIDE
-
+        const heroSlider = document.getElementById('heroSlider');
+        const heroSliderPagination = document.getElementById('heroSliderPagination');
 
         if (!heroSlider || !heroSliderPagination) {
             console.error("Erro: Elementos 'heroSlider' ou 'heroSliderPagination' não encontrados no DOM.");
             return;
         }
 
-                heroSlider.querySelectorAll('.hero-slide').forEach(slide => slide.remove()); // Remove apenas os slides existentes
-
+        heroSlider.innerHTML = ''; // Limpa slides existentes
         heroSliderPagination.innerHTML = ''; // Limpa paginação existente
         heroSlides = []; // Reseta o array de slides
 
@@ -5730,32 +5697,14 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 const overlayDiv = document.createElement('div');
                 overlayDiv.className = 'hero-slide-overlay';
                 
-                                // Lógica para determinar o texto meta (Tópico principal e Gênero)
-                let primaryTag = '';
-                if (serie.isAdult) {
-                    primaryTag = '+18'; // Se for adulto, o tópico principal é '+18'
-                } else {
-                    // Capitaliza a primeira letra do contentType para exibição (Anime, Filme, Live, Cartoon)
-                    primaryTag = serie.contentType.charAt(0).toUpperCase() + serie.contentType.slice(1);
-                }
+                // Escolhe um gênero aleatório para exibir como meta
+                const randomGenre = serie.generos && serie.generos.length > 0 ? serie.generos[Math.floor(Math.random() * serie.generos.length)] : 'Gênero Desconhecido';
+                const metaText = `${serie.isAdult ? '+18 | ' : ''}Anime | ${randomGenre}`;
 
-                // Escolhe um gênero aleatório ou usa um padrão 'Gênero' se não houver
-                const displayGenre = serie.generos && serie.generos.length > 0
-                    ? serie.generos[Math.floor(Math.random() * serie.generos.length)]
-                    : 'Gênero';
-
-                                overlayDiv.innerHTML = `
-                    <div class="hero-overlay-content">
-                        <div class="hero-slide-meta">
-                            <span class="meta-primary-tag">${primaryTag}</span>
-                            <span class="meta-separator"> | </span>
-                            <span class="meta-genre">${displayGenre}</span>
-                        </div>
-                        <div class="hero-slide-title">${serie.nome}</div>
-                    </div>
+                overlayDiv.innerHTML = `
+                    <div class="hero-slide-meta">${metaText}</div>
+                    <div class="hero-slide-title">${serie.nome}</div>
                 `;
-
-
                 slideDiv.appendChild(overlayDiv);
                 heroSlider.appendChild(slideDiv);
 
@@ -5810,30 +5759,3 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

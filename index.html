@@ -5727,14 +5727,19 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 const overlayDiv = document.createElement('div');
                 overlayDiv.className = 'hero-slide-overlay';
                 
-                // Lógica para determinar o texto meta (Tópico principal e Gênero)
+                                // Lógica para determinar o texto meta (Tópico principal e Gênero)
                 let primaryTag = '';
                 if (serie.isAdult) {
                     primaryTag = '+18'; // Se for adulto, o tópico principal é '+18'
                 } else {
-                    // Capitaliza a primeira letra do contentType para exibição (Anime, Filme, Live, Cartoon)
-                    primaryTag = serie.contentType.charAt(0).toUpperCase() + serie.contentType.slice(1);
+                    // Adicionar uma verificação para serie.contentType antes de manipulá-lo
+                    if (serie.contentType) { // Verifica se contentType existe e não é null/undefined
+                        primaryTag = serie.contentType.charAt(0).toUpperCase() + serie.contentType.slice(1);
+                    } else {
+                        primaryTag = 'Conteúdo'; // Fallback se contentType for undefined/null
+                    }
                 }
+
 
                 // Escolhe um gênero aleatório ou usa um padrão 'Gênero' se não houver
                 const displayGenre = serie.generos && serie.generos.length > 0

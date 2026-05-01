@@ -241,7 +241,7 @@
         .hero-slide.active {
             opacity: 1;
         }
-        .hero-slide-overlay {
+                .hero-slide-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -255,22 +255,35 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end; /* Alinha o conteúdo (texto) na parte inferior */
-            align-items: flex-start; /* Alinha o conteúdo (texto) à esquerda */
-            padding: 30px; /* Aumentado de 20px para dar mais "respiro" */
-            box-sizing: border-box; /* Garante que o padding seja incluído na largura/altura total */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra para o texto, ajustada a opacidade */
+            align-items: center; /* ALINHA O BLOCO INTERNO AO CENTRO HORIZONTALMENTE */
+            padding: 30px 15px; /* Ajuste o padding horizontal para que o conteúdo não encoste nas bordas em telas menores */
+            box-sizing: border-box; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
         }
-        .hero-slide-meta {
-            font-size: 1.0em; /* Ligeiramente maior que 0.9em */
-            color: var(--primary); /* Cor de destaque (roxo) para o subtítulo */
-            font-weight: bold; /* Negrito para o subtítulo */
+
+                .hero-slide-meta {
+            font-size: 1.0em; 
             margin-bottom: 8px; /* Mais espaçamento entre o meta e o título */
             text-transform: capitalize; /* Mantém a primeira letra maiúscula */
-            max-width: 100%; /* Permite usar toda a largura disponível */
+            max-width: 100%; 
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            display: flex; /* Transforma em flex para alinhar os spans */
+            align-items: center; /* Alinha verticalmente os itens no centro */
+            font-weight: bold; /* Mantém o negrito para todo o meta */
         }
+        .meta-primary-tag {
+            color: var(--warning); /* Amarelo para o tópico principal, como solicitado */
+        }
+        .meta-separator {
+            color: var(--text-secondary); /* Cinza para o separador */
+            margin: 0 4px; /* Espaço antes e depois do separador */
+        }
+        .meta-genre {
+            color: var(--text-secondary); /* Cinza para o gênero */
+        }
+
         .hero-slide-title {
             font-size: clamp(2.0em, 6vw, 3.5em); /* Fonte maior e mais responsiva, para maior impacto */
             color: #FFFFFF; /* Branco puro para o título */
@@ -285,6 +298,16 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra adicionada diretamente ao título */
             width: 100%;
         }
+                .hero-overlay-content {
+            width: 100%;
+            max-width: 600px; /* Limita a largura do bloco de texto e bolinhas */
+            text-align: left; /* Garante que o texto dentro deste bloco se alinhe à esquerda */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alinha os itens dentro deste contêiner à esquerda */
+            position: relative; /* Para que as bolinhas (dots) possam se posicionar em relação a ele */
+        }
+
         .hero-slider-pagination {
             position: absolute;
             bottom: 30px; /* Movido para baixo, alinhado com o padding do texto */
@@ -5719,14 +5742,17 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                     ? serie.generos[Math.floor(Math.random() * serie.generos.length)]
                     : 'Gênero';
 
-                overlayDiv.innerHTML = `
-                    <div class="hero-slide-meta">
-                        <span class="meta-primary-tag">${primaryTag}</span>
-                        <span class="meta-separator"> | </span>
-                        <span class="meta-genre">${displayGenre}</span>
+                                overlayDiv.innerHTML = `
+                    <div class="hero-overlay-content">
+                        <div class="hero-slide-meta">
+                            <span class="meta-primary-tag">${primaryTag}</span>
+                            <span class="meta-separator"> | </span>
+                            <span class="meta-genre">${displayGenre}</span>
+                        </div>
+                        <div class="hero-slide-title">${serie.nome}</div>
                     </div>
-                    <div class="hero-slide-title">${serie.nome}</div>
                 `;
+
 
                 slideDiv.appendChild(overlayDiv);
                 heroSlider.appendChild(slideDiv);

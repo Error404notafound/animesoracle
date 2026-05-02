@@ -32,8 +32,9 @@
             --warning: #ffa500; /* Amarelo para aviso/nota */
             --orange: #ffa500; /* Laranja para "Em Progresso" */
             --blur-strength: 10px; /* Força do desfoque para conteúdo adulto */
-            --hairline-border: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
+                        --hairline-border: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
 
+            /* --- INÍCIO EDIÇÃO 1.1 - VARS ALTURA GLOBAL --- */
             /* NOVOS: Variáveis para alturas de elementos fixos no topo */
             --main-header-height: 60px;
             --search-bar-height: 50px;
@@ -42,6 +43,8 @@
             --total-fixed-height-default: calc(var(--main-header-height) + var(--az-catalog-height));
             /* Altura total que os elementos fixos ocupam quando a search bar está visível */
             --total-fixed-height-with-search: calc(var(--main-header-height) + var(--search-bar-height) + var(--az-catalog-height));
+            /* --- FIM EDIÇÃO 1.1 - VARS ALTURA GLOBAL --- */
+
         }
         body { 
     margin: 0; 

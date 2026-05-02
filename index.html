@@ -1855,6 +1855,20 @@
             background-color: var(--danger);
             margin-top: 30px;
         }
+                /* Badge "Dublado" para cards de episódio */
+        .episode-grid-card .dublado-badge {
+            position: absolute;
+            bottom: 5px; /* Posição a partir do rodapé da imagem */
+            left: 5px; /* Posição a partir da esquerda da imagem */
+            background-color: rgba(98, 0, 234, 0.7); /* Cor roxa com 70% de opacidade */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px; /* Cantos arredondados */
+            font-size: 0.75em;
+            font-weight: bold;
+            z-index: 5; /* Garante que fique acima da imagem */
+        }
+
     </style>
 </head>
 <body>
@@ -4383,10 +4397,19 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             wrapper.onclick = () => openVideoPlayer(serie, episode); 
         }
 
-        const card = document.createElement('div');
+                const card = document.createElement('div');
         card.className = 'episode-grid-card';
+        
+        let badgeHtml = '';
+        // Verifica se o episódio tem algum link com type 'dublado'
+        const hasDubladoLink = episode.links && episode.links.some(link => link.type === 'dublado');
+        if (hasDubladoLink) {
+            badgeHtml = `<span class="dublado-badge">DUBLADO</span>`;
+        }
+
         card.innerHTML = `
             <img src="${episode.capa}" alt="${episode.nome}">
+            ${badgeHtml} <!-- Insere o badge aqui -->
         `;
         wrapper.appendChild(card);
         wrapper.innerHTML += `
@@ -4395,6 +4418,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         `;
         gridElement.appendChild(wrapper);
     }
+
 
     // Função para carregar e exibir o histórico de animes assistidos
     async function loadWatchedAnimes() {

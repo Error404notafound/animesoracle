@@ -4388,36 +4388,52 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             return;
         }
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'episode-grid-card-wrapper';
-        if (isAdultBlurred) {
-            wrapper.classList.add('adult-content-blurred');
-            wrapper.onclick = (e) => { e.stopPropagation(); openAdultContentWarningModal(serie); }; // Abre o modal de aviso
-        } else {
-            wrapper.onclick = () => openVideoPlayer(serie, episode); 
-        }
+            // ... (o início da função displayEpisodeCardGrid é o mesmo) ...
 
-                const card = document.createElement('div');
-        card.className = 'episode-grid-card';
-        
-        let badgeHtml = '';
-        // Verifica se o episódio tem algum link com type 'dublado'
-        const hasDubladoLink = episode.links && episode.links.some(link => link.type === 'dublado');
-        if (hasDubladoLink) {
-            badgeHtml = `<span class="dublado-badge">DUBLADO</span>`;
-        }
-
-        card.innerHTML = `
-            <img src="${episode.capa}" alt="${episode.nome}">
-            ${badgeHtml} <!-- Insere o badge aqui -->
-        `;
-        wrapper.appendChild(card);
-        wrapper.innerHTML += `
-            <div class="episode-grid-card-title-below">${episode.nome}</div>
-            <div class="episode-grid-card-serie-name-below">${serie.nome}</div>
-        `;
-        gridElement.appendChild(wrapper);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'episode-grid-card-wrapper';
+    if (isAdultBlurred) {
+        wrapper.classList.add('adult-content-blurred');
+        wrapper.onclick = (e) => { e.stopPropagation(); openAdultContentWarningModal(serie); };
+    } else {
+        wrapper.onclick = () => openVideoPlayer(serie, episode); 
     }
+
+    const card = document.createElement('div');
+    card.className = 'episode-grid-card';
+    
+    // Cria o elemento da imagem e o adiciona ao card
+    const img = document.createElement('img');
+    img.src = episode.capa;
+    img.alt = episode.nome;
+    card.appendChild(img);
+
+    // Verifica se o episódio tem algum link com type 'dublado' e cria o badge
+    const hasDubladoLink = episode.links && episode.links.some(link => link.type === 'dublado');
+    if (hasDubladoLink) {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'dublado-badge';
+        badgeSpan.textContent = 'DUBLADO';
+        card.appendChild(badgeSpan); // Adiciona o badge como filho do card
+    }
+
+    wrapper.appendChild(card); // Adiciona o card (com imagem e badge) ao wrapper
+
+    // Cria e adiciona o título do episódio (abaixo do card)
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'episode-grid-card-title-below';
+    titleDiv.textContent = episode.nome;
+    wrapper.appendChild(titleDiv);
+
+    // Cria e adiciona o nome da série (abaixo do card)
+    const serieNameDiv = document.createElement('div');
+    serieNameDiv.className = 'episode-grid-card-serie-name-below';
+    serieNameDiv.textContent = serie.nome;
+    wrapper.appendChild(serieNameDiv);
+    
+    gridElement.appendChild(wrapper); // Adiciona o wrapper completo ao grid
+}
+
 
 
     // Função para carregar e exibir o histórico de animes assistidos

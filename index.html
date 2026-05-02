@@ -16,15 +16,17 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <style>
+            <style>
         /* Estilos Globais e do Tema */
         :root { 
             --main-header-height: 60px;
-            --az-catalog-height: 38px; /* Altura do catálogo A-Z, ajustada para caber */
-            --search-bar-height: 66px; /* padding-top/bottom + height/border do input */
+            --az-catalog-height: 38px;
+            --search-bar-height: 66px; /* Ajuste se o padding vertical do search-container for alterado */
 
-            /* Altura total ocupada pelos elementos fixos no topo */
-            --total-fixed-height-default: calc(var(--main-header-height) + var(--az-catalog-height));
-            --total-fixed-height-with-search: calc(var(--main-header-height) + var(--search-bar-height) + var(--az-catalog-height));
+            /* Nova forma de calcular o top do azCatalog e o padding do body */
+            --az-catalog-top: var(--main-header-height); /* O azCatalog começa imediatamente abaixo do mainHeader */
+            --total-fixed-height: calc(var(--main-header-height) + var(--az-catalog-height)); /* Altura padrão dos elementos fixos */
+            --total-fixed-height-with-search: calc(var(--main-header-height) + var(--search-bar-height) + var(--az-catalog-height)); /* Altura com a busca ativa */
 
             --bg: #0f0f0f; 
             --card: #1a1a1a; 
@@ -42,8 +44,11 @@
             --blur-strength: 10px; /* Força do desfoque para conteúdo adulto */
             --hairline-border: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
         }
-        #main { /* body agora tem id="main" */
+        
+        body { 
             margin: 0;
+            overflow-x: hidden;
+            padding-top: var(--total-fixed-height); /* Padding inicial do body */
             background: var(--bg); 
             color: var(--text); 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -51,18 +56,15 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden; /* Evita scroll horizontal indesejado */
-            /* Padding superior para acomodar os elementos fixos */
-            padding-top: var(--total-fixed-height-default);
         }
 
-        /* Ajuste o padding do body quando a barra de busca estiver ativa */
-        #main.with-search-active {
+        /* Classe para ajustar o padding do body quando a barra de busca estiver ativa */
+        body.with-search-active {
             padding-top: var(--total-fixed-height-with-search);
         }
 
-        /* Modo Escuro/Claro */
-        #main.light-mode {
+        /* Modo Escuro/Claro no body (se a classe light-mode for adicionada ao body) */
+        body.light-mode {
             --bg: #f0f0f0;
             --card: #ffffff;
             --text: #333333;
@@ -71,7 +73,7 @@
             --hairline-border: 1px solid rgba(0,0,0,0.05);
         }
         
-                /* Modo Cinema (aplica-se ao body) */
+        /* Modo Cinema (aplica-se ao body) */
         body.cinema-mode {
             overflow: hidden; /* Evita scroll na página principal */
         }
@@ -94,6 +96,7 @@
             z-index: 5001; /* Garante que o player esteja acima do conteúdo escurecido */
             pointer-events: all; 
         }
+
 
         /* Utilidades para flexbox */
         .flex-row { display: flex; align-items: center; }

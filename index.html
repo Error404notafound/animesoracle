@@ -198,10 +198,10 @@
             z-index: 1001; 
         }
 
-        /* Catálogo A-Z (global e fixo) */
+                /* Catálogo A-Z (global e fixo) */
         #azCatalog {
             position: fixed; 
-            top: var(--total-fixed-height-default); /* Padrão: abaixo do header, mas pode ser ajustado se a search bar estiver ativa */
+            top: var(--az-catalog-top); /* Usando a nova variável para o top, que é --main-header-height */
             left: 0;
             width: 100%;
             display: flex;
@@ -217,11 +217,12 @@
             font-size: 0.9em; 
             box-sizing: border-box;
             height: var(--az-catalog-height); /* Altura definida */
+            transition: top 0.3s ease-in-out; /* Adiciona transição suave para o top */
         }
 
         /* Classe que será adicionada ao azCatalog via JS quando a barra de busca estiver ativa */
         #azCatalog.with-search {
-            top: var(--total-fixed-height-with-search);
+            top: var(--az-catalog-top-with-search); /* Ajusta o top quando a busca está ativa */
         }
 
         #azCatalog::-webkit-scrollbar {
@@ -250,7 +251,7 @@
             color: var(--text);
         }
 
-                /* Hero Slider */
+        /* Hero Slider */
         #heroSlider {
             position: relative;
             width: 100%;
@@ -300,7 +301,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
         }
         
-                /* NOVO: Contêiner para o conteúdo do overlay que será centralizado */
+        /* NOVO: Contêiner para o conteúdo do overlay que será centralizado */
         .hero-overlay-content {
             width: 100%;
             max-width: 600px; /* Limita a largura do bloco de texto */

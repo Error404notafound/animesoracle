@@ -16,18 +16,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <style>
-            <style>
         /* Estilos Globais e do Tema */
         :root { 
-            --main-header-height: 60px;
-            --az-catalog-height: 38px;
-            --search-bar-height: 66px; /* Ajuste se o padding vertical do search-container for alterado */
-
-            /* Nova forma de calcular o top do azCatalog e o padding do body */
-            --az-catalog-top: var(--main-header-height); /* O azCatalog começa imediatamente abaixo do mainHeader */
-            --total-fixed-height: calc(var(--main-header-height) + var(--az-catalog-height)); /* Altura padrão dos elementos fixos */
-            --total-fixed-height-with-search: calc(var(--main-header-height) + var(--search-bar-height) + var(--az-catalog-height)); /* Altura com a busca ativa */
-
             --bg: #0f0f0f; 
             --card: #1a1a1a; 
             --text: #ffffff; 
@@ -44,11 +34,8 @@
             --blur-strength: 10px; /* Força do desfoque para conteúdo adulto */
             --hairline-border: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
         }
-        
         body { 
-            margin: 0;
-            overflow-x: hidden;
-            padding-top: var(--total-fixed-height); /* Padding inicial do body */
+            margin: 0; 
             background: var(--bg); 
             color: var(--text); 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -56,14 +43,10 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Evita scroll horizontal indesejado */
         }
 
-        /* Classe para ajustar o padding do body quando a barra de busca estiver ativa */
-        body.with-search-active {
-            padding-top: var(--total-fixed-height-with-search);
-        }
-
-        /* Modo Escuro/Claro no body (se a classe light-mode for adicionada ao body) */
+        /* Modo Escuro/Claro */
         body.light-mode {
             --bg: #f0f0f0;
             --card: #ffffff;
@@ -73,30 +56,20 @@
             --hairline-border: 1px solid rgba(0,0,0,0.05);
         }
         
-        /* Modo Cinema (aplica-se ao body) */
+        /* Modo Cinema */
         body.cinema-mode {
             overflow: hidden; /* Evita scroll na página principal */
         }
-        body.cinema-mode > #mainPage,
-        body.cinema-mode > #episodeListPage,
-        body.cinema-mode > #postarPage,
-        body.cinema-mode > #newSerieFormPage,
-        body.cinema-mode > #addEpisodePage,
-        body.cinema-mode > #categoryViewPage,
-        body.cinema-mode > #notificationsPage,
-        body.cinema-mode > #savedAnimesPage,
-        body.cinema-mode > #contributionsPage,
-        body.cinema-mode > #settingsPage {
+        body.cinema-mode > :not(#videoPage) { /* Ajustado para nova estrutura de player como página */
             filter: brightness(30%) blur(5px); /* Escurece e desfoca o resto da página */
             transition: filter 0.3s ease-in-out;
             pointer-events: none; /* Bloqueia interações fora do modal */
         }
         body.cinema-mode #videoPage { /* Mantém o player normal */
             filter: brightness(100%); 
-            z-index: 5001; /* Garante que o player esteja acima do conteúdo escurecido */
+            z-index: 5001; 
             pointer-events: all; 
         }
-
 
         /* Utilidades para flexbox */
         .flex-row { display: flex; align-items: center; }
@@ -107,21 +80,18 @@
         .gap-2 { gap: 8px; } /* Espaçamento padrão */
         .gap-4 { gap: 16px; }
 
-        /* Estilos do Header PRINCIPAL (global e fixo) */
-        #mainHeader { 
+        /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
+        header { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             padding: 0 15px; 
             background: #000; 
-            height: var(--main-header-height); 
-            position: fixed; 
+            height: 60px; 
+            position: sticky; 
             top: 0; 
-            left: 0;
-            width: 100%;
-            z-index: 1000; /* Mais alto para ficar acima de tudo */
+            z-index: 1000; 
             border-bottom: 1px solid #333; 
-            box-sizing: border-box; /* Garante que o padding não aumente a altura */
         }
         .logo { 
             font-weight: bold; 
@@ -129,7 +99,6 @@
             font-size: 20px; 
             flex-grow: 1; 
             text-align: center; 
-            cursor: pointer; /* Adicionado para indicar que é clicável */
         }
         .icon-btn { 
             font-size: 24px; 
@@ -151,20 +120,17 @@
             fill: currentColor; 
         }
 
-                /* Barra de Pesquisa (global e fixo) */
-        #searchContainer {
-            position: fixed; 
-            top: var(--main-header-height); /* Abaixo do header principal */
-            left: 0;
+        /* Barra de Pesquisa */
+        .search-container {
+            position: sticky; /* Sticky para se manter visível abaixo do header */
+            top: 60px; /* Abaixo do header fixo */
             width: 100%;
-            display: none; /* Escondido por padrão */
+            display: none; 
             justify-content: center;
-            padding: 10px 0; /* Padding vertical do container */
+            padding: 10px 0;
             border-bottom: 1px solid #333; 
             background: var(--bg); 
-            z-index: 999; /* Abaixo do header, acima do catálogo */
-            box-sizing: border-box; 
-            height: var(--search-bar-height); /* Altura definida */
+            z-index: 999; 
         }
         #searchBar { 
             width: 90%; 
@@ -195,36 +161,29 @@
             font-size: 20px;
             cursor: pointer;
             padding: 5px;
-            z-index: 1001; 
+            z-index: 1001; /* Garante que fique acima da barra de busca */
         }
 
-                /* Catálogo A-Z (global e fixo) */
+                /* Catálogo A-Z */
         #azCatalog {
-            position: fixed; 
-            top: var(--az-catalog-top); /* Usando a nova variável para o top, que é --main-header-height */
-            left: 0;
-            width: 100%;
             display: flex;
-            flex-wrap: nowrap; 
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch; 
-            justify-content: flex-start; 
-            padding: 5px 15px; 
+            flex-wrap: nowrap; /* Impede quebras de linha */
+            overflow-x: auto; /* Permite rolagem horizontal */
+            -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
+            justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+            padding: 5px 15px; /* Reduz padding */
             background: var(--bg);
             border-bottom: 1px solid #333;
-            z-index: 998; /* Abaixo da busca, acima do conteúdo das páginas */
-            gap: 2px; 
-            font-size: 0.9em; 
-            box-sizing: border-box;
-            height: var(--az-catalog-height); /* Altura definida */
-            transition: top 0.3s ease-in-out; /* Adiciona transição suave para o top */
+            z-index: 998;
+            gap: 2px; /* Reduz espaçamento entre as letras */
+            font-size: 0.9em; /* Reduz tamanho da fonte */
         }
 
-        /* Classe que será adicionada ao azCatalog via JS quando a barra de busca estiver ativa */
-        #azCatalog.with-search {
-            top: var(--az-catalog-top-with-search); /* Ajusta o top quando a busca está ativa */
-        }
 
+                /* Ajuste do top para quando a searchbar estiver escondida */
+        #azCatalog.top-60 {
+            top: 60px;
+        }
         #azCatalog::-webkit-scrollbar {
             height: 5px; 
         }
@@ -251,15 +210,15 @@
             color: var(--text);
         }
 
-        /* Hero Slider */
+                        /* Hero Slider */
         #heroSlider {
             position: relative;
             width: 100%;
             max-width: 1280px; 
             margin: 0 auto;
             overflow: hidden;
-            border-radius: 12px; 
-            aspect-ratio: 1280 / 650; 
+            border-radius: 12px; /* Aumentado para 12px */
+            aspect-ratio: 1280 / 650; /* Aumentado a altura */
             border-bottom: 1px solid #333;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             margin-top: 15px; 
@@ -287,7 +246,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Gradiente combinado para escurecer o lado esquerdo e a base */
+            /* Gradiente combinado para escurecer o lado esquerdo e a base, mais escurecimento geral */
             background: 
                 linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%),
                 linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.9) 100%),
@@ -485,7 +444,7 @@
             object-fit: cover;
             display: block;
         }
-                /* Texto abaixo do card de episódio */
+        /* Texto abaixo do card de episódio */
         .episode-grid-card-title-below {
             font-size: 14px;
             font-weight: bold;
@@ -555,7 +514,7 @@
             white-space: nowrap;
         }
 
-        /* Destaque para "Mais Votados & Assistidos" */
+                        /* Destaque para "Mais Votados & Assistidos" */
         .anime-card.highlighted {
             box-shadow: var(--highlight-glow);
             border-color: var(--primary);
@@ -622,36 +581,41 @@
             box-shadow: none;
         }
         
-        /* Estilos Comuns para "Páginas" (modal-page e content-page) */
-        /* Estas classes simulam páginas e ocupam o espaço abaixo dos elementos fixos */
-        .modal-page, .content-page { 
-            display: none; /* Escondido por padrão */
-            position: absolute; /* Não usa fixed, flui sob o body padding */
-            top: 0; /* Começa no topo do container rolavel */
+        /* Estilos Comuns para Modais (pop-ups que agora se comportam como páginas) */
+        .modal-page { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
             left: 0; 
             width: 100%; 
-            min-height: calc(100vh - var(--total-fixed-height-default)); /* Calcula a altura mínima */
-            overflow-y: auto; /* Permite rolagem do conteúdo interno da página */
-            -webkit-overflow-scrolling: touch;
+            height: 100%; 
             background: var(--bg); /* Fundo da "página" */
-            z-index: 1; /* Z-index menor para ficar abaixo dos fixos */
+            z-index: 5000; 
             flex-direction: column; /* Conteúdo em coluna */
+            overflow-y: auto; /* Permite rolagem do conteúdo */
+            -webkit-overflow-scrolling: touch;
         }
-        /* Ajuste min-height quando a busca está ativa */
-        body.with-search-active .modal-page,
-        body.with-search-active .content-page {
-            min-height: calc(100vh - var(--total-fixed-height-with-search));
-        }
-
-        .modal-page.active, .content-page.active {
+        .modal-page.active {
             display: flex;
         }
-
-        /* Os antigos .modal-page-header e .page-header foram removidos conforme solicitação */
-        /* Removido: .modal-page-header */
-        /* Removido: .page-header */
-
-        .modal-page-content, .page-content {
+        .modal-page-header { /* Header para as "páginas" */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            background: #000;
+            height: 60px;
+            z-index: 1001;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+        }
+        .modal-page-header .title {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .modal-page-content {
             padding: 20px 15px;
             max-width: 1200px;
             margin: 0 auto;
@@ -660,7 +624,7 @@
             box-sizing: border-box;
         }
 
-                /* Modal padrão que ainda será popup (para login, aviso adulto, share) */
+        /* Modal padrão que ainda será popup (para login, aviso adulto, share) */
         .modal {
             display: none; 
             position: fixed; 
@@ -784,7 +748,7 @@
             color: white;
         }
 
-        /* Menu do Usuário (Sidebar - Nova Estrutura) */
+                /* Menu do Usuário (Sidebar - Nova Estrutura) */
         #userMenu {
             position: fixed;
             top: 0;
@@ -903,7 +867,7 @@
             fill: currentColor;
             margin-right: 15px;
         }
-        /* Estilos específicos para badges de status (mantidos do original) */
+                /* Estilos específicos para badges de status (mantidos do original) */
         .user-status-badge {
             display: inline-flex;
             align-items: center;
@@ -984,7 +948,7 @@
             transform: translateX(26px);
         }
 
-                /* Estilos para o formulário de Postar Anime/Episódio (como Page) */
+        /* Estilos para o formulário de Postar Anime/Episódio (como Page) */
         #postarPage .modal-page-content,
         #newSerieFormPage .modal-page-content,
         #addEpisodePage .modal-page-content {
@@ -1032,7 +996,7 @@
             background-color: var(--secondary-bg);
         }
 
-        /* Modal de aviso para conteúdo adulto (popup) */
+                /* Modal de aviso para conteúdo adulto (popup) */
         #adultContentWarningModal .modal-card {
             max-width: 350px;
             text-align: center;
@@ -1116,27 +1080,22 @@
         #videoPage {
             display: none; /* Escondido por padrão, ativado via JS */
             flex-direction: column;
-            position: absolute; /* Alterado para absolute */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            min-height: calc(100vh - var(--total-fixed-height-default)); /* Altura ajustada */
+            height: 100%;
             background: var(--bg);
-            z-index: 1; /* Abaixo dos fixos */
+            z-index: 5000;
             overflow-y: auto; /* A página inteira rola, mas o player fica fixo */
             -webkit-overflow-scrolling: touch;
         }
-                /* Ajuste min-height quando a busca está ativa */
-        body.with-search-active #videoPage {
-            min-height: calc(100vh - var(--total-fixed-height-with-search));
-        }
-
         #videoPage.active {
             display: flex;
         }
         #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
             width: 100%;
-            position: sticky; /* Fixa o player no topo do conteúdo ROLÁVEL da página */
+            position: sticky; /* Fixa o player no topo */
             top: 0;
             left: 0;
             z-index: 5001; /* Acima de outros elementos da página, mas abaixo do header principal */
@@ -1251,7 +1210,7 @@
             color: white;
         }
 
-                /* Botões de Navegação do Player (Voltar, Menu, Próximo) */
+        /* Botões de Navegação do Player (Voltar, Menu, Próximo) */
         .player-nav-buttons {
             display: flex;
             width: 100%;
@@ -1289,7 +1248,7 @@
             height: 30px;
         }
 
-        /* Detalhes da Série no Player */
+                        /* Detalhes da Série no Player */
         .player-serie-details {
             display: flex;
             align-items: flex-start;
@@ -1402,181 +1361,6 @@
             fill: currentColor;
         }
 
-                /* Seção Curtir/Descurtir */
-        .like-dislike-buttons {
-            display: flex;
-            justify-content: center; /* Centraliza */
-            gap: 15px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .like-dislike-buttons button {
-            background: var(--secondary-bg);
-            color: var(--text);
-            border: 1px solid #444;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .like-dislike-buttons button:hover {
-            background-color: #333;
-            border-color: var(--primary);
-        }
-        .like-dislike-buttons button.active {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-        .like-dislike-buttons button.active svg {
-            fill: white;
-        }
-        .like-dislike-buttons svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text);
-            transition: fill 0.2s;
-        }
-
-        /* Seção Sugerir Abertura */
-        .suggest-intro-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: var(--secondary-bg);
-            border-radius: 8px;
-            text-align: left;
-            border: 1px solid #333;
-            margin-bottom: 20px;
-        }
-        .suggest-intro-section p {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
-        .suggest-intro-section .locked-feature {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        .suggest-intro-section .locked-feature svg {
-            fill: var(--text-secondary);
-            width: 18px;
-            height: 18px;
-        }
-        .suggest-intro-section input {
-            width: calc(100% - 24px); /* Ajusta a largura */
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-
-        /* Botões de Ação do Usuário Logado (Salvar, Reportar) - No player */
-        .player-action-buttons {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .player-action-buttons .btn-post {
-            flex: 1;
-            margin-top: 0; /* Remove margem padrão */
-            padding: 10px;
-            font-size: 0.95em;
-        }
-        .player-action-buttons .btn-post.share-btn {
-            background-color: var(--info);
-        }
-        .player-action-buttons .btn-post.report-btn {
-            background-color: var(--danger);
-        }
-
-        /* Seção de Comentários */
-        .comments-section {
-            margin-top: 30px;
-            text-align: left;
-            background: var(--card);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
-        .comments-section h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        .comment-item {
-            border-bottom: 1px solid #333;
-            padding: 15px 0;
-            position: relative; 
-        }
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-        .comment-author {
-            font-weight: bold;
-            color: var(--text);
-        }
-        .comment-text {
-            margin-top: 5px;
-            color: #ccc;
-        }
-        .comment-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
-        .comment-actions button {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: color 0.2s;
-        }
-        .comment-actions button:hover {
-            color: var(--primary-light);
-        }
-        .comment-form {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .comment-form textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        /* Modal para Listar Múltiplos Players (popup) */
-        .player-list-modal .modal-card {
-            max-width: 500px;
-        }
-        .player-list-modal button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 8px;
-            background: var(--secondary-bg);
-            color: var(--text);
-            border: 1px solid #444;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            text-align: left;
-        }
-        .player-list-modal button:hover {
-            background-color: var(--primary-light);
-            border-color: var(--primary);
-        }
-```**PARTE 11/30: CSS (Seção Curtir/Descurtir - continuação, Sugerir Abertura, Botões de Ação, Comentários, Modal Lista de Players)**
-
-```css
         /* Seção Curtir/Descurtir */
         .like-dislike-buttons {
             display: flex;
@@ -1728,195 +1512,6 @@
             resize: vertical;
         }
         
-                /* Modal para Listar Múltiplos Players (popup) */
-        .player-list-modal .modal-card {
-            max-width: 500px;
-        }
-        .player-list-modal button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 8px;
-            background: var(--secondary-bg);
-            color: var(--text);
-            border: 1px solid #444;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            text-align: left;
-        }
-        .player-list-modal button:hover {
-            background-color: var(--primary-light);
-            border-color: var(--primary);
-        }
-
-        /* Página de Lista de Episódios da Série (modal-page) */
-        #episodeListPage {
-            z-index: 1; /* Abaixo dos fixos */
-        }
-        #episodeListPage .episode-modal-content {
-            padding: 20px 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        #episodeListPage .serie-details-header {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        #episodeListPage .serie-details-header img {
-            width: 100px;
-            height: auto;
-            aspect-ratio: 2/3;
-            border-radius: 8px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        #episodeListPage .serie-details-info {
-            flex-grow: 1;
-        }
-        #episodeListPage .serie-details-info h3 {
-            margin: 0;
-            color: var(--text);
-            font-size: 1.5em;
-        }
-        #episodeListPage .serie-details-info p.biography {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-top: 5px;
-            line-height: 1.5;
-            max-height: 4.5em; /* Limita a algumas linhas */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-        #episodeListPage .serie-details-info .genres {
-            margin-top: 10px;
-        }
-        #episodeListPage .serie-details-info .genres span {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 15px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 0.8em;
-        }
-
-        /* Lista de Episódios na Página da Série */
-        .episode-list-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background: var(--secondary-bg);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            position: relative;
-        }
-        .episode-list-item:hover {
-            background-color: #333;
-        }
-        .episode-list-item img {
-            width: 80px;
-            height: 45px; /* Proporção 16:9 */
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-        .episode-list-item-details {
-            flex-grow: 1;
-        }
-        .episode-list-item-details .episode-number {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-        }
-        .episode-list-item-details .episode-title {
-            font-weight: bold;
-            color: var(--text);
-            font-size: 1em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .episode-list-item-details .episode-date {
-            font-size: 0.7em;
-            color: var(--text-secondary);
-        }
-        .episode-list-item .delete-episode-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            margin-left: 10px;
-            padding: 5px;
-            font-size: 1.2em;
-            transition: color 0.2s;
-        }
-        .episode-list-item .delete-episode-btn:hover {
-            color: #a00;
-        }
-
-        /* Páginas de "Ver Mais" para Categorias */
-        .category-view-page {
-            /* Já definida como .modal-page */
-            z-index: 1;
-        }
-        .category-view-page .modal-page-content {
-            padding-top: 15px; /* Ajuste para espaçamento interno */
-        }
-        /* Estilos para o grid de exibição nas páginas de categoria */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 3 colunas em telas maiores */
-            gap: 15px;
-        }
-        @media (min-width: 600px) {
-            .category-grid {
-                grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas maiores */
-            }
-        }
-        @media (min-width: 900px) {
-            .category-grid {
-                grid-template-columns: repeat(5, 1fr); /* 5 colunas em telas maiores */
-            }
-        }
-        @media (min-width: 1200px) {
-            .category-grid {
-                grid-template-columns: repeat(6, 1fr); /* 6 colunas em telas maiores */
-            }
-        }
-
-        /* Estilo específico para "Adicionados Recentemente" na página de Ver Mais */
-        #addedEpisodesViewPage .category-grid {
-            grid-template-columns: repeat(2, 1fr); /* 2 colunas para cards de episódio */
-        }
-        @media (min-width: 600px) {
-            #addedEpisodesViewPage .category-grid {
-                grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas maiores */
-            }
-        }
-
-        /* Footer (Opcional, se quiser adicionar) */
-        footer {
-            padding: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.8em;
-            border-top: 1px solid #333;
-            margin-top: 30px;
-        }
-```**PARTE 12/30: CSS (Modal Lista de Players - continuação, Página de Lista de Episódios, Página de Visualização de Categorias, Footer)**
-
-```css
         /* Modal para Listar Múltiplos Players (popup) */
         .player-list-modal .modal-card {
             max-width: 500px;
@@ -1939,9 +1534,9 @@
             border-color: var(--primary);
         }
 
-        /* Página de Lista de Episódios da Série (modal-page) */
+                /* Página de Lista de Episódios da Série (modal-page) */
         #episodeListPage {
-            z-index: 1; /* Abaixo dos fixos */
+            z-index: 5003; /* Acima da videoPage se aberta por lá */
         }
         #episodeListPage .episode-modal-content {
             padding: 20px 15px;
@@ -2056,10 +1651,22 @@
 
         /* Páginas de "Ver Mais" para Categorias */
         .category-view-page {
-            /* Já definida como .modal-page */
-            z-index: 1;
+            display: none; /* Escondido por padrão */
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 5000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        .category-view-page .page-content { /* Usando page-content conforme nova estrutura */
+        .category-view-page.active {
+            display: flex;
+        }
+        .category-view-page .modal-page-content {
             padding-top: 15px; /* Ajuste para espaçamento interno */
         }
         /* Estilos para o grid de exibição nas páginas de categoria */
@@ -2152,14 +1759,47 @@
 
         /* Páginas de Conteúdo (Saved, Contributions, Settings) */
         .content-page {
-            /* Já definida lá em cima, mas reforça aqui o z-index */
-            z-index: 1; 
+            display: none;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 5000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
-
-        /* Removido: .content-page .page-header - Os cabeçalhos internos foram removidos */
-        /* Removido: .content-page .page-header .back-btn */
-        /* Removido: .content-page .page-header .page-title */
-
+        .content-page.active {
+            display: flex;
+        }
+        .content-page .page-header {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            background: #000;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            border-bottom: 1px solid #333;
+        }
+        .content-page .page-header .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            padding-right: 15px;
+        }
+        .content-page .page-header .page-title {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
         .content-page .page-content {
             padding: 20px 15px;
             max-width: 1200px;
@@ -2226,8 +1866,7 @@
         <!-- Ícone de hambúrguer SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <!-- Logo clicável para retornar à página principal -->
-    <div class="logo" onclick="loadHomePage()">AnimesOracle</div>
+    <div class="logo">AnimesOracle</div>
     <!-- Botão de pesquisa -->
     <button class="icon-btn" onclick="toggleSearchBar()">
         <!-- Ícone de lupa SVG -->
@@ -2240,121 +1879,125 @@
     </button>
 </header>
 
-<!-- Barra de Pesquisa (global e fixo) -->
+<!-- Barra de Pesquisa -->
 <div id="searchContainer" class="search-container">
     <input type="text" id="searchBar" placeholder="Buscar animes..." onfocus="this.classList.add('focused')" onblur="this.classList.remove('focused')" oninput="filterAnimes()">
-    <button class="search-close-btn" onclick="toggleSearchBar()">×</button> <!-- Mudado de closeSearchBar para toggleSearchBar -->
+    <button class="search-close-btn" onclick="closeSearchBar()">×</button>
 </div>
 
-<!-- Catálogo A-Z (global e fixo) -->
+<!-- Catálogo A-Z -->
 <div id="azCatalog">
     <!-- Gerado via JavaScript -->
 </div>
 
-<!-- O conteúdo principal do site (agora é uma "modal-page" com id="mainPage") -->
-<div id="mainPage" class="modal-page active"> <!-- 'mainPage' é a primeira a ser mostrada -->
-    <!-- Hero Slider (exclusivo da mainPage) -->
-    <section id="heroSlider">
-        <!-- Slides serão gerados via JavaScript -->
-        <div class="hero-slider-pagination" id="heroSliderPagination">
-            <!-- Dots de paginação serão gerados via JavaScript -->
+<!-- Hero Slider -->
+<section id="heroSlider">
+    <!-- Slides serão gerados via JavaScript -->
+    <div class="hero-slider-pagination" id="heroSliderPagination">
+        <!-- Dots de paginação serão gerados via JavaScript -->
+    </div>
+</section>
+
+<!-- Conteúdo principal do site -->
+<main>
+    <section class="content-section">
+        <div class="section-header">
+            <h2>MAIS VOTADOS & ASSISTIDOS</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('topRatedAnimes')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="topRatedAnimesGrid">
+            <!-- Animes mais votados e assistidos serão carregados aqui -->
         </div>
     </section>
 
-    <!-- Conteúdo principal do site -->
-    <div class="modal-page-content"> <!-- Conteúdo que rola dentro da mainPage -->
-        <section class="content-section">
-            <div class="section-header">
-                <h2>MAIS VOTADOS & ASSISTIDOS</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('topRatedAnimes')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="topRatedAnimesGrid">
-                <!-- Animes mais votados e assistidos serão carregados aqui -->
-            </div>
-        </section>
+    <!-- Nova Seção: Adicionados Recentemente (Episódios) -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2>ADICIONADOS RECENTEMENTE</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentEpisodes')">VER MAIS</a>
+        </div>
+        <div class="added-episodes-grid" id="recentEpisodesGrid">
+            <!-- Episódios adicionados recentemente serão carregados aqui -->
+        </div>
+    </section>
 
-        <!-- Nova Seção: Adicionados Recentemente (Episódios) -->
-        <section class="content-section">
-            <div class="section-header">
-                <h2>ADICIONADOS RECENTEMENTE</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentEpisodes')">VER MAIS</a>
-            </div>
-            <div class="added-episodes-grid" id="recentEpisodesGrid">
-                <!-- Episódios adicionados recentemente serão carregados aqui -->
-            </div>
-        </section>
+    <!-- Nova Seção: Seu Histórico -->
+    <section class="content-section" id="watchedAnimesSection">
+        <div class="section-header">
+            <h2>SEU HISTÓRICO</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('watchedAnimes')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="watchedAnimesGrid">
+            <p style="padding: 10px;">Faça login para ver seu histórico de animes assistidos.</p>
+        </div>
+    </section>
 
-        <!-- Nova Seção: Seu Histórico -->
-        <section class="content-section" id="watchedAnimesSection">
-            <div class="section-header">
-                <h2>SEU HISTÓRICO</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('watchedAnimes')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="watchedAnimesGrid">
-                <p style="padding: 10px;">Faça login para ver seu histórico de animes assistidos.</p>
-            </div>
-        </section>
+    <!-- Nova Seção: +18 Mais Recentes -->
+    <section class="content-section" id="adultRecentAnimesSection">
+        <div class="section-header">
+            <h2>+18 MAIS RECENTES</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('adultAnimes')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="adultRecentAnimesGrid">
+            <p style="padding: 10px;">Ative o Modo Adulto para ver este conteúdo.</p>
+        </div>
+    </section>
 
-        <!-- Nova Seção: +18 Mais Recentes -->
-        <section class="content-section" id="adultRecentAnimesSection">
-            <div class="section-header">
-                <h2>+18 MAIS RECENTES</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('adultAnimes')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="adultRecentAnimesGrid">
-                <p style="padding: 10px;">Ative o Modo Adulto para ver este conteúdo.</p>
-            </div>
-        </section>
+    <!-- Nova Seção: Filmes Mais Recentes -->
+    <section class="content-section" id="recentMoviesSection">
+        <div class="section-header">
+            <h2>FILMES MAIS RECENTES</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentMovies')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="recentMoviesGrid">
+            <p style="padding: 10px;">Nenhum filme recente encontrado.</p>
+        </div>
+    </section>
 
-        <!-- Nova Seção: Filmes Mais Recentes -->
-        <section class="content-section" id="recentMoviesSection">
-            <div class="section-header">
-                <h2>FILMES MAIS RECENTES</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentMovies')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="recentMoviesGrid">
-                <p style="padding: 10px;">Nenhum filme recente encontrado.</p>
-            </div>
-        </section>
+    <!-- Nova Seção: Ao Vivo -->
+    <section class="content-section" id="liveContentSection">
+        <div class="section-header">
+            <h2>AO VIVO</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('liveContent')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="liveContentGrid">
+            <p style="padding: 10px;">Nenhum conteúdo ao vivo no momento.</p>
+        </div>
+    </section>
 
-        <!-- Nova Seção: Ao Vivo -->
-        <section class="content-section" id="liveContentSection">
-            <div class="section-header">
-                <h2>AO VIVO</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('liveContent')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="liveContentGrid">
-                <p style="padding: 10px;">Nenhum conteúdo ao vivo no momento.</p>
-            </div>
-        </section>
+    <!-- Nova Seção: Cartoons Recentes -->
+    <section class="content-section" id="recentCartoonsSection">
+        <div class="section-header">
+            <h2>CARTOONS RECENTES</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentCartoons')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="recentCartoonsGrid">
+            <p style="padding: 10px;">Nenhum cartoon recente encontrado.</p>
+        </div>
+    </section>
 
-        <!-- Nova Seção: Cartoons Recentes -->
-        <section class="content-section" id="recentCartoonsSection">
-            <div class="section-header">
-                <h2>CARTOONS RECENTES</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentCartoons')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="recentCartoonsGrid">
-                <p style="padding: 10px;">Nenhum cartoon recente encontrado.</p>
-            </div>
-        </section>
-
-        <!-- Seção: Mais Recentes (Séries - Agora no final) -->
-        <section class="content-section">
-            <div class="section-header">
-                <h2>MAIS RECENTES</h2>
-                <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentSeries')">VER MAIS</a>
-            </div>
-            <div class="anime-grid scrollable" id="recentAnimesGrid">
-                <!-- Animes adicionados recentemente serão carregados aqui -->
-            </div>
-        </section>
-    </div>
-</div>
+    <!-- Seção: Mais Recentes (Séries - Agora no final) -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2>MAIS RECENTES</h2>
+            <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentSeries')">VER MAIS</a>
+        </div>
+        <div class="anime-grid scrollable" id="recentAnimesGrid">
+            <!-- Animes adicionados recentemente serão carregados aqui -->
+        </div>
+    </section>
+</main>
 
 <!-- Páginas que substituem modais -->
 <!-- Página para Postar Conteúdo (Série ou Episódio) -->
 <div id="postarPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title">Publicar Conteúdo</div>
+        <div></div> <!-- Espaço para centralizar o título -->
+    </div>
     <div class="modal-page-content">
         <button class="btn-post" onclick="openNewSerieFormPage()">Postar Nova Série</button>
         <button class="btn-post" onclick="openAddEpisodeToExistingSeriePage()" style="margin-top: 15px;">Adicionar Episódio a Série Existente</button>
@@ -2363,6 +2006,13 @@
 
 <!-- Página para Formulário de Nova Série -->
 <div id="newSerieFormPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title">Nova Série de Anime</div>
+        <div></div>
+    </div>
     <div class="modal-page-content">
         <div class="form-group">
             <label for="pAnimeNome">Nome da Série:</label>
@@ -2437,6 +2087,13 @@
 
 <!-- Página para Adicionar Episodio a Série Existente -->
 <div id="addEpisodePage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title">Adicionar Episódio</div>
+        <div></div>
+    </div>
     <div class="modal-page-content">
         <div class="search-series-container">
             <label for="searchExistingSerieInput">Buscar Série:</label>
@@ -2473,6 +2130,13 @@
 
 <!-- Página para Visualização de Episódios da Série -->
 <div id="episodeListPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title" id="episodeListPageTitle"></div>
+        <div></div>
+    </div>
     <div class="modal-page-content">
         <div id="episodeListPageContent">
             <!-- Conteúdo da série e lista de episódios serão carregados aqui -->
@@ -2548,7 +2212,7 @@
                     <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
                 </div>
                 
-                <!-- Botão Favoritar (Marca Páginas) -->
+                                <!-- Botão Favoritar (Marca Páginas) -->
                 <button class="favorite-btn" id="btnSalvarAnime" onclick="toggleSalvarAnime()">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>
                     <span>Salvar Anime</span>
@@ -2584,7 +2248,7 @@
     </div>
 </div>
 
-<!-- Modal de Autenticação (Login/Cadastrar - ainda é um modal popup) -->
+<!-- Modal de Autenticação (Login/Cadastro - ainda é um modal popup) -->
 <div id="authModal" class="modal">
     <div class="modal-card">
         <h3 style="color:var(--primary); margin:0 0 10px 0;">Entrar / Cadastrar</h3>
@@ -2592,7 +2256,7 @@
         <input type="password" id="authPassword" placeholder="Senha">
         <button class="btn-post" onclick="cadastrarUsuario()">CADASTRAR</button>
         <button class="btn-post" onclick="loginUsuario()" style="margin-top: 10px;">ENTRAR</button>
-        <button class="cancel-btn" onclick="closeModal('authModal')">Cancelar</button>
+        <button class="cancel-btn" onclick="document.getElementById('authModal').style.display='none'">Cancelar</button>
     </div>
 </div>
 
@@ -2603,11 +2267,11 @@
         <p>Este conteúdo é classificado como +18.</p>
         <p>Para visualizá-lo, você precisa ativar o "Modo Adulto" em suas configurações de usuário.</p>
         <button class="btn-post" onclick="ativarModoAdultoAndRetry()">Ativar Modo Adulto e Continuar</button>
-        <button class="cancel-btn" onclick="closeModal('adultContentWarningModal')">Cancelar</button>
+        <button class="cancel-btn" onclick="document.getElementById('adultContentWarningModal').style.display='none'">Cancelar</button>
     </div>
 </div>
 
-<!-- Modal de Compartilhamento (popup) -->
+        <!-- Modal de Compartilhamento (popup) -->
 <div id="shareModal" class="modal">
     <div class="modal-card">
         <h3 style="color:var(--primary); margin:0 0 20px 0;">Compartilhar Anime</h3>
@@ -2624,8 +2288,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.6-3.803-1.6-5.836 0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12c-1.936 0-3.882-.589-5.636-1.583l-6.264 1.638zm11.943-3.5h-.001c-1.428 0-2.812-.41-4.04-1.189l-2.946.772.788-2.883c-1.053-1.123-1.621-2.5-1.621-3.957 0-4.685 3.805-8.491 8.491-8.491 4.685 0 8.491 3.805 8.491 8.491s-3.806 8.491-8.491 8.491zm4.848-6.848c-.22-.11-.476-.239-.731-.367-.255-.127-1.503-.739-1.734-.82s-.4-.128-.57-.064c-.171.064-.653.82-.796.989-.143.169-.286.192-.534.128-.249-.064-1.056-.389-2.012-1.24-.746-.662-1.248-1.481-1.39-1.734-.142-.255-.015-.4-.015-.57s-.11-.255.239-.636c.29-.384.653-.92.885-1.24.233-.324.29-.255.4-.424.11-.168.055-.319-.03-.448-.088-.129-.796-1.921-1.09-2.63-.294-.71-.6-.614-.82-.869c-.22-.255-.476-.324-.731-.312-.255.012-.448.064-.636.064-.171 0-.476-.052-.731-.052s-.68.18-.94.448c-.255.255-1.056 1.029-1.056 2.509 0 1.48.973 2.909 1.102 3.102.128.192 1.968 3.007 4.757 4.298.665.319 1.188.513 1.597.641.676.21 1.293.18 1.78.115.49-.064.22-.39-.064-.535-.289-.128-.68-.255-1.293-.548z"/></svg>
                                                                                                                 Whatsapp
             </button>
-                                                        <button class="share-btn telegram" onclick="shareSocial('telegram')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18.3 5.3l-1.8 1.3c-.6.4-1.3.6-2.1.6-1 0-1.9-.3-2.6-.9-.8-.6-1.3-1.4-1.6-2.4-.3-.9-.4-1.9-.3-2.8 0-.1 0-.2.1-.3s.2-.1.3-.1h.2c.5 0 .9.2 1.2.6.4.4.6.9.7 1.5.1.5.2 1 .3 1.5.2.5.4.9.7 1.3.3.4.7.7 1.1.9.4.2.8.3 1.3.3.6 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.5-.2-1-.6-1.4s-.9-.6-1.4-.6h-2.1c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.</path></svg>
+                            <button class="share-btn telegram" onclick="shareSocial('telegram')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18.3 5.3l-1.8 1.3c-.6.4-1.3.6-2.1.6-1 0-1.9-.3-2.6-.9-.8-.6-1.3-1.4-1.6-2.4-.3-.9-.4-1.9-.3-2.8 0-.1 0-.2.1-.3s.2-.1.3-.1h.2c.5 0 .9.2 1.2.6.4.4.6.9.7 1.5.1.5.2 1 .3 1.5.2.5.4.9.7 1.3.3.4.7.7 1.1.9.4.2.8.3 1.3.3.6 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.5-.2-1-.6-1.4s-.9-.6-1.4-.6h-2.1c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.</path></svg>
                 Telegram
             </button>
         </div>
@@ -2633,7 +2297,7 @@
             <input type="text" id="shareLink" value="" readonly>
             <button onclick="copyShareLink()">Copiar</button>
         </div>
-        <button class="cancel-btn" onclick="closeModal('shareModal')">Fechar</button>
+        <button class="cancel-btn" onclick="document.getElementById('shareModal').style.display='none'">Fechar</button>
     </div>
 </div>
 
@@ -2694,6 +2358,13 @@
 
 <!-- Páginas de Visualização de Categorias (Para "Ver Mais") -->
 <div id="categoryViewPage" class="category-view-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title" id="categoryViewPageTitle"></div>
+        <div></div>
+    </div>
     <div class="modal-page-content">
         <div id="categoryGrid" class="category-grid">
             <!-- Animes/Episódios da categoria serão carregados aqui -->
@@ -2704,6 +2375,11 @@
 <!-- Páginas do Menu do Usuário (Notificações, Salvos, Contribuições, Configurações) -->
 <!-- Página de Notificações -->
 <div id="notificationsPage" class="content-page">
+    <div class="page-header">
+        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title">Notificações</div>
+        <div></div>
+    </div>
     <div class="page-content">
         <div id="notificationsList">
             <!-- Notificações serão carregadas aqui -->
@@ -2714,6 +2390,11 @@
 
 <!-- Página de Animes Salvos -->
 <div id="savedAnimesPage" class="content-page">
+    <div class="page-header">
+        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title">Meus Animes Salvos</div>
+        <div></div>
+    </div>
     <div class="page-content">
         <div id="savedAnimesGrid" class="category-grid">
             <!-- Animes salvos serão carregados aqui -->
@@ -2724,6 +2405,11 @@
 
 <!-- Página de Contribuições -->
 <div id="contributionsPage" class="content-page">
+    <div class="page-header">
+        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title">Minhas Contribuições</div>
+        <div></div>
+    </div>
     <div class="page-content">
         <div id="contributionsList">
             <!-- Contribuições do usuário (séries e episódios postados) serão carregadas aqui -->
@@ -2734,6 +2420,11 @@
 
 <!-- Página de Configurações -->
 <div id="settingsPage" class="content-page">
+    <div class="page-header">
+        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title">Configurações</div>
+        <div></div>
+    </div>
     <div class="page-content">
         <div class="profile-pic-upload-area">
             <div class="profile-pic-preview" onclick="document.getElementById('settingsFileInput').click()">
@@ -2820,7 +2511,7 @@
     let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
 
     // Pilha de páginas abertas para gerenciamento de navegação (novo)
-    const pageStack = ['mainPage']; // Começa com a página principal (agora div#mainPage)
+    const pageStack = ['main']; // Começa com a página principal
 
     // Adicionado ao início do JavaScript para controlar as páginas
     function openPage(pageId) {
@@ -2860,31 +2551,13 @@
             if (currentPage.id === 'userMenu') {
                 toggleUserMenu(); // Reusa a função que já esconde e reseta
             }
-            // Se a página principal estiver sendo reaberta, recarrega seu conteúdo
-            if (pageStack[pageStack.length - 1] === 'mainPage') {
-                renderHomePageContent(); // Assegura que o hero slider e seções são carregadas
-            }
-
         } else {
-            // Se for a última página (mainPage), apenas garante que está ativa
-            const mainPage = document.getElementById('mainPage');
+            // Se for a última página (main), apenas garante que está ativa
+            const mainPage = document.getElementById('main');
             if (mainPage) mainPage.classList.add('active');
             // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
             console.log("Você está na página principal.");
         }
-        console.log("Pilha de páginas:", pageStack);
-    }
-
-    // Função para retornar à página principal e garantir que a search bar esteja escondida
-    function loadHomePage() {
-        while (pageStack.length > 1) { // Fecha todas as páginas até restar apenas a mainPage
-            const currentPage = document.getElementById(pageStack.pop());
-            if (currentPage) currentPage.classList.remove('active');
-        }
-        const mainPage = document.getElementById('mainPage');
-        if (mainPage) mainPage.classList.add('active');
-        closeSearchBar(); // Garante que a search bar esteja escondida
-        renderHomePageContent(); // Recarrega o conteúdo da home
         console.log("Pilha de páginas:", pageStack);
     }
 
@@ -2911,7 +2584,7 @@
                 pageStack.pop();
             }
         } else {
-                    // Se o menu está fechado, vamos abri-lo
+            // Se o menu está fechado, vamos abri-lo
             const user = auth.currentUser;
             if (user) {
                 await carregarDadosUsuario(user.uid);
@@ -2946,54 +2619,44 @@
     function toggleSearchBar() {
         const searchContainer = document.getElementById('searchContainer');
         const azCatalog = document.getElementById('azCatalog');
-        const bodyElement = document.body; // Referência ao body
-
-        if (!searchContainer || !azCatalog || !bodyElement) {
-            console.error("Erro: Elemento 'searchContainer', 'azCatalog' ou 'body' não encontrado no DOM.");
+        if (!searchContainer || !azCatalog) {
+            console.error("Erro: Elemento 'searchContainer' ou 'azCatalog' não encontrado no DOM.");
             return;
         }
-
-        searchBarVisible = !searchBarVisible; // Inverte o estado
-
         if (searchBarVisible) {
-            searchContainer.style.display = 'flex';
-            azCatalog.classList.add('with-search'); // Move o catálogo para baixo da searchbar
-            bodyElement.classList.add('with-search-active'); // Ajusta padding do body
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar) searchBar.focus(); // Foca na barra de pesquisa
-        } else {
             searchContainer.style.display = 'none';
-            azCatalog.classList.remove('with-search'); // Volta o catálogo para baixo do header
-            bodyElement.classList.remove('with-search-active'); // Restaura padding do body
+            azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
             const searchBar = document.getElementById('searchBar');
             if (searchBar) searchBar.value = ''; // Limpa a busca ao fechar
             // Recarrega os animes se a barra de pesquisa for fechada
             if (currentFilter === 'search') {
-                loadHomePage(); // Volta para o conteúdo da home
+                renderHomePageContent(); // Volta para o conteúdo da home
             }
+        } else {
+            searchContainer.style.display = 'flex';
+            azCatalog.classList.remove('top-60'); // Move o catálogo para baixo da searchbar
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar) searchBar.focus(); // Foca na barra de pesquisa
         }
-        console.log("Search Bar Visible:", searchBarVisible);
+        searchBarVisible = !searchBarVisible;
     }
 
     function closeSearchBar() {
         const searchContainer = document.getElementById('searchContainer');
         const searchBar = document.getElementById('searchBar');
         const azCatalog = document.getElementById('azCatalog');
-        const bodyElement = document.body;
-
-        if (!searchContainer || !searchBar || !azCatalog || !bodyElement) {
-            console.error("Erro: Elemento 'searchContainer', 'searchBar', 'azCatalog' ou 'body' não encontrado no DOM.");
+        if (!searchContainer || !searchBar || !azCatalog) {
+            console.error("Erro: Elemento 'searchContainer', 'searchBar' ou 'azCatalog' não encontrado no DOM.");
             return;
         }
         searchContainer.style.display = 'none';
-        azCatalog.classList.remove('with-search'); // Volta o catálogo para baixo do header
-        bodyElement.classList.remove('with-search-active'); // Restaura padding do body
+        azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
         searchBar.value = '';
         searchBar.classList.remove('focused');
         searchBarVisible = false;
         // Se a barra de pesquisa for fechada, recarrega os animes para o filtro anterior
         if (currentFilter === 'search') {
-            loadHomePage();
+            renderHomePageContent();
         }
     }
 
@@ -3006,21 +2669,21 @@
         }
         const searchTerm = searchBar.value.toLowerCase();
         
-        // As páginas agora são controladas por active/display
-        // Ao invés de mudar o innerHTML do 'main', vamos abrir uma 'categoryViewPage' para os resultados da busca
-        openPage('categoryViewPage');
-        const categoryViewPageTitle = document.getElementById('categoryViewPageTitle');
-        const categoryGrid = document.getElementById('categoryGrid');
-        if (!categoryViewPageTitle || !categoryGrid) {
-            console.error("Erro: Elementos 'categoryViewPageTitle' ou 'categoryGrid' não encontrados no DOM.");
+        const mainContentArea = document.querySelector('main');
+        if (!mainContentArea) {
+            console.error("Erro: Elemento 'main' não encontrado no DOM.");
             return;
         }
-        categoryViewPageTitle.textContent = `Resultados da Busca para "${searchTerm}"`;
-        categoryGrid.innerHTML = ''; // Limpa o conteúdo anterior
+        mainContentArea.innerHTML = ''; // Limpa o conteúdo principal da home
 
         if (searchTerm.length > 0) {
             currentFilter = 'search';
-            categoryGrid.innerHTML = '<p>Carregando resultados...</p>';
+            mainContentArea.innerHTML = `<section class="content-section"><h2>Resultados da Busca para "${searchTerm}"...</h2><div id="searchResultsGrid" class="anime-grid"></div></section>`;
+            const searchResultsGrid = document.getElementById('searchResultsGrid');
+            if (!searchResultsGrid) {
+                console.error("Erro: Elemento 'searchResultsGrid' não encontrado no DOM.");
+                return;
+            }
 
             try {
                 // Busca por séries que contenham o termo de pesquisa no nome ou biografia
@@ -3029,31 +2692,30 @@
                                                 .where('nomeLowerCase', '<=', searchTerm + '\uf8ff')
                                                 .get();
                 
-                categoryGrid.innerHTML = ''; // Limpa "Carregando"
-
                 if (seriesSnapshot.empty) {
-                    categoryGrid.innerHTML = '<p>Nenhuma série encontrada para sua busca.</p>';
+                    searchResultsGrid.innerHTML = '<p>Nenhuma série encontrada para sua busca.</p>';
                     return;
                 }
 
+                searchResultsGrid.innerHTML = ''; // Limpa "Nenhuma série encontrada" se houver resultados
                 seriesSnapshot.forEach(doc => {
                     const serie = { id: doc.id, ...doc.data() };
                     // Aplica a lógica de modo adulto para exibição
                     if (serie.isAdult && (!auth.currentUser || !currentUserData || !currentUserData.modoAdulto)) {
-                        displaySerieCard(categoryGrid, serie, false, true); // Último param true para aplicar blur
+                        displaySerieCard(searchResultsGrid, serie, false, true); // Último param true para aplicar blur
                     } else {
-                        displaySerieCard(categoryGrid, serie);
+                        displaySerieCard(searchResultsGrid, serie);
                     }
                 });
 
             } catch (error) {
                 console.error("Erro ao buscar animes:", error);
-                categoryGrid.innerHTML = '<p>Erro ao buscar animes.</p>';
+                searchResultsGrid.innerHTML = '<p>Erro ao buscar animes.</p>';
                 showMessage("Erro ao buscar animes: " + error.message);
             }
         } else {
-            // Se a busca estiver vazia, retorna para a página principal
-            loadHomePage();
+            // Se a busca estiver vazia, volta a exibir o layout padrão da home
+            renderHomePageContent();
         }
     }
 
@@ -3121,7 +2783,7 @@
         });
     }
 
-        // Função para filtrar animes por gênero
+    // Função para filtrar animes por gênero
     async function filterByGenero(genero) {
         currentFilter = 'genero';
         toggleGenerosMenu(); // Fecha o menu de gêneros
@@ -3293,7 +2955,7 @@
 
         const generosArray = generosInput.split(',').map(g => g.trim()).filter(g => g !== '');
 
-                // Validação de gêneros - certifica que são gêneros pré-definidos (allGeneros deve ser global)
+        // Validação de gêneros - certifica que são gêneros pré-definidos (allGeneros deve ser global)
         if (generosArray.some(g => !allGeneros.includes(g))) {
             showMessage("Um ou mais gêneros informados não são válidos. Por favor, use os gêneros pré-definidos.");
             return;
@@ -3392,7 +3054,7 @@
                 numero: proximoNumero,
                 nome: nomeEpisodio,
                 capa: capaEpisodio,
-                links: [{ url: linkEpisodio, type: typeEpisodio }], // Pode ter múltiplos links para o mesmo episódio (player 1, player 2)
+                links: [{ url: linkEpisodio, type: typeEpisodio }],
                 dataPostagem: firebase.firestore.FieldValue.serverTimestamp(),
                 postedBy: auth.currentUser.uid,
                 isAdult: isAdultSerie,
@@ -3451,7 +3113,7 @@
         }
     }
 
-                                                // 4. LÓGICA DE AUTENTICAÇÃO (LOGIN/CADASTRO/LOGOUT)
+                        // 4. LÓGICA DE AUTENTICAÇÃO (LOGIN/CADASTRO/LOGOUT)
     async function cadastrarUsuario() {
         const authEmail = document.getElementById('authEmail');
         const authPassword = document.getElementById('authPassword');
@@ -3681,7 +3343,7 @@
             const userDocRef = db.collection("users").doc(uid); // Obter a referência do documento
             const userDoc = await userDocRef.get(); // Tentar buscar o documento
 
-                        if (userDoc.exists) {
+            if (userDoc.exists) {
                 // Se o documento existe, carregamos os dados normalmente
                 currentUserData = userDoc.data();
             } else {
@@ -3806,7 +3468,7 @@
         try {
             const snapshot = await profilePicRef.put(file);
             const downloadURL = await snapshot.ref.getDownloadURL();
-            console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIONE ESTA LINHA
+console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIONE ESTA LINHA
 
 
             // Atualiza no Firebase Auth
@@ -3860,7 +3522,7 @@
         }
     }
 
-        // Função para alternar o modo adulto
+    // Função para alternar o modo adulto
     async function toggleModoAdulto() {
         if (!auth.currentUser || !currentUserData) {
             showMessage("Você precisa estar logado para alterar as configurações de modo adulto.");
@@ -3928,7 +3590,6 @@
         } catch (error) {
             console.error("Erro ao carregar notificações:", error);
             notificationsList.innerHTML = '<p>Erro ao carregar notificações.</p>';
-            showMessage("Erro ao carregar notificações: " + error.message);
         }
     }
 
@@ -4008,7 +3669,7 @@
         }
     }
 
-        // Função para abrir a página de contribuições
+    // Função para abrir a página de contribuições
     async function openContributionsPage() {
         if (!auth.currentUser || !currentUserData) {
             showMessage("Você precisa estar logado para ver suas contribuições.");
@@ -4098,7 +3759,7 @@
     // Função para ver uma contribuição (serie ou episode)
     async function viewContribution(serieId, type, episodeId = null) {
         if (type === 'serie') {
-            openEpisodeListPage(serieId);
+            openSeriePage(serieId);
         } else if (type === 'episode') {
             const serieDoc = await db.collection("series").doc(serieId).get();
             const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
@@ -4111,11 +3772,7 @@
                 showMessage("Série ou episódio não encontrado.");
             }
         }
-        // Fechar a página de contribuições após visualizar a contribuição
-        const contributionsPage = document.getElementById('contributionsPage');
-        if (contributionsPage && contributionsPage.classList.contains('active')) {
-            closeCurrentPage(); // Isso removerá 'contributionsPage' da pilha e mostrará a anterior
-        }
+        closeCurrentPage(); // Fecha a página de contribuições
     }
 
         // Função para deletar uma contribuição (serie ou episode)
@@ -4206,7 +3863,7 @@
         };
     }
 
-        // Função para excluir a conta do usuário
+    // Função para excluir a conta do usuário
     async function deleteUserAccount() {
         if (!auth.currentUser) {
             showMessage("Você precisa estar logado para excluir sua conta.");
@@ -4345,23 +4002,109 @@
 
     // Função para renderizar o conteúdo principal da página (home)
     function renderHomePageContent() {
-        const mainPage = document.getElementById('mainPage');
-        if (!mainPage) {
-            console.error("Erro: Elemento 'mainPage' não encontrado no DOM.");
+        const mainContentArea = document.querySelector('main');
+        if (!mainContentArea) {
+            console.error("Erro: Elemento 'main' não encontrado no DOM.");
             return;
         }
-        // O conteúdo da mainPage já está no HTML, apenas garantimos que o hero slider seja carregado
-        // e as seções dinâmicas sejam preenchidas
-        loadHeroSlider(); // Carrega o Hero Slider
-        carregarConteudoHome(); // Carrega o resto do conteúdo da home
+        mainContentArea.innerHTML = `
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>MAIS VOTADOS & ASSISTIDOS</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('topRatedAnimes')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="topRatedAnimesGrid">
+                    <!-- Animes mais votados e assistidos serão carregados aqui -->
+                </div>
+            </section>
+
+            <!-- Nova Seção: Adicionados Recentemente (Episódios) -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>ADICIONADOS RECENTEMENTE</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentEpisodes')">VER MAIS</a>
+                </div>
+                <div class="added-episodes-grid" id="recentEpisodesGrid">
+                    <!-- Episódios adicionados recentemente serão carregados aqui -->
+                </div>
+            </section>
+
+            <!-- Nova Seção: Seu Histórico -->
+            <section class="content-section" id="watchedAnimesSection">
+                <div class="section-header">
+                    <h2>SEU HISTÓRICO</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('watchedAnimes')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="watchedAnimesGrid">
+                    <p style="padding: 10px;">Faça login para ver seu histórico de animes assistidos.</p>
+                </div>
+            </section>
+
+            <!-- Nova Seção: +18 Mais Recentes -->
+            <section class="content-section" id="adultRecentAnimesSection">
+                <div class="section-header">
+                    <h2>+18 MAIS RECENTES</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('adultAnimes')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="adultRecentAnimesGrid">
+                    <p style="padding: 10px;">Ative o Modo Adulto para ver este conteúdo.</p>
+                </div>
+            </section>
+
+            <!-- Nova Seção: Filmes Mais Recentes -->
+            <section class="content-section" id="recentMoviesSection">
+                <div class="section-header">
+                    <h2>FILMES MAIS RECENTES</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentMovies')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="recentMoviesGrid">
+                    <p style="padding: 10px;">Nenhum filme recente encontrado.</p>
+                </div>
+            </section>
+
+            <!-- Nova Seção: Ao Vivo -->
+            <section class="content-section" id="liveContentSection">
+                <div class="section-header">
+                    <h2>AO VIVO</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('liveContent')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="liveContentGrid">
+                    <p style="padding: 10px;">Nenhum conteúdo ao vivo no momento.</p>
+                </div>
+            </section>
+
+                        <!-- Nova Seção: Cartoons Recentes -->
+            <section class="content-section" id="recentCartoonsSection">
+                <div class="section-header">
+                    <h2>CARTOONS RECENTES</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentCartoons')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="recentCartoonsGrid">
+                    <p style="padding: 10px;">Nenhum cartoon recente encontrado.</p>
+                </div>
+            </section>
+
+            <!-- Seção: Mais Recentes (Séries - Agora no final) -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>MAIS RECENTES</h2>
+                    <a href="#" class="see-more-btn" onclick="openCategoryViewPage('recentSeries')">VER MAIS</a>
+                </div>
+                <div class="anime-grid scrollable" id="recentAnimesGrid">
+                    <!-- Animes adicionados recentemente serão carregados aqui -->
+                </div>
+            </section>
+        `;
+        openPage('main'); // Garante que a página principal esteja ativa
+        carregarConteudoHome(); // Chama a função para carregar todos os dados dinâmicos da home
     }
 
     // Função principal para carregar e exibir conteúdo nas seções da home
     async function carregarConteudoHome() {
-        // Carrega Animes Mais Votados/Assistidos para o Hero Slider (já feito em loadHeroSlider)
-        // loadHeroSlider(); // Já chamado no renderHomePageContent
+        // Carrega Animes Mais Votados/Assistidos para o Hero Slider
+        loadHeroSlider();
 
-        // Carrega Animes Mais Votados/Assistidos para o carrossel
+                // Carrega Animes Mais Votados/Assistidos para o carrossel
         try {
             const topRatedGrid = document.getElementById('topRatedAnimesGrid');
             if (topRatedGrid) {
@@ -4394,7 +4137,7 @@
             if(topRatedGrid) topRatedGrid.innerHTML = '<p>Erro ao carregar animes destacados.</p>';
         }
 
-                // Carrega Episódios Adicionados Recentemente (grid 2x4)
+        // Carrega Episódios Adicionados Recentemente (grid 2x4)
         try {
             const recentEpisodesGrid = document.getElementById('recentEpisodesGrid');
             if (recentEpisodesGrid) {
@@ -4653,7 +4396,7 @@
         gridElement.appendChild(wrapper);
     }
 
-        // Função para carregar e exibir o histórico de animes assistidos
+    // Função para carregar e exibir o histórico de animes assistidos
     async function loadWatchedAnimes() {
         const watchedAnimesGrid = document.getElementById('watchedAnimesGrid');
         if (!watchedAnimesGrid) {
@@ -4800,7 +4543,7 @@
         }
     }
 
-                // Função genérica para abrir páginas de visualização de categorias
+        // Função genérica para abrir páginas de visualização de categorias
     async function openCategoryViewPage(categoryType, param = null) {
         openPage('categoryViewPage');
         const categoryViewPageTitle = document.getElementById('categoryViewPageTitle');
@@ -4935,7 +4678,7 @@
                     console.warn(`Tipo de categoria desconhecido: ${categoryType}`);
             }
 
-                        categoryViewPageTitle.textContent = title;
+            categoryViewPageTitle.textContent = title;
             categoryGrid.innerHTML = ''; // Limpa antes de adicionar
 
             if (querySnapshot.empty || querySnapshot.docs.length === 0) {
@@ -4978,6 +4721,7 @@
         const videoModalSerieTitle = document.getElementById('videoModalSerieTitle');
         const videoModalEpisodeTitle = document.getElementById('videoModalEpisodeTitle');
         const playerSerieTitleDetail = document.getElementById('playerSerieTitleDetail');
+        const playerSerieBiografia = document.getElementById('playerSerieBiografia'); // Agora não mais aqui
         const playerSerieGeneros = document.getElementById('playerSerieGeneros');
         const playerSerieCapa = document.getElementById('playerSerieCapa');
         const playerSerieContentRating = document.getElementById('playerSerieContentRating');
@@ -5009,7 +4753,7 @@
 
         // Breadcrumbs
         playerBreadcrumbs.innerHTML = `
-            <a href="#" onclick="loadHomePage()">AnimesOracle</a> &raquo;
+            <a href="#" onclick="openPage('main')">AnimesOracle</a> &raquo;
             <a href="#" onclick="openEpisodeListPage('${serie.id}')">Episódios</a> &raquo;
             ${serie.nome} Episódio ${episodio.numero}
         `;
@@ -5073,7 +4817,7 @@
         
         videoFrame.src = embedLink;
 
-                // Quando o iframe carregar, esconde o skeleton
+        // Quando o iframe carregar, esconde o skeleton
         videoFrame.onload = () => {
             videoSkeleton.style.display = 'none';
             videoFrame.style.display = 'block';
@@ -5190,7 +4934,7 @@
             embedLink = embedLink.replace("voe.sx/", "voe.sx/e/");
         }
 
-                // Mail.ru (pode variar, exemplo de embed)
+        // Mail.ru (pode variar, exemplo de embed)
         if (embedLink.includes("my.mail.ru/video/")) {
              const mailIdMatch = embedLink.match(/my.mail.ru\/video\/(.*?)\/(\d+)\/(\d+)/);
              if (mailIdMatch && mailIdMatch[2] && mailIdMatch[3]) {
@@ -5390,16 +5134,18 @@
 
             // Abre a página de lista de episódios
             openPage('episodeListPage');
+            const episodeListPageTitle = document.getElementById('episodeListPageTitle');
             const episodeListPageContent = document.getElementById('episodeListPageContent');
 
-            if (!episodeListPageContent) {
+            if (!episodeListPageTitle || !episodeListPageContent) {
                 console.error("Erro: Elementos da página de lista de episódios não encontrados no DOM.");
                 return;
             }
 
+            episodeListPageTitle.textContent = serieData.nome;
             episodeListPageContent.innerHTML = ''; // Limpa antes de carregar
 
-                                                // Exibe a capa principal da série e biografia acima da lista de episódios
+                        // Exibe a capa principal da série e biografia acima da lista de episódios
             const serieDetailsHeader = document.createElement('div');
             serieDetailsHeader.className = 'serie-details-header';
             serieDetailsHeader.innerHTML = `
@@ -5525,7 +5271,7 @@
         }
     }
 
-        // Função para carregar a avaliação da série
+    // Função para carregar a avaliação da série
     async function loadSerieRating(serieId) {
         const starRatingContainer = document.getElementById('starRating');
         if (!starRatingContainer) {
@@ -5685,7 +5431,7 @@
                         // Não curtiu, então adiciona o like
                         usersWhoLiked.push(userId);
                         currentLikes++;
-                                                // Se tinha dado dislike antes, remove o dislike
+                        // Se tinha dado dislike antes, remove o dislike
                         if (userAlreadyDisliked) {
                             usersWhoDisliked = usersWhoDisliked.filter(id => id !== userId);
                             currentDislikes--;
@@ -5743,7 +5489,7 @@
         }
         shareLinkInput.value = shareUrl;
 
-                                // Configura as funções de compartilhamento social
+                // Configura as funções de compartilhamento social
         window.shareSocial = (platform) => {
             let url = '';
             switch (platform) {
@@ -5896,7 +5642,7 @@
         commentInput.focus();
     }
 
-        // Monitorar o estado de autenticação para atualizar a UI
+    // Monitorar o estado de autenticação para atualizar a UI
     auth.onAuthStateChanged(user => {
         if (user) {
             console.log("Usuário logado:", user.email);
@@ -6016,7 +5762,7 @@
                 slideDiv.appendChild(overlayDiv);
                 heroSlider.appendChild(slideDiv);
 
-                                // Cria o ponto de paginação (DOT) e adiciona ao contêiner de paginação
+                // Cria o ponto de paginação (DOT) e adiciona ao contêiner de paginação
                 const dot = document.createElement('span');
                 dot.className = 'pagination-dot';
                 dot.dataset.index = index;
@@ -6068,43 +5814,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

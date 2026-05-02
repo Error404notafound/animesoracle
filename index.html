@@ -33,6 +33,15 @@
             --orange: #ffa500; /* Laranja para "Em Progresso" */
             --blur-strength: 10px; /* Força do desfoque para conteúdo adulto */
             --hairline-border: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
+
+            /* NOVOS: Variáveis para alturas de elementos fixos no topo */
+            --main-header-height: 60px;
+            --search-bar-height: 50px;
+            --az-catalog-height: 35px;
+            /* Altura total que os elementos fixos ocupam por padrão (sem search) */
+            --total-fixed-height-default: calc(var(--main-header-height) + var(--az-catalog-height));
+            /* Altura total que os elementos fixos ocupam quando a search bar está visível */
+            --total-fixed-height-with-search: calc(var(--main-header-height) + var(--search-bar-height) + var(--az-catalog-height));
         }
         body { 
             margin: 0; 
@@ -44,8 +53,18 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden; /* Evita scroll horizontal indesejado */
-        }
 
+            /* NOVOS ESTILOS PARA O CABEÇALHO GLOBAL */
+            padding-top: var(--total-fixed-height-default); /* Espaçamento inicial para o conteúdo */
+            position: relative; /* Para que os filhos position:absolute dentro do body se comportem corretamente */
+            min-height: 100vh; /* Garante que o body ocupa a altura total da viewport */
+            box-sizing: border-box; /* Para que padding não adicione altura total */
+        }
+        /* NOVA REGRA: Ajusta o padding do body quando a barra de pesquisa está ativa */
+        body.with-search-active {
+            padding-top: var(--total-fixed-height-with-search);
+        }
+        
         /* Modo Escuro/Claro */
         body.light-mode {
             --bg: #f0f0f0;
@@ -80,17 +99,19 @@
         .gap-2 { gap: 8px; } /* Espaçamento padrão */
         .gap-4 { gap: 16px; }
 
-        /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
+        /* HEADER PRINCIPAL (AGORA FIXO) */
         header { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             padding: 0 15px; 
             background: #000; 
-            height: 60px; 
-            position: sticky; 
+            height: var(--main-header-height); /* Usa a variável */
+            position: fixed; /* Torna o header fixo */
             top: 0; 
-            z-index: 1000; 
+            left: 0; 
+            width: 100%; 
+            z-index: 9000; /* Z-index MUITO ALTO para sempre estar no topo */
             border-bottom: 1px solid #333; 
         }
         .logo { 
@@ -99,6 +120,7 @@
             font-size: 20px; 
             flex-grow: 1; 
             text-align: center; 
+            cursor: pointer; /* Torna o logo clicável */
         }
         .icon-btn { 
             font-size: 24px; 
@@ -120,22 +142,25 @@
             fill: currentColor; 
         }
 
-        /* Barra de Pesquisa */
+                /* Barra de Pesquisa (AGORA FIXA) */
         .search-container {
-            position: sticky; /* Sticky para se manter visível abaixo do header */
-            top: 60px; /* Abaixo do header fixo */
+            position: fixed; /* Torna a search bar fixa */
+            top: var(--main-header-height); /* Começa abaixo do mainHeader */
+            left: 0;
             width: 100%;
-            display: none; 
+            display: none; /* Escondido por padrão */
             justify-content: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #333; 
-            background: var(--bg); 
-            z-index: 999; 
+            align-items: center; /* Centraliza verticalmente o input */
+            padding: 5px 0; /* Padding ajustado */
+            height: var(--search-bar-height); /* Usa a variável */
+            border-bottom: 1px solid #333;
+            background: var(--bg);
+            z-index: 8999; /* Z-index abaixo do header, mas acima do azCatalog */
         }
         #searchBar { 
             width: 90%; 
             max-width: 600px;
-            padding: 12px 15px; 
+            padding: 8px 15px; /* Ajustado padding */
             background: var(--secondary-bg); 
             border: 1px solid #333; 
             color: var(--text); 
@@ -152,7 +177,7 @@
         }
         .search-close-btn { 
             position: absolute;
-            right: 10%; 
+            right: calc(5% + 15px); /* Ajusta a posição para não colidir com o scroll */
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -164,7 +189,7 @@
             z-index: 1001; /* Garante que fique acima da barra de busca */
         }
 
-                /* Catálogo A-Z */
+        /* Catálogo A-Z (AGORA FIXO) */
         #azCatalog {
             display: flex;
             flex-wrap: nowrap; /* Impede quebras de linha */
@@ -174,15 +199,21 @@
             padding: 5px 15px; /* Reduz padding */
             background: var(--bg);
             border-bottom: 1px solid #333;
-            z-index: 998;
+            z-index: 8998; /* Z-index abaixo da search bar */
             gap: 2px; /* Reduz espaçamento entre as letras */
             font-size: 0.9em; /* Reduz tamanho da fonte */
+            
+            position: fixed; /* Torna o catálogo fixo */
+            top: var(--main-header-height); /* Posição inicial: abaixo do mainHeader */
+            left: 0;
+            width: 100%;
+            height: var(--az-catalog-height); /* Usa a variável */
+            box-sizing: border-box; /* Garante que padding não adicione altura */
+            transition: top 0.3s ease-in-out; /* Adiciona transição suave */
         }
-
-
-                /* Ajuste do top para quando a searchbar estiver escondida */
-        #azCatalog.top-60 {
-            top: 60px;
+        /* Ajuste do top para quando a searchbar estiver visível */
+        #azCatalog.with-search {
+            top: calc(var(--main-header-height) + var(--search-bar-height));
         }
         #azCatalog::-webkit-scrollbar {
             height: 5px; 
@@ -210,7 +241,7 @@
             color: var(--text);
         }
 
-                        /* Hero Slider */
+        /* Hero Slider */
         #heroSlider {
             position: relative;
             width: 100%;
@@ -260,7 +291,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
         }
         
-        /* NOVO: Contêiner para o conteúdo do overlay que será centralizado */
+                /* NOVO: Contêiner para o conteúdo do overlay que será centralizado */
         .hero-overlay-content {
             width: 100%;
             max-width: 600px; /* Limita a largura do bloco de texto */
@@ -514,7 +545,7 @@
             white-space: nowrap;
         }
 
-                        /* Destaque para "Mais Votados & Assistidos" */
+                                /* Destaque para "Mais Votados & Assistidos" */
         .anime-card.highlighted {
             box-shadow: var(--highlight-glow);
             border-color: var(--primary);
@@ -581,47 +612,28 @@
             box-shadow: none;
         }
         
-        /* Estilos Comuns para Modais (pop-ups que agora se comportam como páginas) */
-        .modal-page { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: var(--bg); /* Fundo da "página" */
-            z-index: 5000; 
-            flex-direction: column; /* Conteúdo em coluna */
-            overflow-y: auto; /* Permite rolagem do conteúdo */
+        /* Estilos Comuns para "Páginas" que agora rolam sob o cabeçalho fixo */
+        .modal-page, .content-page {
+            display: none; /* Escondido por padrão */
+            position: absolute; /* Posição absoluta dentro do body */
+            top: 0; /* Começa no topo do body (o padding-top já empurrou) */
+            left: 0;
+            width: 100%;
+            /* Altura para a página ocupar o espaço restante abaixo do cabeçalho fixo */
+            min-height: calc(100vh - var(--total-fixed-height-default));
+            background: var(--bg);
+            z-index: 4000; /* Z-index abaixo dos elementos fixos e modais pop-up */
+            flex-direction: column;
+            overflow-y: auto; /* Permite rolagem do conteúdo da página */
             -webkit-overflow-scrolling: touch;
         }
-        .modal-page.active {
-            display: flex;
+        .modal-page.active, .content-page.active {
+            display: flex; /* Exibe a página quando ativa */
         }
-        .modal-page-header { /* Header para as "páginas" */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            background: #000;
-            height: 60px;
-            z-index: 1001;
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-        }
-        .modal-page-header .title {
-            color: var(--primary);
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .modal-page-content {
-            padding: 20px 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-grow: 1; /* Ocupa o espaço restante */
-            width: 100%;
-            box-sizing: border-box;
+        /* Ajuste para quando a search bar está ativa, a página se estende mais para baixo */
+        body.with-search-active .modal-page.active,
+        body.with-search-active .content-page.active {
+            min-height: calc(100vh - var(--total-fixed-height-with-search));
         }
 
         /* Modal padrão que ainda será popup (para login, aviso adulto, share) */
@@ -633,7 +645,7 @@
             width: 100%; 
             height: 100%; 
             background: rgba(0,0,0,0.9); 
-            z-index: 6000; /* Z-index maior para popups */
+            z-index: 6000; /* Z-index alto para popups ficarem acima de tudo */
             justify-content: center; 
             align-items: center; 
         }
@@ -701,7 +713,7 @@
             transition: all 0.3s ease-in-out;
             opacity: 0;
             pointer-events: none; 
-            z-index: 5002; /* Acima de modal-pages */
+            z-index: 6001; /* Z-index acima de outros modais */
         }
         #generosMenu.open { 
             opacity: 1;
@@ -748,7 +760,7 @@
             color: white;
         }
 
-                /* Menu do Usuário (Sidebar - Nova Estrutura) */
+                        /* Menu do Usuário (Sidebar - Nova Estrutura) */
         #userMenu {
             position: fixed;
             top: 0;
@@ -1012,7 +1024,7 @@
             background-color: #a00;
         }
 
-        /* Modal de Compartilhamento (popup) */
+                /* Modal de Compartilhamento (popup) */
         #shareModal .modal-card {
             max-width: 380px;
             text-align: center;
@@ -1080,25 +1092,24 @@
         #videoPage {
             display: none; /* Escondido por padrão, ativado via JS */
             flex-direction: column;
-            position: fixed;
-            top: 0;
+            position: absolute; /* Posição absoluta dentro do body */
+            top: 0; /* Começa no topo do body (o padding-top já empurrou) */
             left: 0;
             width: 100%;
-            height: 100%;
+            /* Altura para a página ocupar o espaço restante abaixo do cabeçalho fixo */
+            min-height: calc(100vh - var(--total-fixed-height-default));
             background: var(--bg);
-            z-index: 5000;
-            overflow-y: auto; /* A página inteira rola, mas o player fica fixo */
+            z-index: 4001; /* Z-index um pouco maior que outras páginas, mas abaixo de modais */
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
         #videoPage.active {
             display: flex;
         }
-        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
+        #videoPlayerContainer { /* Onde o iframe do vídeo fica dentro da página */
             width: 100%;
-            position: sticky; /* Fixa o player no topo */
-            top: 0;
             left: 0;
-            z-index: 5001; /* Acima de outros elementos da página, mas abaixo do header principal */
+            z-index: 5001;
             background-color: #000;
         }
         #videoSkeleton {
@@ -1119,22 +1130,7 @@
             border: none;
             display: none; /* Escondido por padrão, até o carregamento */
         }
-        .video-page-close-btn {
-            background: none;
-            border: none;
-            color: white; /* Alterado para branco para contraste */
-            font-size: 30px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 5002;
-            transition: color 0.2s;
-        }
-        .video-page-close-btn:hover {
-            color: var(--danger);
-        }
-        .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
+        .player-content-wrapper { /* Para o conteúdo que rola abaixo do player */
             flex-grow: 1;
             padding: 15px; /* Espaçamento geral */
             max-width: 1200px;
@@ -1248,7 +1244,7 @@
             height: 30px;
         }
 
-                        /* Detalhes da Série no Player */
+                                /* Detalhes da Série no Player */
         .player-serie-details {
             display: flex;
             align-items: flex-start;
@@ -1456,7 +1452,7 @@
             background-color: var(--danger);
         }
 
-        /* Seção de Comentários */
+                /* Seção de Comentários */
         .comments-section {
             margin-top: 30px;
             text-align: left;
@@ -1536,7 +1532,7 @@
 
                 /* Página de Lista de Episódios da Série (modal-page) */
         #episodeListPage {
-            z-index: 5003; /* Acima da videoPage se aberta por lá */
+            z-index: 4002; /* Acima da videoPage se aberta por lá */
         }
         #episodeListPage .episode-modal-content {
             padding: 20px 15px;
@@ -1653,13 +1649,14 @@
         .category-view-page {
             display: none; /* Escondido por padrão */
             flex-direction: column;
-            position: fixed;
-            top: 0;
+            position: absolute; /* Posição absoluta dentro do body */
+            top: 0; /* Começa no topo do body (o padding-top já empurrou) */
             left: 0;
             width: 100%;
-            height: 100%;
+            /* Altura para a página ocupar o espaço restante abaixo do cabeçalho fixo */
+            min-height: calc(100vh - var(--total-fixed-height-default));
             background: var(--bg);
-            z-index: 5000;
+            z-index: 4000; /* Z-index abaixo dos elementos fixos e modais pop-up */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -1701,7 +1698,7 @@
             }
         }
 
-        /* Footer (Opcional, se quiser adicionar) */
+                /* Footer (Opcional, se quiser adicionar) */
         footer {
             padding: 20px;
             text-align: center;
@@ -1761,47 +1758,23 @@
         .content-page {
             display: none;
             flex-direction: column;
-            position: fixed;
-            top: 0;
+            position: absolute; /* Posição absoluta dentro do body */
+            top: 0; /* Começa no topo do body (o padding-top já empurrou) */
             left: 0;
             width: 100%;
-            height: 100%;
+            /* Altura para a página ocupar o espaço restante abaixo do cabeçalho fixo */
+            min-height: calc(100vh - var(--total-fixed-height-default));
             background: var(--bg);
-            z-index: 5000;
+            z-index: 4000; /* Z-index abaixo dos elementos fixos e modais pop-up */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
         .content-page.active {
             display: flex;
         }
-        .content-page .page-header {
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            background: #000;
-            height: 60px;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            border-bottom: 1px solid #333;
-        }
-        .content-page .page-header .back-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 24px;
-            cursor: pointer;
-            padding-right: 15px;
-        }
-        .content-page .page-header .page-title {
-            color: var(--primary);
-            font-size: 20px;
-            font-weight: bold;
-            flex-grow: 1;
-            text-align: center;
-        }
-        .content-page .page-content {
-            padding: 20px 15px;
+        /* Removido page-header, page-header .back-btn, page-header .page-title */
+        .content-page .page-content { /* Ajustado para que o padding seja aplicado corretamente */
+            padding: 20px 15px; /* Mantém o padding original para o conteúdo */
             max-width: 1200px;
             margin: 0 auto;
             flex-grow: 1;
@@ -1866,7 +1839,7 @@
         <!-- Ícone de hambúrguer SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <div class="logo">AnimesOracle</div>
+    <div class="logo" onclick="loadHomePage()">AnimesOracle</div> <!-- Adicionado onclick para voltar à home -->
     <!-- Botão de pesquisa -->
     <button class="icon-btn" onclick="toggleSearchBar()">
         <!-- Ícone de lupa SVG -->
@@ -1898,8 +1871,8 @@
     </div>
 </section>
 
-<!-- Conteúdo principal do site -->
-<main>
+<!-- Conteúdo principal do site (AGORA É UMA PÁGINA) -->
+<div id="mainPage" class="modal-page active"> <!-- Adicionado id="mainPage" e classes -->
     <section class="content-section">
         <div class="section-header">
             <h2>MAIS VOTADOS & ASSISTIDOS</h2>
@@ -1965,7 +1938,7 @@
         </div>
     </section>
 
-    <!-- Nova Seção: Cartoons Recentes -->
+                        <!-- Nova Seção: Cartoons Recentes -->
     <section class="content-section" id="recentCartoonsSection">
         <div class="section-header">
             <h2>CARTOONS RECENTES</h2>
@@ -1976,7 +1949,7 @@
         </div>
     </section>
 
-    <!-- Seção: Mais Recentes (Séries - Agora no final) -->
+        <!-- Seção: Mais Recentes (Séries - Agora no final) -->
     <section class="content-section">
         <div class="section-header">
             <h2>MAIS RECENTES</h2>
@@ -1986,18 +1959,11 @@
             <!-- Animes adicionados recentemente serão carregados aqui -->
         </div>
     </section>
-</main>
+</div>
 
 <!-- Páginas que substituem modais -->
 <!-- Página para Postar Conteúdo (Série ou Episódio) -->
 <div id="postarPage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title">Publicar Conteúdo</div>
-        <div></div> <!-- Espaço para centralizar o título -->
-    </div>
     <div class="modal-page-content">
         <button class="btn-post" onclick="openNewSerieFormPage()">Postar Nova Série</button>
         <button class="btn-post" onclick="openAddEpisodeToExistingSeriePage()" style="margin-top: 15px;">Adicionar Episódio a Série Existente</button>
@@ -2006,13 +1972,6 @@
 
 <!-- Página para Formulário de Nova Série -->
 <div id="newSerieFormPage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title">Nova Série de Anime</div>
-        <div></div>
-    </div>
     <div class="modal-page-content">
         <div class="form-group">
             <label for="pAnimeNome">Nome da Série:</label>
@@ -2087,13 +2046,6 @@
 
 <!-- Página para Adicionar Episodio a Série Existente -->
 <div id="addEpisodePage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title">Adicionar Episódio</div>
-        <div></div>
-    </div>
     <div class="modal-page-content">
         <div class="search-series-container">
             <label for="searchExistingSerieInput">Buscar Série:</label>
@@ -2130,13 +2082,6 @@
 
 <!-- Página para Visualização de Episódios da Série -->
 <div id="episodeListPage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title" id="episodeListPageTitle"></div>
-        <div></div>
-    </div>
     <div class="modal-page-content">
         <div id="episodeListPageContent">
             <!-- Conteúdo da série e lista de episódios serão carregados aqui -->
@@ -2149,8 +2094,6 @@
     <div id="videoPlayerContainer">
         <div id="videoSkeleton">Carregando Vídeo...</div>
         <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
     </div>
 
     <div class="player-nav-buttons">
@@ -2169,7 +2112,7 @@
         <!-- Breadcrumbs -->
         <p class="player-breadcrumbs" id="playerBreadcrumbs"></p>
 
-        <!-- Título do Episódio e Série (no player) -->
+                <!-- Título do Episódio e Série (no player) -->
         <h3 class="anime-title" id="videoModalSerieTitle"></h3>
         <h4 class="episode-title" id="videoModalEpisodeTitle"></h4>
 
@@ -2232,6 +2175,30 @@
             </button>
         </div>
 
+                <!-- Seção Sugerir Abertura -->
+        <div class="suggest-intro-section">
+            <p>Se você sabe os minutos exatos da abertura do episódio, ajude-nos a marcar para que outros usuários possam pular diretamente para o conteúdo!</p>
+            <div class="locked-feature">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/></svg>
+                <span>Faça login para sugerir</span>
+            </div>
+            <input type="text" id="introStartMin" placeholder="Início (min)" disabled style="width: calc(33% - 8px); margin-right: 8px;">
+            <input type="text" id="introStartSec" placeholder="Início (seg)" disabled style="width: calc(33% - 8px); margin-right: 8px;">
+            <button class="btn-post" disabled style="width: calc(34% - 8px); margin-top: 0;">Sugerir</button>
+        </div>
+
+        <!-- Botões de Ação do Usuário Logado (Salvar, Reportar, Compartilhar) -->
+        <div class="player-action-buttons">
+            <button class="btn-post share-btn" onclick="openShareModal('current_episode')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white" style="vertical-align: middle; margin-right: 5px;"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.52.47 1.2.77 1.96.77 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L7.05 11.23c-.52-.47-1.2-.77-1.96-.77-1.66 0-3 1.34-3 3s1.34 3 3 3c.76 0 1.44-.3 1.96-.77l7.05 4.11c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>
+                Compartilhar
+            </button>
+            <button class="btn-post report-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white" style="vertical-align: middle; margin-right: 5px;"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM12 17.3c-.72 0-1.3-.58-1.3-1.3s.58-1.3 1.3-1.3 1.3.58 1.3 1.3-.58 1.3-1.3 1.3zm1-4.3h-2V7h2v6z"/></svg>
+                Reportar Erro
+            </button>
+        </div>
+
         <!-- Seção de Comentários -->
         <div class="comments-section">
             <h3>Comentários</h3>
@@ -2271,7 +2238,7 @@
     </div>
 </div>
 
-        <!-- Modal de Compartilhamento (popup) -->
+                <!-- Modal de Compartilhamento (popup) -->
 <div id="shareModal" class="modal">
     <div class="modal-card">
         <h3 style="color:var(--primary); margin:0 0 20px 0;">Compartilhar Anime</h3>
@@ -2282,14 +2249,14 @@
             </button>
             <button class="share-btn twitter" onclick="shareSocial('twitter')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.593 0-6.494 2.901-6.494 6.494 0 .509.058 1.007.163 1.49-.052-.002-1.392-.128-2.65-.6-2.784-2.316-4.502-5.636-4.502-9.282 0-1.258.197-2.478.586-3.645-.583.308-1.206.586-1.859.839-.981.428-1.792.83-2.67.83-.538 0-1.04-.08-1.527-.22-1.049-2.083-2.529-4.321-2.529-4.321 0 0-1.745 4.793-2.574 7.218-.184.549-.286 1.12-.286 1.706 0 5.474 4.542 9.948 10.158 9.948 0 .041.002.083.002.124 0 2.223-1.636 4.025-3.649 4.025-1.353 0-2.511-.861-2.955-2.052.174-.029.35-.045.525-.045 2.186 0 3.963-1.777 3.963-3.963 0-.097-.004-.195-.011-.291 0-1.517.904-2.82 2.196-3.393.003.001.006.002.009.003 1.296.697 2.222 1.954 2.222 3.407 0 2.055-1.579 3.738-3.551 3.738-1.082 0-2.03-.434-2.735-1.135-.018.002-.036.004-.055.006 1.189.92 2.68 1.464 4.256 1.464 4.269 0 7.747-3.479 7.747-7.747 0-.118-.003-.236-.008-.354.802-.578 1.499-1.297 2.046-2.115z"/></svg>
-                Twitter
+                                Twitter
             </button>
             <button class="share-btn whatsapp" onclick="shareSocial('whatsapp')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.6-3.803-1.6-5.836 0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12c-1.936 0-3.882-.589-5.636-1.583l-6.264 1.638zm11.943-3.5h-.001c-1.428 0-2.812-.41-4.04-1.189l-2.946.772.788-2.883c-1.053-1.123-1.621-2.5-1.621-3.957 0-4.685 3.805-8.491 8.491-8.491 4.685 0 8.491 3.805 8.491 8.491s-3.806 8.491-8.491 8.491zm4.848-6.848c-.22-.11-.476-.239-.731-.367-.255-.127-1.503-.739-1.734-.82s-.4-.128-.57-.064c-.171.064-.653.82-.796.989-.143.169-.286.192-.534.128-.249-.064-1.056-.389-2.012-1.24-.746-.662-1.248-1.481-1.39-1.734-.142-.255-.015-.4-.015-.57s-.11-.255.239-.636c.29-.384.653-.92.885-1.24.233-.324.29-.255.4-.424.11-.168.055-.319-.03-.448-.088-.129-.796-1.921-1.09-2.63-.294-.71-.6-.614-.82-.869c-.22-.255-.476-.324-.731-.312-.255.012-.448.064-.636.064-.171 0-.476-.052-.731-.052s-.68.18-.94.448c-.255.255-1.056 1.029-1.056 2.509 0 1.48.973 2.909 1.102 3.102.128.192 1.968 3.007 4.757 4.298.665.319 1.188.513 1.597.641.676.21 1.293.18 1.78.115.49-.064.22-.39-.064-.535-.289-.128-.68-.255-1.293-.548z"/></svg>
                                                                                                                 Whatsapp
             </button>
                             <button class="share-btn telegram" onclick="shareSocial('telegram')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18.3 5.3l-1.8 1.3c-.6.4-1.3.6-2.1.6-1 0-1.9-.3-2.6-.9-.8-.6-1.3-1.4-1.6-2.4-.3-.9-.4-1.9-.3-2.8 0-.1 0-.2.1-.3s.2-.1.3-.1h.2c.5 0 .9.2 1.2.6.4.4.6.9.7 1.5.1.5.2 1 .3 1.5.2.5.4.9.7 1.3.3.4.7.7 1.1.9.4.2.8.3 1.3.3.6 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.5-.2-1-.6-1.4s-.9-.6-1.4-.6h-2.1c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.</path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18.3 5.3l-1.8 1.3c-.6.4-1.3.6-2.1.6-1 0-1.9-.3-2.6-.9-.8-.6-1.3-1.4-1.6-2.4-.3-.9-.4-1.9-.3-2.8 0-.1 0-.2.1-.3s.2-.1.3-.1h.2c.5 0 .9.2 1.2.6.4.4.6.9.7 1.5.1.5.2 1 .3 1.5.2.5.4.9.7 1.3.3.4.7.7 1.1.9.4.2.8.3 1.3.3.6 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4 0-.5-.2-1-.6-1.4s-.9-.6-1.4-.6h-2.1c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.5.3s-.2.4-.1.6c.1.2.3.3.5.3h.7c.3 0 .6.1.8.3.2.2.3.4.3.7 0 .3-.1.5-.3.7s-.4.3-.7.3h-.7c-.2 0-.4.1-.</path></svg>
                 Telegram
             </button>
         </div>
@@ -2357,14 +2324,7 @@
 </div>
 
 <!-- Páginas de Visualização de Categorias (Para "Ver Mais") -->
-<div id="categoryViewPage" class="category-view-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title" id="categoryViewPageTitle"></div>
-        <div></div>
-    </div>
+<div id="categoryViewPage" class="modal-page">
     <div class="modal-page-content">
         <div id="categoryGrid" class="category-grid">
             <!-- Animes/Episódios da categoria serão carregados aqui -->
@@ -2375,12 +2335,7 @@
 <!-- Páginas do Menu do Usuário (Notificações, Salvos, Contribuições, Configurações) -->
 <!-- Página de Notificações -->
 <div id="notificationsPage" class="content-page">
-    <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Notificações</div>
-        <div></div>
-    </div>
-    <div class="page-content">
+    <div class="modal-page-content">
         <div id="notificationsList">
             <!-- Notificações serão carregadas aqui -->
             <p>Nenhuma notificação por enquanto.</p>
@@ -2390,12 +2345,7 @@
 
 <!-- Página de Animes Salvos -->
 <div id="savedAnimesPage" class="content-page">
-    <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Meus Animes Salvos</div>
-        <div></div>
-    </div>
-    <div class="page-content">
+    <div class="modal-page-content">
         <div id="savedAnimesGrid" class="category-grid">
             <!-- Animes salvos serão carregados aqui -->
             <p>Você não tem animes salvos.</p>
@@ -2405,12 +2355,7 @@
 
 <!-- Página de Contribuições -->
 <div id="contributionsPage" class="content-page">
-    <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Minhas Contribuições</div>
-        <div></div>
-    </div>
-    <div class="page-content">
+    <div class="modal-page-content">
         <div id="contributionsList">
             <!-- Contribuições do usuário (séries e episódios postados) serão carregadas aqui -->
             <p>Você não fez contribuições ainda.</p>
@@ -2420,12 +2365,7 @@
 
 <!-- Página de Configurações -->
 <div id="settingsPage" class="content-page">
-    <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Configurações</div>
-        <div></div>
-    </div>
-    <div class="page-content">
+    <div class="modal-page-content">
         <div class="profile-pic-upload-area">
             <div class="profile-pic-preview" onclick="document.getElementById('settingsFileInput').click()">
                 <img id="settingsProfileImage" src="https://via.placeholder.com/120?text=AP" alt="Foto de Perfil">
@@ -2442,7 +2382,7 @@
             <label for="settingsEmail">E-mail:</label>
             <input type="email" id="settingsEmail" disabled>
         </div>
-        <!-- Toggle de luminosidade será removido, substituído por tema -->
+                <!-- Toggle de luminosidade será removido, substituído por tema -->
         <button class="btn-post delete-account-btn" onclick="deleteUserAccount()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white" style="vertical-align: middle; margin-right: 5px;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4h-2.5z"/></svg>
             Excluir Conta
@@ -2454,7 +2394,7 @@
 <script>
     // 1. CONFIGURAÇÃO DO FIREBASE (SEUS DADOS DE PROJETO)
     const firebaseConfig = { 
-      apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHtQY2kw", 
+      apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHqTj2kw", // Substitua pelo seu apiKey
       authDomain: "animesoracle-a60e9.firebaseapp.com", 
       projectId: "animesoracle-a60e9", 
       storageBucket: "animesoracle-a60e9.firebasestorage.app", 
@@ -2511,7 +2451,7 @@
     let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
 
     // Pilha de páginas abertas para gerenciamento de navegação (novo)
-    const pageStack = ['main']; // Começa com a página principal
+    const pageStack = ['mainPage']; // Começa com a página principal (agora id="mainPage")
 
     // Adicionado ao início do JavaScript para controlar as páginas
     function openPage(pageId) {
@@ -2552,8 +2492,8 @@
                 toggleUserMenu(); // Reusa a função que já esconde e reseta
             }
         } else {
-            // Se for a última página (main), apenas garante que está ativa
-            const mainPage = document.getElementById('main');
+            // Se for a última página (mainPage), apenas garante que está ativa
+            const mainPage = document.getElementById('mainPage');
             if (mainPage) mainPage.classList.add('active');
             // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
             console.log("Você está na página principal.");
@@ -2614,18 +2554,21 @@
     // Função para ajustar a luminosidade do site (agora via tema)
     // REMOVIDO: A funcionalidade de luminosidade por slider foi substituída por tema claro/escuro.
 
-        // Funções para a barra de pesquisa
+            // Funções para a barra de pesquisa
     let searchBarVisible = false;
     function toggleSearchBar() {
         const searchContainer = document.getElementById('searchContainer');
         const azCatalog = document.getElementById('azCatalog');
+        const body = document.body;
+
         if (!searchContainer || !azCatalog) {
             console.error("Erro: Elemento 'searchContainer' ou 'azCatalog' não encontrado no DOM.");
             return;
         }
         if (searchBarVisible) {
             searchContainer.style.display = 'none';
-            azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
+            azCatalog.classList.remove('with-search'); // Remove classe de ajuste para search bar
+            body.classList.remove('with-search-active'); // Remove classe do body
             const searchBar = document.getElementById('searchBar');
             if (searchBar) searchBar.value = ''; // Limpa a busca ao fechar
             // Recarrega os animes se a barra de pesquisa for fechada
@@ -2634,7 +2577,8 @@
             }
         } else {
             searchContainer.style.display = 'flex';
-            azCatalog.classList.remove('top-60'); // Move o catálogo para baixo da searchbar
+            azCatalog.classList.add('with-search'); // Adiciona classe de ajuste para search bar
+            body.classList.add('with-search-active'); // Adiciona classe ao body
             const searchBar = document.getElementById('searchBar');
             if (searchBar) searchBar.focus(); // Foca na barra de pesquisa
         }
@@ -2645,12 +2589,15 @@
         const searchContainer = document.getElementById('searchContainer');
         const searchBar = document.getElementById('searchBar');
         const azCatalog = document.getElementById('azCatalog');
+        const body = document.body;
+
         if (!searchContainer || !searchBar || !azCatalog) {
             console.error("Erro: Elemento 'searchContainer', 'searchBar' ou 'azCatalog' não encontrado no DOM.");
             return;
         }
         searchContainer.style.display = 'none';
-        azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
+        azCatalog.classList.remove('with-search'); // Remove classe de ajuste para search bar
+        body.classList.remove('with-search-active'); // Remove classe do body
         searchBar.value = '';
         searchBar.classList.remove('focused');
         searchBarVisible = false;
@@ -2669,9 +2616,9 @@
         }
         const searchTerm = searchBar.value.toLowerCase();
         
-        const mainContentArea = document.querySelector('main');
+        const mainContentArea = document.getElementById('mainPage'); // Mudado de 'main' para 'mainPage'
         if (!mainContentArea) {
-            console.error("Erro: Elemento 'main' não encontrado no DOM.");
+            console.error("Erro: Elemento 'mainPage' não encontrado no DOM.");
             return;
         }
         mainContentArea.innerHTML = ''; // Limpa o conteúdo principal da home
@@ -2806,7 +2753,7 @@
             openModal('authModal');
             return;
         }
-        // Limpa o formulário antes de abrir
+                // Limpa o formulário antes de abrir
         document.getElementById('pAnimeNome').value = '';
         document.getElementById('pCapaSerie').value = '';
         document.getElementById('pBiografia').value = '';
@@ -2988,7 +2935,7 @@
                 usersWhoDisliked: [],
             });
 
-            // Adiciona o primeiro episódio como uma subcoleção da série
+                        // Adiciona o primeiro episódio como uma subcoleção da série
             await newSerieRef.collection("episodios").add({
                 numero: 1, // Assumindo que este é o primeiro episódio
                 nome: nomeEpisodio,
@@ -3113,7 +3060,7 @@
         }
     }
 
-                        // 4. LÓGICA DE AUTENTICAÇÃO (LOGIN/CADASTRO/LOGOUT)
+                                                // 4. LÓGICA DE AUTENTICAÇÃO (LOGIN/CADASTRO/LOGOUT)
     async function cadastrarUsuario() {
         const authEmail = document.getElementById('authEmail');
         const authPassword = document.getElementById('authPassword');
@@ -3242,6 +3189,19 @@
         }
     }
 
+    // NOVO: Função para carregar a página principal (Home)
+    function loadHomePage() {
+        closeSearchBar(); // Esconde a barra de pesquisa se estiver aberta
+        // Garante que a pilha de páginas só tenha 'mainPage'
+        while (pageStack.length > 1) {
+            const currentPage = document.getElementById(pageStack.pop());
+            if (currentPage) currentPage.classList.remove('active');
+        }
+        openPage('mainPage'); // Abre a página principal
+        renderHomePageContent(); // Recarrega o conteúdo da home
+        console.log("Voltando para a página principal.");
+    }
+
 
         // 5. LÓGICA DO MENU DO USUÁRIO E OUTRAS FUNCIONALIDADES
         // Função para marcar um episódio como assistido
@@ -3280,7 +3240,7 @@
                     };
                     transaction.set(userRef, newUserData); // Cria o documento
                     
-                    // Depois de criar, vamos adicionar o primeiro item assistido
+                                        // Depois de criar, vamos adicionar o primeiro item assistido
                     const newWatchedItem = {
                         serieId: serieId,
                         episodeId: episodeId,
@@ -3399,7 +3359,7 @@
             let statusIcon = '😶';
             let statusClass = 'status-fantasma';
 
-            // Lógica para atualização do status (simplificada aqui)
+                        // Lógica para atualização do status (simplificada aqui)
             if (userStatus === 'novo') {
                 statusIcon = '🙂';
                 statusClass = 'status-novo';
@@ -3593,7 +3553,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         }
     }
 
-    // Função para abrir a página de animes salvos
+        // Função para abrir a página de animes salvos
     async function openSavedAnimesPage() {
         if (!auth.currentUser || !currentUserData) {
             showMessage("Você precisa estar logado para ver seus animes salvos.");
@@ -3759,7 +3719,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     // Função para ver uma contribuição (serie ou episode)
     async function viewContribution(serieId, type, episodeId = null) {
         if (type === 'serie') {
-            openSeriePage(serieId);
+            openEpisodeListPage(serieId); // Alterado para openEpisodeListPage
         } else if (type === 'episode') {
             const serieDoc = await db.collection("series").doc(serieId).get();
             const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
@@ -3772,10 +3732,10 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 showMessage("Série ou episódio não encontrado.");
             }
         }
-        closeCurrentPage(); // Fecha a página de contribuições
+        //closeCurrentPage(); // Não fecha a página de contribuições automaticamente, pode querer ver mais
     }
 
-        // Função para deletar uma contribuição (serie ou episode)
+            // Função para deletar uma contribuição (serie ou episode)
     async function deleteContribution(serieId, type, itemId, itemName = null) {
         if (!auth.currentUser) {
             showMessage("Você precisa estar logado para excluir contribuições.");
@@ -4002,9 +3962,9 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
     // Função para renderizar o conteúdo principal da página (home)
     function renderHomePageContent() {
-        const mainContentArea = document.querySelector('main');
+        const mainContentArea = document.getElementById('mainPage');
         if (!mainContentArea) {
-            console.error("Erro: Elemento 'main' não encontrado no DOM.");
+            console.error("Erro: Elemento 'mainPage' não encontrado no DOM.");
             return;
         }
         mainContentArea.innerHTML = `
@@ -4095,7 +4055,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 </div>
             </section>
         `;
-        openPage('main'); // Garante que a página principal esteja ativa
+        openPage('mainPage'); // Garante que a página principal esteja ativa
         carregarConteudoHome(); // Chama a função para carregar todos os dados dinâmicos da home
     }
 
@@ -4137,7 +4097,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             if(topRatedGrid) topRatedGrid.innerHTML = '<p>Erro ao carregar animes destacados.</p>';
         }
 
-        // Carrega Episódios Adicionados Recentemente (grid 2x4)
+                // Carrega Episódios Adicionados Recentemente (grid 2x4)
         try {
             const recentEpisodesGrid = document.getElementById('recentEpisodesGrid');
             if (recentEpisodesGrid) {
@@ -4283,7 +4243,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             if (recentCartoonsGrid) recentCartoonsGrid.innerHTML = '<p>Erro ao carregar cartoons recentes.</p>';
         }
 
-        // Carrega Séries Mais Recentes (cards verticais)
+                // Carrega Séries Mais Recentes (cards verticais)
         try {
             const recentAnimesGrid = document.getElementById('recentAnimesGrid');
             if (recentAnimesGrid) {
@@ -4422,7 +4382,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             }
         }
         
-                // Converte o Map de volta para um array de IDs únicos
+                                // Converte o Map de volta para um array de IDs únicos
         const uniqueSerieIds = Array.from(watchedSerieIdsMap.keys());
         
         if (uniqueSerieIds.length === 0) {
@@ -4543,7 +4503,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         }
     }
 
-        // Função genérica para abrir páginas de visualização de categorias
+                // Função genérica para abrir páginas de visualização de categorias
     async function openCategoryViewPage(categoryType, param = null) {
         openPage('categoryViewPage');
         const categoryViewPageTitle = document.getElementById('categoryViewPageTitle');
@@ -4624,7 +4584,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 case 'recentSeries': // Mais recentes que são animes, não outros tipos
                     title = 'Animes Mais Recentes';
                     querySnapshot = await db.collection("series")
-                                            .where('contentType', '==', 'anime')
+                                            .where('contentType', '==', 'anime') // Apenas animes
                                             .where('isAdult', '==', false) // Não inclui +18 aqui
                                             .orderBy("dataCriacao", "desc")
                                             .get();
@@ -4693,7 +4653,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                     const serieDoc = await db.collection("series").doc(serieId).get();
                     if (serieDoc.exists) {
                         const serie = { id: serieDoc.id, ...serieDoc.data() };
-                        displayEpisodeCardGrid(categoryGrid, serie, episode, serie.isAdult && (!auth.currentUser || !currentUserData || !currentUserData.modoAdulto));
+                        displayEpisodeCardGrid(categoryGrid, serie, serie.isAdult && (!auth.currentUser || !currentUserData || !currentUserData.modoAdulto));
                     }
                 } else {
                     const serie = { id: doc.id, ...doc.data() };
@@ -4709,7 +4669,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-        // Funções do Player de Vídeo
+                // Funções do Player de Vídeo
     async function openVideoPlayer(serie, episodio, playerIndex = 0) {
         currentPlayingSerie = serie;
         currentPlayingEpisode = episodio;
@@ -4721,7 +4681,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         const videoModalSerieTitle = document.getElementById('videoModalSerieTitle');
         const videoModalEpisodeTitle = document.getElementById('videoModalEpisodeTitle');
         const playerSerieTitleDetail = document.getElementById('playerSerieTitleDetail');
-        const playerSerieBiografia = document.getElementById('playerSerieBiografia'); // Agora não mais aqui
+        //const playerSerieBiografia = document.getElementById('playerSerieBiografia'); // Agora não mais aqui
         const playerSerieGeneros = document.getElementById('playerSerieGeneros');
         const playerSerieCapa = document.getElementById('playerSerieCapa');
         const playerSerieContentRating = document.getElementById('playerSerieContentRating');
@@ -4753,8 +4713,8 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
         // Breadcrumbs
         playerBreadcrumbs.innerHTML = `
-            <a href="#" onclick="openPage('main')">AnimesOracle</a> &raquo;
-            <a href="#" onclick="openEpisodeListPage('${serie.id}')">Episódios</a> &raquo;
+            <span onclick="loadHomePage()" style="cursor:pointer; color:var(--primary);">AnimesOracle</span> &raquo;
+            <span onclick="openEpisodeListPage('${serie.id}')" style="cursor:pointer; color:var(--primary);">Episódios</span> &raquo;
             ${serie.nome} Episódio ${episodio.numero}
         `;
 
@@ -4824,7 +4784,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         };
 
 
-        // Marca o episódio como assistido (se não for convidado)
+                // Marca o episódio como assistido (se não for convidado)
         if (auth.currentUser) {
             marcarEpisodioComoAssistido(serie.id, episodio.id);
         }
@@ -4870,9 +4830,9 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 // Desativa/ativa todos os botões no player, exceto o próprio modo cinema e o botão de fechar
         const playerContentWrapper = document.querySelector('#videoPage .player-content-wrapper');
         const playerNavButtons = document.querySelector('#videoPage .player-nav-buttons');
-        const videoPageCloseBtn = document.querySelector('#videoPage .video-page-close-btn');
+        //const videoPageCloseBtn = document.querySelector('#videoPage .video-page-close-btn'); // REMOVIDO: O botão de fechar está no cabeçalho global
 
-        if (!playerContentWrapper || !playerNavButtons || !videoPageCloseBtn) {
+        if (!playerContentWrapper || !playerNavButtons) { // REMOVIDO videoPageCloseBtn
             console.error("Erro: Elementos do player não encontrados para modo cinema.");
             return;
         }
@@ -4885,7 +4845,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             playerNavButtons.style.pointerEvents = 'none';
             playerContentWrapper.style.opacity = '0.3';
             playerNavButtons.style.opacity = '0.3';
-            videoPageCloseBtn.style.pointerEvents = 'all'; // Mantém o botão de fechar ativo
+            // REMOVIDO: videoPageCloseBtn.style.pointerEvents = 'all'; // Mantém o botão de fechar ativo
             btnModoCinema.style.pointerEvents = 'all'; // Mantém o próprio botão ativo
         } else {
             // Ativa interações
@@ -4893,7 +4853,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             playerNavButtons.style.pointerEvents = 'all';
             playerContentWrapper.style.opacity = '1';
             playerNavButtons.style.opacity = '1';
-            videoPageCloseBtn.style.pointerEvents = 'all'; 
+            // REMOVIDO: videoPageCloseBtn.style.pointerEvents = 'all';
             btnModoCinema.style.pointerEvents = 'all';
         }
     }
@@ -4987,7 +4947,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         playerOptionLegendado.style.display = 'none';
         btnModoCinema.style.display = 'flex'; // Sempre mostra o botão Modo Cinema
 
-        // Verifica se há links dublados/legendados
+                // Verifica se há links dublados/legendados
         const hasDublado = links.some(link => link.type === 'dublado');
         const hasLegendado = links.some(link => link.type === 'legendado');
 
@@ -5142,8 +5102,13 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 return;
             }
 
-            episodeListPageTitle.textContent = serieData.nome;
-            episodeListPageContent.innerHTML = ''; // Limpa antes de carregar
+            // REMOVIDO: episodeListPageTitle.textContent = serieData.nome; // O título agora é gerado pelo breadcrumbs
+            episodeListPageContent.innerHTML = `
+                <p class="player-breadcrumbs" id="episodeListBreadcrumbs">
+                    <span onclick="loadHomePage()" style="cursor:pointer; color:var(--primary);">AnimesOracle</span> &raquo;
+                    Episódios de ${serieData.nome}
+                </p>
+            `; // Limpa antes de carregar e adiciona breadcrumbs
 
                         // Exibe a capa principal da série e biografia acima da lista de episódios
             const serieDetailsHeader = document.createElement('div');
@@ -5160,7 +5125,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             `;
             episodeListPageContent.appendChild(serieDetailsHeader);
 
-                        // Adiciona a opção de postar novo episódio (para usuários logados)
+                                                // Adiciona a opção de postar novo episódio (para usuários logados)
             if (auth.currentUser) {
                 const addEpisodeBtn = document.createElement('button');
                 addEpisodeBtn.textContent = 'Adicionar Novo Episódio';
@@ -5287,7 +5252,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             const mediaAvaliacao = serieData.mediaAvaliacao || 0;
             const totalAvaliacoes = serieData.totalAvaliacoes || 0;
 
-            // Atualiza a visualização das estrelas
+                        // Atualiza a visualização das estrelas
             const stars = starRatingContainer.querySelectorAll('input[type="radio"]');
             stars.forEach(star => {
                 star.checked = false; // Limpa todas as seleções
@@ -5470,7 +5435,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         }
     }
 
-        // Função para abrir o modal de compartilhamento
+                // Função para abrir o modal de compartilhamento
     function openShareModal(type) { // 'current_page' ou 'current_episode'
         let shareUrl = window.location.href; // URL atual
         let shareTitle = "AnimesOracle - Onde seus animes ganham vida!";
@@ -5642,7 +5607,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         commentInput.focus();
     }
 
-    // Monitorar o estado de autenticação para atualizar a UI
+        // Monitorar o estado de autenticação para atualizar a UI
     auth.onAuthStateChanged(user => {
         if (user) {
             console.log("Usuário logado:", user.email);
@@ -5814,3 +5779,37 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

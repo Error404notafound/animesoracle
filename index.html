@@ -425,7 +425,7 @@
             text-decoration: none;
             color: inherit;
         }
-        .episode-grid-card { /* Card de episódio em grade */
+                .episode-grid-card { /* Card de episódio em grade */
             background: var(--card);
             border-radius: 8px;
             overflow: hidden;
@@ -433,7 +433,9 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            position: relative; /* <--- ADICIONE ESTA LINHA CRUCIAL! */
         }
+
         .episode-grid-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -4382,11 +4384,17 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
     // Função para exibir um único card de episódio (agora em grade)
-    function displayEpisodeCardGrid(gridElement, serie, episode, isAdultBlurred = false) {
+        function displayEpisodeCardGrid(gridElement, serie, episode, isAdultBlurred = false) {
         if (!gridElement) {
             console.error("Erro: gridElement não fornecido para displayEpisodeCardGrid.");
             return;
         }
+        // --- Linha para depuração ---
+        console.log("Processando episódio:", episode.nome, "Links:", episode.links); 
+        // --- Fim da linha de depuração ---
+
+        // ... (resto do código da função) ...
+
 
             // ... (o início da função displayEpisodeCardGrid é o mesmo) ...
 

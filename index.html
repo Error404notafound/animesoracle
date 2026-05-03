@@ -4981,7 +4981,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-    // Função para formatar links de embed de vários provedores
+        // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
         if (!originalLink) return "";
 
@@ -5047,11 +5047,28 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 }
             }
         }
-        // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
-        // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
+
+        // NOVO: Blogger (usando o contentid ou um URL de embed do Blogger)
+        // Detecta se é um ID hexadecimal de 16 caracteres (ex: e401c9ed23d312ff)
+        // ou uma URL que contenha "blogger.com" e "id="
+        const bloggerIdMatch = embedLink.match(/id=([a-f0-9]{16})/i); // Busca por id=SEUID
+        const directBloggerContentIdMatch = embedLink.match(/^([a-f0-9]{16})$/i); // Se a string for APENAS o ID
+
+        let bloggerVideoId = '';
+        if (bloggerIdMatch && bloggerIdMatch[1]) {
+            bloggerVideoId = bloggerIdMatch[1];
+        } else if (directBloggerContentIdMatch && directBloggerContentIdMatch[1]) {
+            bloggerVideoId = directBloggerContentIdMatch[1];
+        }
+
+        if (bloggerVideoId) {
+            embedLink = `https://www.blogger.com/video.g?id=${bloggerVideoId}`;
+        }
+        // FIM NOVO BLOCO BLOGGER
 
         return embedLink;
     }
+
 
 
     // Função para atualizar as opções de player (Dublado/Legendado)

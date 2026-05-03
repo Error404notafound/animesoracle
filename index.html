@@ -3039,8 +3039,7 @@
         }
     }
 
-    // Função para adicionar um episódio a uma série existente
-    async function addEpisodeToSerie() {
+        async function addEpisodeToSerie() {
         const addEpisodeTargetSerieId = document.getElementById('addEpisodeTargetSerieId');
         const addEpNome = document.getElementById('addEpNome');
         const addEpCapa = document.getElementById('addEpCapa');
@@ -3084,27 +3083,35 @@
                 numero: proximoNumero,
                 nome: nomeEpisodio,
                 capa: capaEpisodio,
-                links: [{ url: linkEpisodio, type: typeEpisodio }],
+                links: [{ url: linkEpisodio, type: typeEpisodio }], // Pode ter múltiplos links para o mesmo episódio (player 1, player 2)
                 dataPostagem: firebase.firestore.FieldValue.serverTimestamp(),
                 postedBy: auth.currentUser.uid,
                 isAdult: isAdultSerie,
             });
 
             showMessage(`Episódio ${proximoNumero} adicionado à série com sucesso!`);
-            closeCurrentPage(); // Fecha a página
-            // Limpa formulário (já é feito ao abrir a página)
 
+            // ******************************************************************
+            // ESTE É O BLOCO QUE ESTAVA CAUSANDO O ERRO E FOI REMOVIDO/COMENTADO.
             // Opcional: recarregar a lista de episódios se o modal do player estiver aberto
-            if (currentPlayingSerie && currentPlayingSerie.id === serieId) {
-                // Atualiza a lista de episódios na página da série ou no player
-                loadEpisodeListForSeriePage(currentPlayingSerie);
-            }
+            // if (currentPlayingSerie && currentPlayingSerie.id === serieId) {
+            //    // Atualiza a lista de episódios na página da série ou no player
+            //    // loadEpisodeListForSeriePage(currentPlayingSerie); // <-- Esta função não existe
+            // }
+            // O sistema de `closeCurrentPage()` já deve retornar à página anterior (que pode ser `episodeListPage`)
+            // e essa página se encarregará de recarregar seu conteúdo.
+            // ******************************************************************
+
+            // Chamada para fechar a página de adição de episódio.
+            // Isso irá navegar de volta para a página anterior na pilha (e.g., episodeListPage, main).
+            closeCurrentPage();
 
         } catch (e) {
             console.error("Erro ao adicionar episódio:", e);
             showMessage("Erro do Firebase: " + e.message + "\n\nVerifique as 'Regras' no Firebase e os dados inseridos!");
         }
     }
+
 
     // Função para abrir o modal de aviso de conteúdo adulto
     let deferredAdultContentSerie = null; // Armazena a série que tentou abrir

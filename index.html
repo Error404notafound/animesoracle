@@ -4983,75 +4983,79 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
     // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
-        if (!originalLink) return "";
+    if (!originalLink) return "";
 
-        let embedLink = originalLink;
+    let embedLink = originalLink;
 
-        // YouTube
-        if (embedLink.includes("youtube.com/watch?v=")) {
-            embedLink = embedLink.replace("watch?v=", "embed/");
-        } else if (embedLink.includes("youtu.be/")) {
-            embedLink = embedLink.replace("youtu.be/", "youtube.com/embed/");
-        }
-
-        // Google Drive /view para /embed
-        if (embedLink.includes("drive.google.com/file/d/") && embedLink.includes("/view")) {
-            const videoIdMatch = embedLink.match(/\/d\/([a-zA-Z0-9_-]+)\/view/);
-            if (videoIdMatch && videoIdMatch[1]) {
-                embedLink = `https://drive.google.com/embed?id=${videoIdMatch[1]}`;
-            }
-        }
-        // OK.ru (Odzonklassniki)
-        if (embedLink.includes("ok.ru/video/")) {
-            embedLink = embedLink.replace("ok.ru/video/", "ok.ru/videoembed/");
-        }
-        // StreamWish / VidHide / Voe.sx (assumindo que já são links de embed ou um padrão similar)
-        if (embedLink.includes("streamwish.to/") && !embedLink.includes("/e/")) {
-            embedLink = embedLink.replace("streamwish.to/", "streamwish.to/e/");
-        }
-        if (embedLink.includes("vidhide.com/") && !embedLink.includes("/e/")) {
-            embedLink = embedLink.replace("vidhide.com/", "vidhide.com/e/");
-        }
-        if (embedLink.includes("voe.sx/") && !embedLink.includes("/e/")) {
-            embedLink = embedLink.replace("voe.sx/", "voe.sx/e/");
-        }
-
-        // Mail.ru (pode variar, exemplo de embed)
-        if (embedLink.includes("my.mail.ru/video/")) {
-             const mailIdMatch = embedLink.match(/my.mail.ru\/video\/(.*?)\/(\d+)\/(\d+)/);
-             if (mailIdMatch && mailIdMatch[2] && mailIdMatch[3]) {
-                 embedLink = `https://my.mail.ru/video/embed/${mailIdMatch[2]}/${mailIdMatch[3]}`;
-             }
-        }
-        // Rutube
-        if (embedLink.includes("rutube.ru/video/")) {
-            embedLink = embedLink.replace("rutube.ru/video/", "rutube.ru/play/embed/");
-        }
-        // Sibnet
-        if (embedLink.includes("sibnet.ru/video/")) {
-            const sibnetIdMatch = embedLink.match(/sibnet.ru\/video\/(\d+)/);
-            if (sibnetIdMatch && sibnetIdMatch[1]) {
-                embedLink = `https://video.sibnet.ru/shell.php?videoid=${sibnetIdMatch[1]}`;
-            }
-        }
-        // Facebook (link de postagem para embed)
-        if (embedLink.includes("facebook.com/watch/") || embedLink.includes("facebook.com/video/")) {
-            embedLink = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(embedLink)}&show_text=0&width=560`;
-        }
-        // DoodStream (ex: https://dood.yt/e/abcdef123)
-        if (embedLink.includes("dood.yt/") || embedLink.includes("dood.to/") || embedLink.includes("doodstream.com/")) {
-            if (!embedLink.includes("/e/")) {
-                const doodIdMatch = embedLink.match(/(dood\.(yt|to)|doodstream\.com)\/(e\/)?([a-zA-Z0-9]+)/);
-                if (doodIdMatch && doodIdMatch[4]) {
-                    embedLink = `https://${doodIdMatch[1]}/e/${doodIdMatch[4]}`;
-                }
-            }
-        }
-        // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
-        // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
-
-        return embedLink;
+    // YouTube
+    if (embedLink.includes("youtube.com/watch?v=")) {
+        embedLink = embedLink.replace("watch?v=", "embed/");
+    } else if (embedLink.includes("youtu.be/")) {
+        embedLink = embedLink.replace("youtu.be/", "youtube.com/embed/");
     }
+
+    // Google Drive (converte para o formato /preview para consistência)
+    if (embedLink.includes("drive.google.com/file/d/")) {
+        const fileIdRegex = /\/d\/([a-zA-Z0-9_-]+)/; // Expressão para capturar o ID do arquivo
+        const match = embedLink.match(fileIdRegex);
+        if (match && match[1]) {
+            const fileId = match[1];
+            // Sempre reconstruir para o formato /preview para garantir o embed correto
+            embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+    }
+    // OK.ru (Odzonklassniki)
+    if (embedLink.includes("ok.ru/video/")) {
+        embedLink = embedLink.replace("ok.ru/video/", "ok.ru/videoembed/");
+    }
+    // StreamWish / VidHide / Voe.sx (assumindo que já são links de embed ou um padrão similar)
+    if (embedLink.includes("streamwish.to/") && !embedLink.includes("/e/")) {
+        embedLink = embedLink.replace("streamwish.to/", "streamwish.to/e/");
+    }
+    if (embedLink.includes("vidhide.com/") && !embedLink.includes("/e/")) {
+        embedLink = embedLink.replace("vidhide.com/", "vidhide.com/e/");
+    }
+    if (embedLink.includes("voe.sx/") && !embedLink.includes("/e/")) {
+        embedLink = embedLink.replace("voe.sx/", "voe.sx/e/");
+    }
+
+    // Mail.ru (pode variar, exemplo de embed)
+    if (embedLink.includes("my.mail.ru/video/")) {
+         const mailIdMatch = embedLink.match(/my.mail.ru\/video\/(.*?)\/(\d+)\/(\d+)/);
+         if (mailIdMatch && mailIdMatch[2] && mailIdMatch[3]) {
+             embedLink = `https://my.mail.ru/video/embed/${mailIdMatch[2]}/${mailIdMatch[3]}`;
+         }
+    }
+    // Rutube
+    if (embedLink.includes("rutube.ru/video/")) {
+        embedLink = embedLink.replace("rutube.ru/video/", "rutube.ru/play/embed/");
+    }
+    // Sibnet
+    if (embedLink.includes("sibnet.ru/video/")) {
+        const sibnetIdMatch = embedLink.match(/sibnet.ru\/video\/(\d+)/);
+        if (sibnetIdMatch && sibnetIdMatch[1]) {
+            embedLink = `https://video.sibnet.ru/shell.php?videoid=${sibnetIdMatch[1]}`;
+        }
+    }
+    // Facebook (link de postagem para embed)
+    if (embedLink.includes("facebook.com/watch/") || embedLink.includes("facebook.com/video/")) {
+        embedLink = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(embedLink)}&show_text=0&width=560`;
+    }
+    // DoodStream (ex: https://dood.yt/e/abcdef123)
+    if (embedLink.includes("dood.yt/") || embedLink.includes("dood.to/") || embedLink.includes("doodstream.com/")) {
+        if (!embedLink.includes("/e/")) {
+            const doodIdMatch = embedLink.match(/(dood\.(yt|to)|doodstream\.com)\/(e\/)?([a-zA-Z0-9]+)/);
+            if (doodIdMatch && doodIdMatch[4]) {
+                embedLink = `https://${doodIdMatch[1]}/e/${doodIdMatch[4]}`;
+            }
+        }
+    }
+    // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
+    // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
+
+    return embedLink;
+}
+
 
 
     // Função para atualizar as opções de player (Dublado/Legendado)

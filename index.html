@@ -4981,7 +4981,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-        // Função para formatar links de embed de vários provedores
+            // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
         if (!originalLink) return "";
 
@@ -5048,11 +5048,9 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             }
         }
 
-        // NOVO: Blogger (usando o contentid ou um URL de embed do Blogger)
-        // Detecta se é um ID hexadecimal de 16 caracteres (ex: e401c9ed23d312ff)
-        // ou uma URL que contenha "blogger.com" e "id="
-        const bloggerIdMatch = embedLink.match(/id=([a-f0-9]{16})/i); // Busca por id=SEUID
-        const directBloggerContentIdMatch = embedLink.match(/^([a-f0-9]{16})$/i); // Se a string for APENAS o ID
+        // **CORREÇÃO AQUI: Blogger**
+        const bloggerIdMatch = embedLink.match(/id=([a-f0-9]{16})/i);
+        const directBloggerContentIdMatch = embedLink.match(/^([a-f0-9]{16})$/i);
 
         let bloggerVideoId = '';
         if (bloggerIdMatch && bloggerIdMatch[1]) {
@@ -5062,12 +5060,14 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         }
 
         if (bloggerVideoId) {
-            embedLink = `https://www.blogger.com/video.g?id=${bloggerVideoId}`;
+            // **Alterado de video.g para video-play.mp4**
+            embedLink = `https://www.blogger.com/video-play.mp4?id=${bloggerVideoId}`;
         }
-        // FIM NOVO BLOCO BLOGGER
+        // FIM DO BLOCO BLOGGER
 
         return embedLink;
     }
+
 
 
 

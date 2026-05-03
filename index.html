@@ -425,7 +425,7 @@
             text-decoration: none;
             color: inherit;
         }
-                .episode-grid-card { /* Card de episódio em grade */
+        .episode-grid-card { /* Card de episódio em grade */
             background: var(--card);
             border-radius: 8px;
             overflow: hidden;
@@ -433,9 +433,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
-            position: relative; /* <--- ADICIONE ESTA LINHA CRUCIAL! */
         }
-
         .episode-grid-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -1857,34 +1855,6 @@
             background-color: var(--danger);
             margin-top: 30px;
         }
-                /* Badge "Dublado" para cards de episódio */
-        .episode-grid-card .dublado-badge {
-            position: absolute;
-            bottom: 5px; /* Posição a partir do rodapé da imagem */
-            left: 5px; /* Posição a partir da esquerda da imagem */
-            background-color: rgba(98, 0, 234, 0.7); /* Cor roxa com 70% de opacidade */
-            color: white;
-            padding: 4px 8px;
-            border-radius: 8px; /* Cantos arredondados */
-            font-size: 0.75em;
-            font-weight: bold;
-            z-index: 5; /* Garante que fique acima da imagem */
-        }
-                    /* Badge "Legendado" para cards de episódio */
-        .episode-grid-card .legendado-badge {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            background-color: rgba(0, 123, 255, 0.7); /* Azul, como a variável --info, com 70% de opacidade */
-            color: white;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 0.75em;
-            font-weight: bold;
-            z-index: 5;
-        }
-
-
     </style>
 </head>
 <body>
@@ -3039,7 +3009,8 @@
         }
     }
 
-        async function addEpisodeToSerie() {
+    // Função para adicionar um episódio a uma série existente
+    async function addEpisodeToSerie() {
         const addEpisodeTargetSerieId = document.getElementById('addEpisodeTargetSerieId');
         const addEpNome = document.getElementById('addEpNome');
         const addEpCapa = document.getElementById('addEpCapa');
@@ -3083,35 +3054,27 @@
                 numero: proximoNumero,
                 nome: nomeEpisodio,
                 capa: capaEpisodio,
-                links: [{ url: linkEpisodio, type: typeEpisodio }], // Pode ter múltiplos links para o mesmo episódio (player 1, player 2)
+                links: [{ url: linkEpisodio, type: typeEpisodio }],
                 dataPostagem: firebase.firestore.FieldValue.serverTimestamp(),
                 postedBy: auth.currentUser.uid,
                 isAdult: isAdultSerie,
             });
 
             showMessage(`Episódio ${proximoNumero} adicionado à série com sucesso!`);
+            closeCurrentPage(); // Fecha a página
+            // Limpa formulário (já é feito ao abrir a página)
 
-            // ******************************************************************
-            // ESTE É O BLOCO QUE ESTAVA CAUSANDO O ERRO E FOI REMOVIDO/COMENTADO.
             // Opcional: recarregar a lista de episódios se o modal do player estiver aberto
-            // if (currentPlayingSerie && currentPlayingSerie.id === serieId) {
-            //    // Atualiza a lista de episódios na página da série ou no player
-            //    // loadEpisodeListForSeriePage(currentPlayingSerie); // <-- Esta função não existe
-            // }
-            // O sistema de `closeCurrentPage()` já deve retornar à página anterior (que pode ser `episodeListPage`)
-            // e essa página se encarregará de recarregar seu conteúdo.
-            // ******************************************************************
-
-            // Chamada para fechar a página de adição de episódio.
-            // Isso irá navegar de volta para a página anterior na pilha (e.g., episodeListPage, main).
-            closeCurrentPage();
+            if (currentPlayingSerie && currentPlayingSerie.id === serieId) {
+                // Atualiza a lista de episódios na página da série ou no player
+                loadEpisodeListForSeriePage(currentPlayingSerie);
+            }
 
         } catch (e) {
             console.error("Erro ao adicionar episódio:", e);
             showMessage("Erro do Firebase: " + e.message + "\n\nVerifique as 'Regras' no Firebase e os dados inseridos!");
         }
     }
-
 
     // Função para abrir o modal de aviso de conteúdo adulto
     let deferredAdultContentSerie = null; // Armazena a série que tentou abrir
@@ -4405,85 +4368,33 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
     // Função para exibir um único card de episódio (agora em grade)
-        function displayEpisodeCardGrid(gridElement, serie, episode, isAdultBlurred = false) {
+    function displayEpisodeCardGrid(gridElement, serie, episode, isAdultBlurred = false) {
         if (!gridElement) {
             console.error("Erro: gridElement não fornecido para displayEpisodeCardGrid.");
             return;
         }
-        // --- Linha para depuração ---
-        console.log("Processando episódio:", episode.nome, "Links:", episode.links); 
-        // --- Fim da linha de depuração ---
 
-        // ... (resto do código da função) ...
-
-
-            // ... (o início da função displayEpisodeCardGrid é o mesmo) ...
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'episode-grid-card-wrapper';
-    if (isAdultBlurred) {
-        wrapper.classList.add('adult-content-blurred');
-        wrapper.onclick = (e) => { e.stopPropagation(); openAdultContentWarningModal(serie); };
-    } else {
-        wrapper.onclick = () => openVideoPlayer(serie, episode); 
-    }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'episode-grid-card-wrapper';
+        if (isAdultBlurred) {
+            wrapper.classList.add('adult-content-blurred');
+            wrapper.onclick = (e) => { e.stopPropagation(); openAdultContentWarningModal(serie); }; // Abre o modal de aviso
+        } else {
+            wrapper.onclick = () => openVideoPlayer(serie, episode); 
+        }
 
         const card = document.createElement('div');
-    card.className = 'episode-grid-card';
-    
-    // Cria o elemento da imagem e o adiciona ao card
-    const img = document.createElement('img');
-    img.src = episode.capa;
-    img.alt = episode.nome;
-    card.appendChild(img);
-
-    // --- Linha para depuração: Verifique os links de CADA episódio ---
-    console.log("Processando episódio:", episode.nome, "Links:", episode.links); 
-
-    // Verifica se o episódio tem algum link com type 'dublado'
-    const hasDubladoLink = episode.links && episode.links.some(link => link.type === 'dublado');
-    // Verifica se o episódio tem algum link com type 'legendado'
-    const hasLegendadoLink = episode.links && episode.links.some(link => link.type === 'legendado');
-
-    if (hasDubladoLink || hasLegendadoLink) { 
-        const badgeSpan = document.createElement('span');
-        let badgeText = '';
-        let badgeClass = '';
-
-        if (hasDubladoLink) {
-            badgeText = 'DUBLADO';
-            badgeClass = 'dublado-badge'; 
-        } else if (hasLegendadoLink) { 
-            badgeText = 'LEGENDADO';
-            badgeClass = 'legendado-badge'; // Nova classe CSS para badge "LEGENDADO"
-        }
-
-        if (badgeText) { 
-            badgeSpan.className = badgeClass; 
-            badgeSpan.textContent = badgeText; 
-            card.appendChild(badgeSpan); // Adiciona o badge como filho do card
-        }
+        card.className = 'episode-grid-card';
+        card.innerHTML = `
+            <img src="${episode.capa}" alt="${episode.nome}">
+        `;
+        wrapper.appendChild(card);
+        wrapper.innerHTML += `
+            <div class="episode-grid-card-title-below">${episode.nome}</div>
+            <div class="episode-grid-card-serie-name-below">${serie.nome}</div>
+        `;
+        gridElement.appendChild(wrapper);
     }
-
-    wrapper.appendChild(card); // Adiciona o card (com imagem e badge) ao wrapper
-
-    // Cria e adiciona o título do episódio (abaixo do card)
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'episode-grid-card-title-below';
-    titleDiv.textContent = episode.nome;
-    wrapper.appendChild(titleDiv);
-
-    // Cria e adiciona o nome da série (abaixo do card)
-    const serieNameDiv = document.createElement('div');
-    serieNameDiv.className = 'episode-grid-card-serie-name-below';
-    serieNameDiv.textContent = serie.nome;
-    wrapper.appendChild(serieNameDiv);
-
-    
-    gridElement.appendChild(wrapper); // Adiciona o wrapper completo ao grid
-}
-
-
 
     // Função para carregar e exibir o histórico de animes assistidos
     async function loadWatchedAnimes() {
@@ -4988,7 +4899,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-            // Função para formatar links de embed de vários provedores
+    // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
         if (!originalLink) return "";
 
@@ -5054,28 +4965,11 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 }
             }
         }
-
-        // **CORREÇÃO AQUI: Blogger**
-        const bloggerIdMatch = embedLink.match(/id=([a-f0-9]{16})/i);
-        const directBloggerContentIdMatch = embedLink.match(/^([a-f0-9]{16})$/i);
-
-        let bloggerVideoId = '';
-        if (bloggerIdMatch && bloggerIdMatch[1]) {
-            bloggerVideoId = bloggerIdMatch[1];
-        } else if (directBloggerContentIdMatch && directBloggerContentIdMatch[1]) {
-            bloggerVideoId = directBloggerContentIdMatch[1];
-        }
-
-        if (bloggerVideoId) {
-            // **Alterado de video.g para video-play.mp4**
-            embedLink = `https://www.blogger.com/video-play.mp4?id=${bloggerVideoId}`;
-        }
-        // FIM DO BLOCO BLOGGER
+        // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
+        // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
 
         return embedLink;
     }
-
-
 
 
     // Função para atualizar as opções de player (Dublado/Legendado)

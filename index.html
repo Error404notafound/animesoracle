@@ -1095,14 +1095,17 @@
         #videoPage.active {
             display: flex;
         }
-        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
+                /* Este contêiner permanece o mesmo */
+        #videoPlayerContainer { 
             width: 100%;
-            position: sticky; /* Fixa o player no topo */
+            position: sticky;
             top: 0;
             left: 0;
-            z-index: 5001; /* Acima de outros elementos da página, mas abaixo do header principal */
+            z-index: 5001;
             background-color: #000;
         }
+
+        /* O esqueleto também permanece o mesmo, mas agora pode ter o margin-bottom para alinhar com o wrapper */
         #videoSkeleton {
             width: 100%;
             aspect-ratio: 16/9;
@@ -1113,18 +1116,42 @@
             color: #777;
             font-size: 1.5em;
             font-weight: bold;
+            /* Se quiser alinhar a base do skeleton com a base do iframe, adicione: */
+            margin-bottom: 15px; 
         }
-        #videoFrame {
+
+        /* --- NOVAS REGRAS CSS --- */
+        /* Novo wrapper para iframes responsivos (adicionado no HTML e estilizado aqui) */
+        .video-responsive {
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção 16:9 (altura é 9/16 da largura) */
+            height: 0;
+            overflow: hidden;
+            width: 100%; /* Garante que o wrapper preencha a largura disponível */
+            margin-bottom: 15px; /* Espaçamento abaixo do player, se necessário */
+        }
+
+        /* Estilos para o iframe DENTRO do wrapper .video-responsive */
+        .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            aspect-ratio: 16/9;
-            height: auto;
+            height: 100%;
             border: none;
-            display: none; /* Escondido por padrão, até o carregamento */
         }
+
+        /* --- REGRA #videoFrame ATUALIZADA --- */
+        /* O seletor #videoFrame agora tem apenas a propriedade de display */
+        #videoFrame {
+            display: none; /* Manter a lógica de esconder enquanto carrega. As propriedades de layout agora são do .video-responsive iframe */
+        }
+
+        /* O botão de fechar o vídeo permanece o mesmo */
         .video-page-close-btn {
             background: none;
             border: none;
-            color: white; /* Alterado para branco para contraste */
+            color: white;
             font-size: 30px;
             cursor: pointer;
             position: absolute;
@@ -1136,6 +1163,7 @@
         .video-page-close-btn:hover {
             color: var(--danger);
         }
+
         .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
             flex-grow: 1;
             padding: 15px; /* Espaçamento geral */
@@ -2177,11 +2205,14 @@
 <!-- Página do Player de Vídeo -->
 <div id="videoPage" class="modal-page">
     <div id="videoPlayerContainer">
-        <div id="videoSkeleton">Carregando Vídeo...</div>
+    <div id="videoSkeleton">Carregando Vídeo...</div>
+    <div class="video-responsive"> <!-- NOVO WRAPPER -->
         <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
     </div>
+    <!-- Botão de fechar o vídeo, agora dentro do container do player -->
+    <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
+</div>
+
 
     <div class="player-nav-buttons">
         <button class="player-nav-button" onclick="previousEpisode()">

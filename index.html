@@ -5008,6 +5008,14 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 embedLink = `https://drive.google.com/embed?id=${videoIdMatch[1]}`;
             }
         }
+                // Mega.nz
+        if (embedLink.includes("mega.nz/")) {
+            const megaIdMatch = embedLink.match(/mega\.nz\/(?:file|embed)\/([a-zA-Z0-9_-]+)/);
+            if (megaIdMatch && megaIdMatch[1]) {
+                embedLink = `https://mega.nz/embed/${megaIdMatch[1]}`;
+            }
+        }
+
         // OK.ru (Odzonklassniki)
         if (embedLink.includes("ok.ru/video/")) {
             embedLink = embedLink.replace("ok.ru/video/", "ok.ru/videoembed/");

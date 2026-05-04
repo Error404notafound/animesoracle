@@ -1095,17 +1095,14 @@
         #videoPage.active {
             display: flex;
         }
-                /* Este contêiner permanece o mesmo */
-        #videoPlayerContainer { 
+        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
             width: 100%;
-            position: sticky;
+            position: sticky; /* Fixa o player no topo */
             top: 0;
             left: 0;
-            z-index: 5001;
+            z-index: 5001; /* Acima de outros elementos da página, mas abaixo do header principal */
             background-color: #000;
         }
-
-        /* O esqueleto também permanece o mesmo, mas agora pode ter o margin-bottom para alinhar com o wrapper */
         #videoSkeleton {
             width: 100%;
             aspect-ratio: 16/9;
@@ -1116,42 +1113,18 @@
             color: #777;
             font-size: 1.5em;
             font-weight: bold;
-            /* Se quiser alinhar a base do skeleton com a base do iframe, adicione: */
-            margin-bottom: 15px; 
         }
-
-        /* --- NOVAS REGRAS CSS --- */
-        /* Novo wrapper para iframes responsivos (adicionado no HTML e estilizado aqui) */
-        .video-responsive {
-            position: relative;
-            padding-bottom: 56.25%; /* Proporção 16:9 (altura é 9/16 da largura) */
-            height: 0;
-            overflow: hidden;
-            width: 100%; /* Garante que o wrapper preencha a largura disponível */
-            margin-bottom: 15px; /* Espaçamento abaixo do player, se necessário */
-        }
-
-        /* Estilos para o iframe DENTRO do wrapper .video-responsive */
-        .video-responsive iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* --- REGRA #videoFrame ATUALIZADA --- */
-        /* O seletor #videoFrame agora tem apenas a propriedade de display */
         #videoFrame {
-            display: none; /* Manter a lógica de esconder enquanto carrega. As propriedades de layout agora são do .video-responsive iframe */
+            width: 100%;
+            aspect-ratio: 16/9;
+            height: auto;
+            border: none;
+            display: none; /* Escondido por padrão, até o carregamento */
         }
-
-        /* O botão de fechar o vídeo permanece o mesmo */
         .video-page-close-btn {
             background: none;
             border: none;
-            color: white;
+            color: white; /* Alterado para branco para contraste */
             font-size: 30px;
             cursor: pointer;
             position: absolute;
@@ -1163,7 +1136,6 @@
         .video-page-close-btn:hover {
             color: var(--danger);
         }
-
         .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
             flex-grow: 1;
             padding: 15px; /* Espaçamento geral */
@@ -2205,14 +2177,11 @@
 <!-- Página do Player de Vídeo -->
 <div id="videoPage" class="modal-page">
     <div id="videoPlayerContainer">
-    <div id="videoSkeleton">Carregando Vídeo...</div>
-    <div class="video-responsive"> <!-- NOVO WRAPPER -->
+        <div id="videoSkeleton">Carregando Vídeo...</div>
         <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <!-- Botão de fechar o vídeo, agora dentro do container do player -->
+        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
     </div>
-    <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-    <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
-</div>
-
 
     <div class="player-nav-buttons">
         <button class="player-nav-button" onclick="previousEpisode()">
@@ -5014,79 +4983,75 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
     // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
-    if (!originalLink) return "";
+        if (!originalLink) return "";
 
-    let embedLink = originalLink;
+        let embedLink = originalLink;
 
-    // YouTube
-    if (embedLink.includes("youtube.com/watch?v=")) {
-        embedLink = embedLink.replace("watch?v=", "embed/");
-    } else if (embedLink.includes("youtu.be/")) {
-        embedLink = embedLink.replace("youtu.be/", "youtube.com/embed/");
-    }
-
-    // Google Drive (converte para o formato /preview para consistência)
-    if (embedLink.includes("drive.google.com/file/d/")) {
-        const fileIdRegex = /\/d\/([a-zA-Z0-9_-]+)/; // Expressão para capturar o ID do arquivo
-        const match = embedLink.match(fileIdRegex);
-        if (match && match[1]) {
-            const fileId = match[1];
-            // Sempre reconstruir para o formato /preview para garantir o embed correto
-            embedLink = `https://drive.google.com/file/d/${fileId}/preview`;
+        // YouTube
+        if (embedLink.includes("youtube.com/watch?v=")) {
+            embedLink = embedLink.replace("watch?v=", "embed/");
+        } else if (embedLink.includes("youtu.be/")) {
+            embedLink = embedLink.replace("youtu.be/", "youtube.com/embed/");
         }
-    }
-    // OK.ru (Odzonklassniki)
-    if (embedLink.includes("ok.ru/video/")) {
-        embedLink = embedLink.replace("ok.ru/video/", "ok.ru/videoembed/");
-    }
-    // StreamWish / VidHide / Voe.sx (assumindo que já são links de embed ou um padrão similar)
-    if (embedLink.includes("streamwish.to/") && !embedLink.includes("/e/")) {
-        embedLink = embedLink.replace("streamwish.to/", "streamwish.to/e/");
-    }
-    if (embedLink.includes("vidhide.com/") && !embedLink.includes("/e/")) {
-        embedLink = embedLink.replace("vidhide.com/", "vidhide.com/e/");
-    }
-    if (embedLink.includes("voe.sx/") && !embedLink.includes("/e/")) {
-        embedLink = embedLink.replace("voe.sx/", "voe.sx/e/");
-    }
 
-    // Mail.ru (pode variar, exemplo de embed)
-    if (embedLink.includes("my.mail.ru/video/")) {
-         const mailIdMatch = embedLink.match(/my.mail.ru\/video\/(.*?)\/(\d+)\/(\d+)/);
-         if (mailIdMatch && mailIdMatch[2] && mailIdMatch[3]) {
-             embedLink = `https://my.mail.ru/video/embed/${mailIdMatch[2]}/${mailIdMatch[3]}`;
-         }
-    }
-    // Rutube
-    if (embedLink.includes("rutube.ru/video/")) {
-        embedLink = embedLink.replace("rutube.ru/video/", "rutube.ru/play/embed/");
-    }
-    // Sibnet
-    if (embedLink.includes("sibnet.ru/video/")) {
-        const sibnetIdMatch = embedLink.match(/sibnet.ru\/video\/(\d+)/);
-        if (sibnetIdMatch && sibnetIdMatch[1]) {
-            embedLink = `https://video.sibnet.ru/shell.php?videoid=${sibnetIdMatch[1]}`;
-        }
-    }
-    // Facebook (link de postagem para embed)
-    if (embedLink.includes("facebook.com/watch/") || embedLink.includes("facebook.com/video/")) {
-        embedLink = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(embedLink)}&show_text=0&width=560`;
-    }
-    // DoodStream (ex: https://dood.yt/e/abcdef123)
-    if (embedLink.includes("dood.yt/") || embedLink.includes("dood.to/") || embedLink.includes("doodstream.com/")) {
-        if (!embedLink.includes("/e/")) {
-            const doodIdMatch = embedLink.match(/(dood\.(yt|to)|doodstream\.com)\/(e\/)?([a-zA-Z0-9]+)/);
-            if (doodIdMatch && doodIdMatch[4]) {
-                embedLink = `https://${doodIdMatch[1]}/e/${doodIdMatch[4]}`;
+        // Google Drive /view para /embed
+        if (embedLink.includes("drive.google.com/file/d/") && embedLink.includes("/view")) {
+            const videoIdMatch = embedLink.match(/\/d\/([a-zA-Z0-9_-]+)\/view/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                embedLink = `https://drive.google.com/embed?id=${videoIdMatch[1]}`;
             }
         }
+        // OK.ru (Odzonklassniki)
+        if (embedLink.includes("ok.ru/video/")) {
+            embedLink = embedLink.replace("ok.ru/video/", "ok.ru/videoembed/");
+        }
+        // StreamWish / VidHide / Voe.sx (assumindo que já são links de embed ou um padrão similar)
+        if (embedLink.includes("streamwish.to/") && !embedLink.includes("/e/")) {
+            embedLink = embedLink.replace("streamwish.to/", "streamwish.to/e/");
+        }
+        if (embedLink.includes("vidhide.com/") && !embedLink.includes("/e/")) {
+            embedLink = embedLink.replace("vidhide.com/", "vidhide.com/e/");
+        }
+        if (embedLink.includes("voe.sx/") && !embedLink.includes("/e/")) {
+            embedLink = embedLink.replace("voe.sx/", "voe.sx/e/");
+        }
+
+        // Mail.ru (pode variar, exemplo de embed)
+        if (embedLink.includes("my.mail.ru/video/")) {
+             const mailIdMatch = embedLink.match(/my.mail.ru\/video\/(.*?)\/(\d+)\/(\d+)/);
+             if (mailIdMatch && mailIdMatch[2] && mailIdMatch[3]) {
+                 embedLink = `https://my.mail.ru/video/embed/${mailIdMatch[2]}/${mailIdMatch[3]}`;
+             }
+        }
+        // Rutube
+        if (embedLink.includes("rutube.ru/video/")) {
+            embedLink = embedLink.replace("rutube.ru/video/", "rutube.ru/play/embed/");
+        }
+        // Sibnet
+        if (embedLink.includes("sibnet.ru/video/")) {
+            const sibnetIdMatch = embedLink.match(/sibnet.ru\/video\/(\d+)/);
+            if (sibnetIdMatch && sibnetIdMatch[1]) {
+                embedLink = `https://video.sibnet.ru/shell.php?videoid=${sibnetIdMatch[1]}`;
+            }
+        }
+        // Facebook (link de postagem para embed)
+        if (embedLink.includes("facebook.com/watch/") || embedLink.includes("facebook.com/video/")) {
+            embedLink = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(embedLink)}&show_text=0&width=560`;
+        }
+        // DoodStream (ex: https://dood.yt/e/abcdef123)
+        if (embedLink.includes("dood.yt/") || embedLink.includes("dood.to/") || embedLink.includes("doodstream.com/")) {
+            if (!embedLink.includes("/e/")) {
+                const doodIdMatch = embedLink.match(/(dood\.(yt|to)|doodstream\.com)\/(e\/)?([a-zA-Z0-9]+)/);
+                if (doodIdMatch && doodIdMatch[4]) {
+                    embedLink = `https://${doodIdMatch[1]}/e/${doodIdMatch[4]}`;
+                }
+            }
+        }
+        // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
+        // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
+
+        return embedLink;
     }
-    // Blogger (Google) - Não tentaremos formatar, espera-se iframe completo
-    // Se o usuário inserir o iframe completo do blogger, ele funcionaria.
-
-    return embedLink;
-}
-
 
 
     // Função para atualizar as opções de player (Dublado/Legendado)

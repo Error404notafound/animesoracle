@@ -4981,7 +4981,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-    // Função para formatar links de embed de vários provedores
+        // Função para formatar links de embed de vários provedores
     function formatEmbedLink(originalLink) {
         if (!originalLink) return "";
 
@@ -4992,6 +4992,13 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             embedLink = embedLink.replace("watch?v=", "embed/");
         } else if (embedLink.includes("youtu.be/")) {
             embedLink = embedLink.replace("youtu.be/", "youtube.com/embed/");
+        }
+        // Vimeo
+        if (embedLink.includes("vimeo.com/")) {
+            const vimeoIdMatch = embedLink.match(/vimeo.com\/(\d+)/);
+            if (vimeoIdMatch && vimeoIdMatch[1]) {
+                embedLink = `https://player.vimeo.com/video/${vimeoIdMatch[1]}`;
+            }
         }
 
         // Google Drive /view para /embed
@@ -5052,6 +5059,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
         return embedLink;
     }
+
 
 
     // Função para atualizar as opções de player (Dublado/Legendado)

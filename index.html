@@ -14,6 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <!-- Adicionar Firebase Storage para foto de perfil -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         /* Estilos Globais e do Tema */
@@ -2350,7 +2351,7 @@
             <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
             <!-- Ex: Foto, Nome, Email, Status -->
         </div>
-        <div class="userMenu-nav">
+                <div class="userMenu-nav">
             <a href="#" class="userMenu-nav-item" onclick="openNotificationsPage()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.93 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
                 Notificações
@@ -2366,6 +2367,11 @@
             <a href="#" class="userMenu-nav-item" onclick="openSettingsPage()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.09-.73-1.71-.96L14 2h-4l-.38 2.65c-.62.23-1.19.56-1.71.96l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24-.42-.12-.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.09.73 1.71.96L10 22h4l.38-2.65c.62-.23 1.19-.56 1.71-.96l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
                 Configurações
+            </a>
+            <!-- NOVO BOTÃO DE SINCRONIZAÇÃO DO BLOGGER -->
+            <a href="#" class="userMenu-nav-item" onclick="handleAuthClick()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 1.01L8 1c-1.1 0-1.99.9-1.99 2v18c0 1.1.89 2 1.99 2h8c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM16 21H8v-1h8v1zm0-3H8V5h8v13zm-1-6h-3V8h3v4z"/></svg>
+                Sincronizar Blogger (Admin)
             </a>
             <div class="toggle-switch-container">
                 <span class="toggle-switch-label">Modo Adulto (+18)</span>
@@ -2383,6 +2389,7 @@
             </div>
             <button onclick="logoutUsuario()" class="btn-post" style="background:var(--danger); margin-top: 10px; margin-bottom: 20px;">Sair</button>
         </div>
+
     </div>
 </div>
 
@@ -2530,6 +2537,88 @@
         .catch((error) => {
             console.error("Erro ao configurar persistência de login:", error);
         });
+    // --- FUNÇÕES PARA OAUTH (ADICIONE JUNTO COM AS OUTRAS FUNÇÕES JS) ---
+
+    // 1. Função para iniciar o login OAuth e obter o Token
+    function handleAuthClick() {
+      if (!auth.currentUser) {
+        showMessage("Você precisa estar logado no Firebase primeiro para autenticar com Google.");
+        openModal('authModal');
+        return;
+      }
+      
+      // Cria o cliente de token OAuth
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: (tokenResponse) => {
+          accessToken = tokenResponse.access_token;
+          console.log("[OAuth Debug] Token obtido com sucesso!");
+          showMessage("Login OAuth com Google realizado com sucesso. Os vídeos do Blogger agora serão carregados com seu acesso.");
+          // Opcional: Você pode querer recarregar a página ou o player atual aqui para aplicar o novo token.
+          if (currentPlayingSerie && currentPlayingEpisode) {
+              openVideoPlayer(currentPlayingSerie, currentPlayingEpisode, currentPlayingPlayerIndex);
+          }
+        },
+        error_callback: (error) => {
+            console.error("[OAuth Debug] Erro ao obter token OAuth:", error);
+            showMessage("Erro ao fazer login OAuth com Google. Verifique o console para mais detalhes.");
+        }
+      });
+      // Solicita o token de acesso
+      client.requestAccessToken();
+    }
+
+    // 2. Função para buscar os dados do Blogger usando o token OAuth e extrair o link de embed
+    async function getBloggerEmbedUrlWithOAuth(blogId, postId) {
+      if (!accessToken) {
+        console.warn("[Blogger OAuth Debug] Nenhum token OAuth disponível. Não foi possível buscar com OAuth.");
+        return null;
+      }
+      
+      try {
+        const response = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts/${postId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}` // Usa o token OAuth para autenticação
+          }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`[Blogger OAuth Debug] Erro na requisição API com OAuth: ${response.status} ${response.statusText}`, errorText);
+            showMessage(`Erro ao buscar post do Blogger com OAuth: ${response.statusText}. Verifique as permissões do Blogger.`);
+            return null;
+        }
+
+        const data = await response.json();
+        console.log("[Blogger OAuth Debug] Dados recebidos da API do Blogger com OAuth:", data);
+
+        if (data.content) {
+            console.log("[Blogger OAuth Debug] Conteúdo HTML do post com OAuth:", data.content);
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data.content, "text/html");
+            const iframe = doc.querySelector('iframe');
+            if (iframe && iframe.src) {
+                console.log("[Blogger OAuth Debug] SRC do iframe do Blogger extraído com OAuth:", iframe.src);
+                return iframe.src;
+            } else {
+                console.warn("[Blogger OAuth Debug] Conteúdo do post do Blogger encontrado (via OAuth), mas não foi possível extrair o src do iframe.", data.content);
+                showMessage("Não foi possível encontrar o link do vídeo no post do Blogger (via OAuth). Verifique o formato do post.");
+                return null;
+            }
+        } else {
+            console.error("[Blogger OAuth Debug] Conteúdo do post do Blogger vazio ou inesperado (via OAuth).", data);
+            showMessage("Conteúdo do post do Blogger vazio ou inesperado (via OAuth).");
+            return null;
+        }
+      } catch (err) {
+        console.error("[Blogger OAuth Debug] Erro ao buscar post do Blogger com OAuth:", err);
+        showMessage("Erro de rede ou na API do Blogger com OAuth: " + err.message);
+        return null;
+      }
+    }
+
+    // --- FIM DAS FUNÇÕES OAUTH ---
 
     let currentUserData = null; // Para armazenar os dados do usuário logado e seus settings
     let currentFilter = 'recentes'; // Filtro de animes atual (recentes, legendados, dublados, salvos, search, genero, letter, watched, adult)
@@ -2546,7 +2635,13 @@
     // --- NOVAS CONSTANTES PARA A API DO BLOGGER ---
     const BLOGGER_API_KEY = 'AIzaSyDnMiAiWNMKmjpFluovJXaF9tNiaWxe9vk'; // Sua chave de API
     const BLOGGER_BLOG_ID = '2598097647287770981'; // Seu ID do Blog
-    // --- FIM DAS NOVAS CONSTANTES ---
+        // --- NOVAS CONSTANTES E VARIÁVEIS PARA OAUTH ---
+    const CLIENT_ID = '751657326717-2tk881jhsinamjc1ki5lceq72bljb9uv.apps.googleusercontent.com'; // Seu ID de Cliente OAuth
+    const SCOPES = 'https://www.googleapis.com/auth/blogger.readonly'; // Escopo para ler posts do Blogger
+
+    let accessToken = null; // Armazenará o token de acesso OAuth após o login
+    // --- FIM NOVAS CONSTANTES E VARIÁVEIS PARA OAUTH ---
+
 
 
     // Adicionado ao início do JavaScript para controlar as páginas
@@ -4988,46 +5083,70 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     }
 
 
-            // Função para formatar links de embed de vários provedores
-    async function formatEmbedLink(originalLink) { // AGORA É UMA FUNÇÃO ASSÍNCRONA
+                // Função para formatar links de embed de vários provedores
+    async function formatEmbedLink(originalLink) {
         if (!originalLink) return "";
 
         let embedLink = originalLink;
 
-        // --- NOVO: Lógica para Blogger API ---
-        // Verificamos se o link fornecido segue o padrão "blogger-post-id:SEU_ID_DO_POST"
+        // --- NOVO: Lógica para Blogger API (Prioriza OAuth, depois API Key pública) ---
         if (embedLink.startsWith("blogger-post-id:")) {
             const bloggerPostId = embedLink.substring("blogger-post-id:".length);
-            console.log("Detectado vídeo do Blogger com Post ID:", bloggerPostId);
+            console.log("[Blogger Debug] Detectado vídeo do Blogger com Post ID:", bloggerPostId);
+
+            // Tenta usar o token OAuth se o usuário estiver logado no Firebase E tiver um token OAuth
+            if (accessToken && auth.currentUser) {
+                console.log("[Blogger OAuth Debug] Tentando buscar com token OAuth...");
+                const oauthEmbedUrl = await getBloggerEmbedUrlWithOAuth(BLOGGER_BLOG_ID, bloggerPostId);
+                if (oauthEmbedUrl) {
+                    console.log("[Blogger OAuth Debug] Sucesso com OAuth, usando URL:", oauthEmbedUrl);
+                    return oauthEmbedUrl; // Retorna o URL obtido via OAuth
+                } else {
+                    console.warn("[Blogger OAuth Debug] Falha ao obter URL com OAuth. Caindo para API Key pública.");
+                    // Se OAuth falhar, continua para a lógica da API Key pública abaixo
+                }
+            }
+
+            // Fallback para a lógica da API Key pública se OAuth não foi tentado ou falhou
             try {
-                // Fazemos uma chamada à API do Blogger para obter o conteúdo do post
-                // A URL da API do Blogger que você forneceu é: https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts?key={API_KEY}
-                // Para buscar um post específico, o formato é: https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts/{POST_ID}?key={API_KEY}
-                const response = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts/${bloggerPostId}?key=${BLOGGER_API_KEY}`);
+                const apiUrl = `https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts/${bloggerPostId}?key=${BLOGGER_API_KEY}`;
+                console.log("[Blogger Debug] Fazendo requisição API Key pública para:", apiUrl);
+
+                const response = await fetch(apiUrl);
+                
+                // Verificar se a resposta foi bem-sucedida (status 200)
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`[Blogger Debug] Erro na requisição API Key pública: ${response.status} ${response.statusText}`, errorText);
+                    showMessage(`Erro ao carregar vídeo do Blogger: ${response.statusText}. Verifique a chave da API ou o ID do post.`);
+                    return originalLink; // Fallback
+                }
+
                 const data = await response.json();
+                console.log("[Blogger Debug] Dados recebidos da API do Blogger (API Key pública):", data);
 
                 if (data.content) {
-                    // O 'data.content' contém o HTML completo do post, incluindo o <iframe> do vídeo
-                    // Precisamos extrair o atributo 'src' do iframe
+                    console.log("[Blogger Debug] Conteúdo HTML do post (API Key pública):", data.content);
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data.content, "text/html");
                     const iframe = doc.querySelector('iframe');
                     if (iframe && iframe.src) {
-                        console.log("SRC do iframe do Blogger extraído:", iframe.src);
+                        console.log("[Blogger Debug] SRC do iframe do Blogger extraído (API Key pública):", iframe.src);
                         return iframe.src; // Retorna o SRC do iframe (o link direto do vídeo)
                     } else {
-                        console.warn("Conteúdo do post do Blogger encontrado, mas não foi possível extrair o src do iframe:", data.content);
-                        // Se não encontrar o iframe ou o src, podemos tentar retornar o link original
-                        // ou um placeholder de erro, dependendo do que for melhor para o UX.
-                        return originalLink; // Fallback: retorna o link original
+                        console.warn("[Blogger Debug] Conteúdo do post do Blogger encontrado (API Key pública), mas não foi possível extrair o src do iframe.", data.content);
+                        showMessage("Não foi possível encontrar o link do vídeo no post do Blogger. Verifique o formato do post.");
+                        return originalLink; // Fallback
                     }
                 } else {
-                    console.error("Conteúdo do post do Blogger não encontrado para o ID:", bloggerPostId, data);
-                    return originalLink; // Fallback: retorna o link original
+                    console.error("[Blogger Debug] Conteúdo do post do Blogger vazio ou inesperado (API Key pública).", data);
+                    showMessage("Conteúdo do post do Blogger vazio ou inesperado.");
+                    return originalLink; // Fallback
                 }
             } catch (error) {
-                console.error("Erro ao buscar conteúdo do post do Blogger para o ID:", bloggerPostId, error);
-                return originalLink; // Fallback: retorna o link original em caso de erro na API
+                console.error("[Blogger Debug] Erro ao buscar conteúdo do post do Blogger (API Key pública):", bloggerPostId, error);
+                showMessage("Erro de rede ou na API do Blogger: " + error.message);
+                return originalLink; // Fallback em caso de erro na API
             }
         }
         // --- FIM: Lógica para Blogger API ---

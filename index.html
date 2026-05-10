@@ -3712,9 +3712,10 @@
         // TODO: Adicionar inicialização do GoogleAuthProvider
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    // Importar Plyr.io
-    // (Você precisará adicionar a tag <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script> ao seu HTML)
-    // E o CSS correspondente: <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css"/>
+        // Importar Plyr.io
+    // Para Plyr.io, você precisará adicionar as tags <script> e <link> na seção <head> do seu HTML.
+    // Exemplo da tag <script> a ser adicionada: https://cdn.plyr.io/3.7.8/plyr.js
+    // Exemplo da tag <link> (CSS) a ser adicionada: https://cdn.plyr.io/3.7.8/plyr.css
 
     let plyrPlayer; // Variável global para o player Plyr
 
@@ -3740,6 +3741,8 @@
         'Esportes de Aventura', 'Esportes Radicais', 'Jogos de Tabuleiro',
         'Jogos de Cartas', 'RPG', 'MMORPG', 'Realidade Virtual', 'Realidade Aumentada'
     ];
+
+
 
 
     // Persistência de Login: Adiciona o Firebase Auth para usar a persistência local

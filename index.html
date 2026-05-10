@@ -3708,7 +3708,7 @@
     const auth = firebase.auth(); 
     const storage = firebase.storage(); // Inicializa o Firebase Storage
 
-    // TODO: Adicionar inicialização do GoogleAuthProvider
+        // TODO: Adicionar inicialização do GoogleAuthProvider
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
     // Importar Plyr.io
@@ -3774,26 +3774,27 @@
         if (newPageEl) newPageEl.classList.add('active');
         
         // Adiciona a nova página à pilha se não for a página atual ou se for uma nova instância
-        if (pageStack[pageStack.length - 1] !== pageId) {
-            pageStack.push(pageId);
-        } else if (params && JSON.stringify(params) !== JSON.stringify(pageStack[pageStack.length - 1].params)) {
-             // Se for a mesma página, mas com parâmetros diferentes, empilha como nova
-            pageStack[pageStack.length - 1] = { pageId, title, params };
+        if (typeof pageStack[pageStack.length - 1] === 'string' || pageStack[pageStack.length - 1].pageId !== pageId || (params && JSON.stringify(params) !== JSON.stringify(pageStack[pageStack.length - 1].params))) {
+             pageStack.push({ pageId, title, params });
+        } else if (pageStack[pageStack.length - 1].title !== title) { // Atualiza o título se for o mesmo pageId mas title diferente
+            pageStack[pageStack.length - 1].title = title;
         }
 
-                // Atualiza breadcrumbs
-        updateBreadcrumbs(pageId, title);
+        // Atualiza breadcrumbs
+        updateBreadcrumbs();
 
         console.log("Pilha de páginas:", pageStack);
     }
 
     function closeCurrentPage() {
         if (pageStack.length > 1) {
-            const currentPageId = pageStack.pop();
+            const currentPageObj = pageStack.pop();
+            const currentPageId = typeof currentPageObj === 'string' ? currentPageObj : currentPageObj.pageId;
             const currentPage = document.getElementById(currentPageId);
             if (currentPage) currentPage.classList.remove('active');
 
-            const previousPageId = pageStack[pageStack.length - 1];
+            const previousPageObj = pageStack[pageStack.length - 1];
+            const previousPageId = typeof previousPageObj === 'string' ? previousPageObj : previousPageObj.pageId;
             const previousPage = document.getElementById(previousPageId);
             if (previousPage) previousPage.classList.add('active');
 
@@ -3822,52 +3823,45 @@
             }
 
             // Atualiza breadcrumbs ao voltar
-            updateBreadcrumbs(previousPageId, pageStack[pageStack.length - 1].title || null);
+            updateBreadcrumbs();
 
         } else {
             // Se for a última página (main), apenas garante que está ativa
             const mainPage = document.getElementById('main');
             if (mainPage) mainPage.classList.add('active');
-            // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
             console.log("Você está na página principal.");
-
-            // Garante que os breadcrumbs sejam limpos ou mostrem apenas "AnimesOracle"
-            updateBreadcrumbs('main', 'AnimesOracle');
+            updateBreadcrumbs(); // Garante que os breadcrumbs mostrem apenas "AnimesOracle"
         }
         console.log("Pilha de páginas:", pageStack);
     }
 
     // Função para atualizar os breadcrumbs
-    function updateBreadcrumbs(currentPageId, currentPageTitle = null) {
+    function updateBreadcrumbs() {
         const breadcrumbsDiv = document.getElementById('breadcrumbs');
         if (!breadcrumbsDiv) return;
 
-        // Base
-        let pathHtml = `<a href="#" onclick="openPage('main', 'AnimesOracle')">AnimesOracle</a>`;
-        
-        // Remove a página atual se já estiver no path para evitar duplicatas
-        breadcrumbsPath = breadcrumbsPath.filter(item => item.pageId !== currentPageId);
+        let pathHtml = '';
+        for (let i = 0; i < pageStack.length; i++) {
+            const item = pageStack[i];
+            const pageId = typeof item === 'string' ? item : item.pageId;
+            let title = typeof item === 'string' ? item.charAt(0).toUpperCase() + item.slice(1) : item.title;
 
-        // Adiciona ou atualiza a página atual no path
-        let currentTitle = currentPageTitle;
-        if (!currentTitle) {
-            // Tenta obter o título de outras formas se não for passado
-            const pageElement = document.getElementById(currentPageId);
-            if (pageElement) {
-                const titleElement = pageElement.querySelector('.modal-page-header .title, .page-header .page-title');
-                if (titleElement) currentTitle = titleElement.textContent;
+            // Ajustes para nomes mais amigáveis no breadcrumbs
+            if (pageId === 'main') title = 'AnimesOracle';
+            else if (pageId === 'userMenu') title = 'Menu';
+            else if (pageId === 'postarPage') title = 'Publicar';
+            else if (pageId === 'newSerieFormPage') title = 'Nova Série';
+            else if (pageId === 'addEpisodePage') title = 'Add Episódio';
+            else if (pageId === 'editSeriePage') title = 'Editar Série';
+            else if (pageId === 'editEpisodePage') title = 'Editar Episódio';
+            else if (pageId === 'videoPage') title = currentPlayingSerie ? currentPlayingSerie.nome : 'Player';
+            else if (pageId === 'episodeListPage') title = currentPlayingSerie ? currentPlayingSerie.nome : 'Episódios';
+            else if (pageId === 'categoryViewPage') title = title; // Já vem formatado
+
+            if (i > 0) {
+                pathHtml += `<span> &raquo; </span>`;
             }
-        }
-        if (currentTitle) {
-            breadcrumbsPath.push({ pageId: currentPageId, title: currentTitle });
-        }
-
-
-        // Constrói o HTML
-        for (let i = 0; i < breadcrumbsPath.length; i++) {
-            const item = breadcrumbsPath[i];
-            if (item.pageId === 'main') continue; // Já adicionado
-            pathHtml += `<span> &raquo; </span><a href="#" onclick="openPage('${item.pageId}', '${item.title}')">${item.title}</a>`;
+            pathHtml += `<a href="#" onclick="openPage('${pageId}', '${title}', ${JSON.stringify(item.params || null)})">${title}</a>`;
         }
         
         breadcrumbsDiv.innerHTML = pathHtml;

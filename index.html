@@ -81,18 +81,113 @@
         .gap-4 { gap: 16px; }
 
         /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
-        header { 
+                header { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             padding: 0 15px; 
             background: #000; 
             height: 60px; 
-            position: sticky; 
+            position: fixed; /* Mude para fixed */
+            width: 100%;    /* Adicione para ocupar toda a largura */
             top: 0; 
-            z-index: 1000; 
+            left: 0;        /* Adicione para alinhar à esquerda */
+            z-index: 9999;  /* Aumente o z-index para ficar acima de tudo */
             border-bottom: 1px solid #333; 
         }
+
+        /* Ajuste para o conteúdo principal para não ficar escondido abaixo do header fixo */
+        body > main {
+            padding-top: 60px; /* Altura do header */
+        }
+
+        /* Ajuste para as páginas modais que agora são de tela cheia */
+        .modal-page,
+        .category-view-page,
+        .content-page {
+            position: fixed; /* Já está fixed, mas garante */
+            top: 60px;       /* Começa abaixo do header principal */
+            height: calc(100% - 60px); /* Ocupa o resto da altura da tela */
+            left: 0;
+            width: 100%;
+            background: var(--bg);
+            z-index: 5000;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: none; /* Escondido por padrão */
+        }
+
+        /* Remove os cabeçalhos internos das páginas que não precisarão mais deles */
+        .modal-page .modal-page-header,
+        .category-view-page .modal-page-header,
+        .content-page .page-header {
+            display: none; /* O header global será usado */
+        }
+
+        /* Ajuste a barra de pesquisa para ficar abaixo do header fixo */
+        .search-container {
+            position: fixed; /* Mude para fixed */
+            top: 60px;       /* Abaixo do header fixo */
+            width: 100%;
+            display: none; 
+            justify-content: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #333; 
+            background: var(--bg); 
+            z-index: 9998; /* Um pouco abaixo do header, mas acima do conteúdo */
+        }
+
+        /* Ajuste o catálogo A-Z para ficar abaixo da searchbar ou do header */
+        #azCatalog {
+            position: fixed; /* Mude para fixed */
+            top: 60px; /* Padrão, abaixo do header */
+            width: 100%;
+            /* ... outros estilos ... */
+            z-index: 9997; /* Um pouco abaixo da searchbar */
+            background: var(--bg); /* Garante que o fundo seja o do tema */
+        }
+
+        /* Ajuste para o heroSlider para não ficar sobreposto pelo header */
+        #heroSlider {
+            margin-top: 25px; /* Adicione um margin-top para empurrar para baixo */
+        }
+
+        /* Quando a searchbar está aberta, o azCatalog precisa descer */
+        #searchContainer.active + #azCatalog { /* Use active class para searchContainer */
+            top: 110px; /* 60px (header) + 50px (aprox searchbar) */
+        }
+
+        /* O .modal de menu lateral precisa ter o top ajustado também */
+        #generosMenu .modal-card,
+        #userMenu-content {
+             top: 60px; /* Começa abaixo do header global */
+             height: calc(100% - 60px); /* Ocupa o resto da altura da tela */
+             border-radius: 0; /* Remove border-radius superior se for de tela cheia */
+        }
+        
+        /* Ajuste para o botão de fechar do menu lateral */
+        #generosMenu .close-btn,
+        .userMenu-close-btn {
+            top: 10px; /* Ajusta a posição vertical dentro do modal-card */
+            right: 15px;
+            z-index: 10000; /* Garante que fique acima de outros elementos dentro do menu */
+        }
+
+        /* Ajuste o z-index da página de vídeo para garantir que ela esteja acima do header quando ativa, se necessário */
+        #videoPage {
+            z-index: 9990; /* Um pouco abaixo do header principal, mas acima de outras páginas */
+        }
+        #videoPlayerContainer {
+            z-index: 9991; /* Fica acima do #videoPage, mas ainda abaixo do header global */
+        }
+
+        /* Ajuste para o botão de fechar do player (ficava no videoPlayerContainer, agora precisa ir pro body) */
+        .video-page-close-btn {
+            z-index: 9992; /* Acima do player */
+            color: white; /* Garante visibilidade */
+        }
+
         .logo { 
             font-weight: bold; 
             color: var(--primary); 
@@ -1896,7 +1991,8 @@
         <!-- Ícone de hambúrguer SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <div class="logo">AnimesOracle</div>
+        <div class="logo" onclick="goToHomePage()">AnimesOracle</div>
+
     <!-- Botão de pesquisa -->
     <button class="icon-btn" onclick="toggleSearchBar()">
         <!-- Ícone de lupa SVG -->
@@ -2021,18 +2117,11 @@
 <!-- Páginas que substituem modais -->
 <!-- Página para Postar Conteúdo (Série ou Episódio) -->
 <div id="postarPage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title">Publicar Conteúdo</div>
-        <div></div> <!-- Espaço para centralizar o título -->
-    </div>
     <div class="modal-page-content">
-        <button class="btn-post" onclick="openNewSerieFormPage()">Postar Nova Série</button>
-        <button class="btn-post" onclick="openAddEpisodeToExistingSeriePage()" style="margin-top: 15px;">Adicionar Episódio a Série Existente</button>
+        <!-- ... conteúdo ... -->
     </div>
 </div>
+
 
 <!-- Página para Formulário de Nova Série -->
 <div id="newSerieFormPage" class="modal-page">
@@ -2180,7 +2269,8 @@
         <div id="videoSkeleton">Carregando Vídeo...</div>
         <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
+                <button class="video-page-close-btn" onclick="closeCurrentPage()">&times;</button>
+
     </div>
 
     <div class="player-nav-buttons">
@@ -2544,51 +2634,136 @@
     const pageStack = ['main']; // Começa com a página principal
 
     // Adicionado ao início do JavaScript para controlar as páginas
-    function openPage(pageId) {
-        // Esconde a página atual
-        const currentPage = document.getElementById(pageStack[pageStack.length - 1]);
-        if (currentPage) currentPage.classList.remove('active');
+        function openPage(pageId) {
+        // Fecha o menu do usuário e o menu de gêneros se estiverem abertos
+        const userMenu = document.getElementById('userMenu');
+        if (userMenu && userMenu.classList.contains('open')) {
+            toggleUserMenu();
+        }
+        const generosMenu = document.getElementById('generosMenu');
+        if (generosMenu && generosMenu.classList.contains('open')) {
+            toggleGenerosMenu();
+        }
 
+        // Esconde a search bar se estiver visível
+        if (searchBarVisible) {
+            closeSearchBar();
+        }
+
+        // Esconde a página atualmente ativa na pilha
+        const currentActivePageId = pageStack[pageStack.length - 1];
+        if (currentActivePageId) {
+            const currentActivePage = document.getElementById(currentActivePageId);
+            if (currentActivePage) {
+                currentActivePage.classList.remove('active');
+            }
+        }
+        
         // Mostra a nova página
         const newPage = document.getElementById(pageId);
-        if (newPage) newPage.classList.add('active');
+        if (newPage) {
+            newPage.classList.add('active');
+        }
         
         // Adiciona a nova página à pilha se não for a página atual
         if (pageStack[pageStack.length - 1] !== pageId) {
             pageStack.push(pageId);
         }
+
+        // Se a página principal está sendo aberta, garante que ela tenha o conteúdo renderizado
+        if (pageId === 'main') {
+            renderHomePageContent(); // Garante que o conteúdo principal seja carregado
+        }
+
         console.log("Pilha de páginas:", pageStack);
     }
 
-    function closeCurrentPage() {
+
+        function closeCurrentPage() {
+        // Se a pilha de páginas tem mais de uma entrada (ou seja, não estamos na página principal)
         if (pageStack.length > 1) {
-            const currentPage = document.getElementById(pageStack.pop());
-            if (currentPage) currentPage.classList.remove('active');
+            const currentPageId = pageStack.pop(); // Remove a página atual da pilha
+            const currentPage = document.getElementById(currentPageId);
+            if (currentPage) currentPage.classList.remove('active'); // Esconde a página atual
 
-            const previousPage = document.getElementById(pageStack[pageStack.length - 1]);
-            if (previousPage) previousPage.classList.add('active');
+            const previousPageId = pageStack[pageStack.length - 1]; // Pega o ID da página anterior (topo da pilha)
+            const previousPage = document.getElementById(previousPageId);
+            if (previousPage) previousPage.classList.add('active'); // Mostra a página anterior
 
-            // Se for o player que está sendo fechado, pare o vídeo
-            if (currentPage.id === 'videoPage') {
+            // Lógica específica para fechar o player
+            if (currentPageId === 'videoPage') {
                 const videoFrame = document.getElementById('videoFrame');
                 if (videoFrame) videoFrame.src = ""; // Para o vídeo
                 currentPlayingSerie = null;
                 currentPlayingEpisode = null;
-                 // Remove o estado do modo cinema
-                document.body.classList.remove('cinema-mode');
+                document.body.classList.remove('cinema-mode'); // Remove o estado do modo cinema
             }
-            // Se for o userMenu, fechar de forma especial
-            if (currentPage.id === 'userMenu') {
-                toggleUserMenu(); // Reusa a função que já esconde e reseta
+            // Lógica específica para fechar o menu do usuário, se ele foi fechado pelo 'back' button
+            if (currentPageId === 'userMenu') {
+                // Se o userMenu está sendo fechado e o userMenuContent ainda está visível, force a transição
+                const userMenuContent = document.getElementById('userMenu-content');
+                if (userMenuContent && userMenuContent.style.transform === 'translateX(0px)') {
+                    userMenuContent.style.transform = 'translateX(-100%)';
+                    userMenuContent.addEventListener('transitionend', function handler() {
+                        const userMenu = document.getElementById('userMenu');
+                        if (userMenu) userMenu.style.display = 'none';
+                        userMenuContent.removeEventListener('transitionend', handler);
+                    }, { once: true });
+                }
             }
+
+            // Garante que searchbar e azCatalog estejam no estado correto (escondidos)
+            closeSearchBar(); 
+
+            // Se voltarmos para a página principal, renderiza o conteúdo novamente
+            if (previousPageId === 'main') {
+                renderHomePageContent();
+            }
+
         } else {
-            // Se for a última página (main), apenas garante que está ativa
+            // Se já estamos na página principal e tentamos fechar, garantimos que ela esteja ativa
             const mainPage = document.getElementById('main');
             if (mainPage) mainPage.classList.add('active');
-            // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
-            console.log("Você está na página principal.");
+            console.log("Você já está na página principal.");
         }
         console.log("Pilha de páginas:", pageStack);
+    }
+
+    // Nova função para retornar à página principal ao clicar no logo
+    function goToHomePage() {
+        // Limpa a pilha de páginas, deixando apenas 'main'
+        pageStack.splice(1); // Remove todos os itens a partir do segundo elemento (índice 1)
+        
+        // Garante que todas as outras "páginas" estejam escondidas
+        const allModalPages = document.querySelectorAll('.modal-page, .category-view-page, .content-page');
+        allModalPages.forEach(page => {
+            if (page.id !== 'main') { // Não esconde a 'main'
+                page.classList.remove('active');
+            }
+        });
+
+        // Garante que o menu do usuário esteja fechado se estiver aberto
+        const userMenu = document.getElementById('userMenu');
+        if (userMenu && userMenu.classList.contains('open')) {
+            toggleUserMenu(); // Fecha o menu do usuário
+        }
+        // Garante que o menu de gêneros esteja fechado
+        const generosMenu = document.getElementById('generosMenu');
+        if (generosMenu && generosMenu.classList.contains('open')) {
+            toggleGenerosMenu(); // Fecha o menu de gêneros
+        }
+
+        // Fecha a barra de pesquisa
+        closeSearchBar();
+
+        // Ativa a página principal
+        const mainPage = document.getElementById('main');
+        if (mainPage) mainPage.classList.add('active');
+        
+        // Recarrega o conteúdo da homepage para garantir que esteja atualizado
+        renderHomePageContent();
+
+        console.log("Retornando à página principal. Pilha de páginas:", pageStack);
     }
 
     // Função para abrir o menu do usuário (Drawer)

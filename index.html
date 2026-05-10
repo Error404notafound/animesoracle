@@ -419,12 +419,15 @@
                 grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas maiores */
             }
         }
-        .episode-grid-card-wrapper { /* Novo wrapper para o card de episódio e seu texto */
+                .episode-grid-card-wrapper { /* Novo wrapper para o card de episódio e seu texto */
             display: flex;
             flex-direction: column;
             text-decoration: none;
             color: inherit;
+            width: 100%;    /* <-- ADICIONE ESTA LINHA */
+            overflow: hidden; /* <-- ADICIONE ESTA LINHA */
         }
+
                 .episode-grid-card { /* Card de episódio em grade */
             background: var(--card);
             border-radius: 8px;

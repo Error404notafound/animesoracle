@@ -4496,60 +4496,74 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
 
     // Função para carregar e exibir o histórico de animes assistidos
     async function loadWatchedAnimes() {
-        const watchedAnimesGrid = document.getElementById('watchedAnimesGrid');
-        if (!watchedAnimesGrid) {
-            console.error("Erro: Elemento 'watchedAnimesGrid' não encontrado no DOM.");
-            return;
+    const watchedAnimesGrid = document.getElementById('watchedAnimesGrid');
+    if (!watchedAnimesGrid) {
+        console.error("Erro: Elemento 'watchedAnimesGrid' não encontrado no DOM.");
+        return;
+    }
+    watchedAnimesGrid.innerHTML = ''; // Limpa o conteúdo anterior
+
+    console.log("loadWatchedAnimes: currentUserData:", currentUserData);
+    console.log("loadWatchedAnimes: currentUserData.animesAssistidos:", currentUserData ? currentUserData.animesAssistidos : "Nenhum dado do usuário ou histórico.");
+
+
+    if (!auth.currentUser || !currentUserData || !currentUserData.animesAssistidos || currentUserData.animesAssistidos.length === 0) {
+        watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Você ainda não assistiu a nenhum anime.</p>';
+        return;
+    }
+
+    const watchedSerieIdsMap = new Map();
+
+    console.log("loadWatchedAnimes: Itens brutos do histórico:", currentUserData.animesAssistidos);
+
+    const sortedWatched = [...currentUserData.animesAssistidos].sort((a, b) => {
+        const tsA = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate() : new Date(0);
+        const tsB = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate() : new Date(0);
+        return tsA.getTime() - tsB.getTime();
+    });
+
+    for (const item of sortedWatched) {
+        if (!watchedSerieIdsMap.has(item.serieId)) {
+            watchedSerieIdsMap.set(item.serieId, item.episodeId);
         }
-        watchedAnimesGrid.innerHTML = ''; // Limpa o conteúdo anterior
+    }
+    
+    const uniqueSerieIds = Array.from(watchedSerieIdsMap.keys());
+    
+    console.log("loadWatchedAnimes: IDs únicos de séries assistidas:", uniqueSerieIds);
 
-        if (!auth.currentUser || !currentUserData || !currentUserData.animesAssistidos || currentUserData.animesAssistidos.length === 0) {
-            watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Você ainda não assistiu a nenhum anime.</p>';
-            return;
-        }
+    if (uniqueSerieIds.length === 0) {
+        watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Você ainda não assistiu a nenhum anime.</p>';
+        return;
+    }
 
-        // Para evitar duplicatas e manter a ordem dos assistidos recentemente
-        const watchedSerieIdsMap = new Map(); // Para mapear serieId para a última vez assistida
+    const watchedSeriesPromises = uniqueSerieIds.map(serieId => db.collection("series").doc(serieId).get());
+    const watchedSeriesSnapshots = await Promise.all(watchedSeriesPromises);
 
-        // Ordena por timestamp de forma decrescente para mostrar os mais recentes primeiro
-        const sortedWatched = [...currentUserData.animesAssistidos].sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
+    let hasDisplayedAnyCard = false;
 
-        for (const item of sortedWatched) {
-            if (!watchedSerieIdsMap.has(item.serieId)) { // Adiciona apenas a primeira ocorrência (a mais recente)
-                watchedSerieIdsMap.set(item.serieId, item.episodeId);
+    for (const doc of watchedSeriesSnapshots) {
+        if (doc.exists) {
+            const serie = { id: doc.id, ...doc.data() };
+            console.log("loadWatchedAnimes: Processando série:", serie.nome, "(ID:", serie.id, ")");
+
+            if (serie.isAdult && (!auth.currentUser || !currentUserData.modoAdulto)) {
+                console.log("loadWatchedAnimes: Série +18 ignorada no histórico:", serie.nome);
+                continue;
             }
-        }
-        
-                // Converte o Map de volta para um array de IDs únicos
-        const uniqueSerieIds = Array.from(watchedSerieIdsMap.keys());
-        
-        if (uniqueSerieIds.length === 0) {
-            watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Você ainda não assistiu a nenhum anime.</p>';
-            return;
-        }
-
-        const watchedSeriesPromises = uniqueSerieIds.map(serieId => db.collection("series").doc(serieId).get());
-        const watchedSeriesSnapshots = await Promise.all(watchedSeriesPromises);
-
-        watchedSeriesSnapshots.forEach(doc => {
-            if (doc.exists) {
-                const serie = { id: doc.id, ...doc.data() };
-                if (serie.isAdult && (!auth.currentUser || !currentUserData.modoAdulto)) {
-                    // Não exibe conteúdo adulto borrado aqui no histórico, apenas esconde
-                    return; 
-                }
-                const wrapper = document.createElement('div');
-                wrapper.className = 'anime-card-wrapper';
-                wrapper.onclick = () => openEpisodeListPage(serie.id); // Abre a página da série
-                
-                const card = document.createElement('div');
-                card.className = 'anime-card';
-                card.innerHTML = `
-                    <img src="${serie.capa}" alt="${serie.nome}">
-                `;
-                wrapper.appendChild(card);
-                wrapper.innerHTML += `
-                    <div class="anime-card-title-below">${serie.nome}</div>
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'anime-card-wrapper';
+            wrapper.onclick = () => openEpisodeListPage(serie.id);
+            
+            const card = document.createElement('div');
+            card.className = 'anime-card';
+            card.innerHTML = `
+                <img src="${serie.capa}" alt="${serie.nome}">
+            `;
+            wrapper.appendChild(card);
+            wrapper.innerHTML += `
+                <div class="anime-card-title-below">${serie.nome}</div>
                 <div class="anime-card-genres-below">${serie.generos && serie.generos.length > 0 ? serie.generos.join(', ') : ''}</div>
             `;
 
@@ -4579,6 +4593,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Nenhum anime assistido encontrado que corresponda às suas preferências.</p>';
     }
 }
+
 
         // Função para remover um item do histórico de assistidos
     async function removeWatchedItem(serieIdToRemove) {

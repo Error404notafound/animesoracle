@@ -3287,15 +3287,12 @@
     console.log("DEBUG: marcarEpisodioComoAssistido - Argumentos recebidos:", { serieId, episodeId });
     if (typeof serieId !== 'string' || serieId.trim() === '') {
         console.error("DEBUG ERROR: serieId é inválido:", serieId);
-        // Opcional: throw new Error("ID da série é inválido.");
         return; // Retorna para evitar erro
     }
     if (typeof episodeId !== 'string' || episodeId.trim() === '') {
         console.error("DEBUG ERROR: episodeId é inválido:", episodeId);
-        // Opcional: throw new Error("ID do episódio é inválido.");
         return; // Retorna para evitar erro
     }
-
 
     if (!auth.currentUser) {
         console.log("DEBUG: Usuário não logado. Não é possível marcar episódio como assistido.");
@@ -3311,13 +3308,13 @@
 
             let animesAssistidosParaSalvar = [];
 
-            // Construindo o novo item assistido
+            // ***** CORREÇÃO AQUI: USAR 'new Date()' EM VEZ DE 'firebase.firestore.FieldValue.serverTimestamp()' *****
             const newWatchedItem = {
                 serieId: serieId,
                 episodeId: episodeId,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                timestamp: new Date() // <--- AGORA ESTÁ CORRETO
             };
-            console.log("DEBUG: newWatchedItem construído:", newWatchedItem);
+            console.log("DEBUG: newWatchedItem construído (com new Date()):", newWatchedItem);
 
 
             if (!userDoc.exists) {
@@ -3329,7 +3326,7 @@
                     email: auth.currentUser.email,
                     photoURL: auth.currentUser.photoURL || 'https://via.placeholder.com/60?text=AP',
                     animesSalvos: [],
-                    animesAssistidos: animesAssistidosParaSalvar, // <--- CUIDADO AQUI!
+                    animesAssistidos: animesAssistidosParaSalvar,
                     modoAdulto: false,
                     theme: 'dark',
                     displayName: auth.currentUser.displayName || (auth.currentUser.email ? auth.currentUser.email.split('@')[0] : 'Usuário'),
@@ -3378,10 +3375,10 @@
         }
     } catch (error) {
         console.error("DEBUG ERROR: Erro FINAL ao marcar episódio como assistido:", error);
-        // AQUI ESTÁ A CHAVE: O 'error' agora deve ter mais detalhes.
         console.error("DEBUG ERROR: Propriedades do erro:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
     }
 }
+
 
 
 

@@ -3283,13 +3283,24 @@
         // 5. LÓGICA DO MENU DO USUÁRIO E OUTRAS FUNCIONALIDADES
         // Função para marcar um episódio como assistido
     async function marcarEpisodioComoAssistido(serieId, episodeId) {
-    if (!auth.currentUser) {
-        console.log("Usuário não logado. Não é possível marcar episódio como assistido.");
-        return;
+    // Log inicial: Verificando os argumentos recebidos
+    console.log("DEBUG: marcarEpisodioComoAssistido - Argumentos recebidos:", { serieId, episodeId });
+    if (typeof serieId !== 'string' || serieId.trim() === '') {
+        console.error("DEBUG ERROR: serieId é inválido:", serieId);
+        // Opcional: throw new Error("ID da série é inválido.");
+        return; // Retorna para evitar erro
+    }
+    if (typeof episodeId !== 'string' || episodeId.trim() === '') {
+        console.error("DEBUG ERROR: episodeId é inválido:", episodeId);
+        // Opcional: throw new Error("ID do episódio é inválido.");
+        return; // Retorna para evitar erro
     }
 
-    // Adicione esta linha para depurar os IDs recebidos
-    console.log("marcarEpisodioComoAssistido chamado com:", { serieId, episodeId });
+
+    if (!auth.currentUser) {
+        console.log("DEBUG: Usuário não logado. Não é possível marcar episódio como assistido.");
+        return;
+    }
 
     const userId = auth.currentUser.uid;
     const userRef = db.collection("users").doc(userId);
@@ -3298,27 +3309,27 @@
         await db.runTransaction(async (transaction) => {
             const userDoc = await transaction.get(userRef);
 
-            // Inicializamos o array que será salvo
             let animesAssistidosParaSalvar = [];
 
+            // Construindo o novo item assistido
             const newWatchedItem = {
                 serieId: serieId,
                 episodeId: episodeId,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
+            console.log("DEBUG: newWatchedItem construído:", newWatchedItem);
+
 
             if (!userDoc.exists) {
-                // Se o documento do usuário NÃO existe, vamos criá-lo com dados padrão
-                console.warn("Documento do usuário não encontrado para o UID: " + userId + ". Criando um novo com dados padrão.");
+                console.warn("DEBUG: Documento do usuário NÃO encontrado para o UID: " + userId + ". Criando um novo com dados padrão.");
 
-                // Adicionamos o primeiro item diretamente ao array que será usado no `set`
                 animesAssistidosParaSalvar.push(newWatchedItem);
 
                 const newUserData = {
                     email: auth.currentUser.email,
                     photoURL: auth.currentUser.photoURL || 'https://via.placeholder.com/60?text=AP',
                     animesSalvos: [],
-                    animesAssistidos: animesAssistidosParaSalvar, // <--- CORREÇÃO AQUI: Usa o array preenchido
+                    animesAssistidos: animesAssistidosParaSalvar, // <--- CUIDADO AQUI!
                     modoAdulto: false,
                     theme: 'dark',
                     displayName: auth.currentUser.displayName || (auth.currentUser.email ? auth.currentUser.email.split('@')[0] : 'Usuário'),
@@ -3326,47 +3337,52 @@
                     status: 'novo',
                     statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
                 };
-                transaction.set(userRef, newUserData); // Cria o documento com o item assistido
+                console.log("DEBUG: Novos dados do usuário para SET (primeira vez):", newUserData);
+                transaction.set(userRef, newUserData);
 
-                // Atualiza o currentUserData localmente
                 if (currentUserData) {
                     Object.assign(currentUserData, newUserData);
                 }
 
             } else {
-                // Documento do usuário EXISTE, continua com a lógica original
+                console.log("DEBUG: Documento do usuário encontrado. Atualizando.");
                 animesAssistidosParaSalvar = userDoc.data().animesAssistidos || [];
+                console.log("DEBUG: animesAssistidos EXISTENTE antes da modificação:", animesAssistidosParaSalvar);
 
-                // Remove entradas antigas para o mesmo serieId e episodeId
-                // Garante que apenas o registro mais recente para uma série/episódio específico é mantido
+                // Remove entradas antigas para o mesmo serieId e episodeId (para evitar duplicatas ou manter apenas o mais recente)
                 animesAssistidosParaSalvar = animesAssistidosParaSalvar.filter(item =>
                     !(item.serieId === serieId && item.episodeId === episodeId)
                 );
+                console.log("DEBUG: animesAssistidos após FILTRAR duplicatas:", animesAssistidosParaSalvar);
 
-                // Adiciona o novo item (ou o item atualizado)
                 animesAssistidosParaSalvar.push(newWatchedItem);
+                console.log("DEBUG: animesAssistidos após ADICIONAR novo item:", animesAssistidosParaSalvar);
 
-                // Apenas atualiza o campo `animesAssistidos`
+                // Verificação final do array antes do update
+                if (!Array.isArray(animesAssistidosParaSalvar)) {
+                    console.error("DEBUG ERROR: animesAssistidosParaSalvar NÃO É UM ARRAY antes do update!");
+                    throw new Error("Dados de animes assistidos inválidos: não é um array.");
+                }
+
                 transaction.update(userRef, { animesAssistidos: animesAssistidosParaSalvar });
 
-                // Atualiza o currentUserData localmente
                 if (currentUserData) {
                     currentUserData.animesAssistidos = animesAssistidosParaSalvar;
                 }
             }
-            // Mudei para depurar a variável correta
-            console.log("Array 'animesAssistidos' prestes a ser salvo:", animesAssistidosParaSalvar);
+            console.log("DEBUG: Transação de 'animesAssistidos' preparada para COMMIT. Array final:", animesAssistidosParaSalvar);
         });
-        console.log(`Episódio ${episodeId} da série ${serieId} marcado como assistido para o usuário ${userId}.`);
-        // Opcional: Recarregar a seção de histórico se estiver visível
+        console.log(`DEBUG: Episódio ${episodeId} da série ${serieId} marcado como assistido para o usuário ${userId}.`);
         if (document.getElementById('watchedAnimesSection') && document.getElementById('watchedAnimesSection').style.display !== 'none') {
              loadWatchedAnimes();
         }
     } catch (error) {
-        console.error("Erro ao marcar episódio como assistido:", error);
-        // showMessage("Erro ao registrar seu histórico de visualização: " + error.message); // Removido para evitar alerts excessivos
+        console.error("DEBUG ERROR: Erro FINAL ao marcar episódio como assistido:", error);
+        // AQUI ESTÁ A CHAVE: O 'error' agora deve ter mais detalhes.
+        console.error("DEBUG ERROR: Propriedades do erro:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
     }
 }
+
 
 
 

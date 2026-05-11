@@ -4550,29 +4550,35 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
                 wrapper.appendChild(card);
                 wrapper.innerHTML += `
                     <div class="anime-card-title-below">${serie.nome}</div>
-                    <div class="anime-card-genres-below">${serie.generos && serie.generos.length > 0 ? serie.generos.join(', ') : ''}</div>
-                `;
+                <div class="anime-card-genres-below">${serie.generos && serie.generos.length > 0 ? serie.generos.join(', ') : ''}</div>
+            `;
 
-                // Botão de remover do histórico
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'remove-from-history-btn';
-                removeBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-.71-.71C14.49 3.11 14.28 3 14 3H10c-.28 0-.49.11-.7.29L8.5 4H6v2h14V4h-2.5z"/></svg>
-                `;
-                removeBtn.onclick = (e) => {
-                    e.stopPropagation(); // Evita o clique no card
-                    removeWatchedItem(serie.id);
-                };
-                wrapper.appendChild(removeBtn);
+            // O CÓDIGO DO BOTÃO DA LIXEIRA FOI REMOVIDO DAQUI
+            // Se você quiser o botão de volta, pode reinserir este bloco:
+            /*
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-from-history-btn';
+            removeBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-.71-.71C14.49 3.11 14.28 3 14 3H10c-.28 0-.49.11-.7.29L8.5 4H6v2h14V4h-2.5z"/></svg>
+            `;
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeWatchedItem(serie.id);
+            };
+            wrapper.appendChild(removeBtn);
+            */
 
-                watchedAnimesGrid.appendChild(wrapper);
-            }
-        });
-
-        if (watchedAnimesGrid.innerHTML === '') {
-            watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Nenhum anime assistido encontrado que corresponda às suas preferências.</p>';
+            watchedAnimesGrid.appendChild(wrapper);
+            hasDisplayedAnyCard = true;
+        } else {
+            console.warn("loadWatchedAnimes: Documento de série não encontrado para ID:", doc.id);
         }
     }
+
+    if (!hasDisplayedAnyCard) {
+        watchedAnimesGrid.innerHTML = '<p style="padding: 10px;">Nenhum anime assistido encontrado que corresponda às suas preferências.</p>';
+    }
+}
 
         // Função para remover um item do histórico de assistidos
     async function removeWatchedItem(serieIdToRemove) {

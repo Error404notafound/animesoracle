@@ -2694,38 +2694,31 @@ body.light-mode {
 </div>
 
 <!-- Páginas do Menu do Usuário (Notificações, Salvos, Contribuições, Configurações) -->
-<!-- Página de Notificações -->
-<div id="notificationsPage" class="content-page">
+<!-- Página de Animes Salvos -->
+<div id="savedAnimesPage" class="content-page">
     <div class="page-header">
         <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Notificações</div>
+        <div class="page-title">Meus Salvos</div>
         <div></div>
     </div>
-    <div class="page-content">
-        <div id="notificationsList">
-            <!-- Notificações serão carregadas aqui -->
-            <p>Nenhuma notificação por enquanto.</p>
+    <div class="page-content"> 
+        <div class="saved-content-toggle">
+            <button id="toggleSavedAnimesBtn" class="active" onclick="toggleSavedContent('animes')">Animes</button>
+            <button id="toggleSavedWaifusBtn" onclick="toggleSavedContent('waifus')">Waifus</button>
+        </div>
+
+        <!-- Área para Animes Salvos -->
+        <div id="savedAnimesContent" class="category-grid">
+            <p class="no-content-message">Você não tem animes salvos.</p>
+        </div>
+
+        <!-- Área para Waifus Salvas -->
+        <div id="savedWaifusContent" class="waifu-grid" style="display: none;">
+            <p class="no-content-message">Você não tem waifus salvas.</p>
         </div>
     </div>
 </div>
 
-<!-- NOVO CONTEÚDO PARA A PÁGINA savedAnimesPage -->
-<div class="page-content">
-    <div class="saved-content-toggle">
-        <button id="toggleSavedAnimesBtn" class="active" onclick="toggleSavedContent('animes')">Animes</button>
-        <button id="toggleSavedWaifusBtn" onclick="toggleSavedContent('waifus')">Waifus</button>
-    </div>
-
-    <!-- Área para Animes Salvos -->
-    <div id="savedAnimesContent" class="category-grid">
-        <p class="no-content-message">Você não tem animes salvos.</p>
-    </div>
-
-    <!-- Área para Waifus Salvas -->
-    <div id="savedWaifusContent" class="waifu-grid" style="display: none;">
-        <p class="no-content-message">Você não tem waifus salvas.</p>
-    </div>
-</div>
 <!-- FIM DO NOVO CONTEÚDO PARA savedAnimesPage -->
 
 

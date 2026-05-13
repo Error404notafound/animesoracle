@@ -6093,13 +6093,6 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
         }
     });
 
-    // Inicia o carregamento de animes e catálogo A-Z quando a página é carregada
-    document.addEventListener('DOMContentLoaded', () => {
-        generateAZCatalog();
-        // A função onAuthStateChanged cuidará da primeira carga do Hero Slider e carregarAnimes
-        // após a autenticação ser resolvida.
-    });
-
         // Função para iniciar o Hero Slider
         async function loadHeroSlider() {
         const heroSlider = document.getElementById('heroSlider');

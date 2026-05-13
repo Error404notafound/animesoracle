@@ -2136,7 +2136,7 @@ body.light-mode {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
     </button>
     <!-- NOVO BOTÃO WAIFUS -->
-<button class="icon-btn" onclick="openWaifusPage()">
+<button class="icon-btn" id="waifusButton" onclick="openWaifusPage()" style="display: none;">
     <!-- Ícone de Calcinha Minimalista (Alinhamento e Cor Originais) -->
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <!-- Cós superior esquerdo -->
@@ -3793,13 +3793,30 @@ body.light-mode {
             else console.warn("Elemento 'themeToggle' não encontrado.");
 
             // Aplica o tema imediatamente
-            aplicarTema(currentUserData.theme);
+        aplicarTema(currentUserData.theme);
+
+        // NOVO: Atualiza a visibilidade do botão Waifus
+        updateWaifusButtonVisibility();
 
         } catch (error) {
             console.error("Erro ao carregar dados do usuário:", error);
             showMessage("Erro ao carregar dados do usuário: " + error.message);
         }
     }
+// Função para controlar a visibilidade do botão "Waifus"
+function updateWaifusButtonVisibility() {
+    const waifusButton = document.getElementById('waifusButton');
+    if (!waifusButton) {
+        console.error("Erro: Elemento 'waifusButton' não encontrado no DOM.");
+        return;
+    }
+
+    if (auth.currentUser && currentUserData && currentUserData.modoAdulto) {
+        waifusButton.style.display = 'flex'; // ou 'block' dependendo do seu layout, 'flex' é consistente com icon-btn
+    } else {
+        waifusButton.style.display = 'none';
+    }
+}
 
     async function uploadProfilePicture(event) {
         const file = event.target.files[0];
@@ -3890,7 +3907,10 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             showMessage(`Modo Adulto: ${newModoAdultoState ? 'Ativado' : 'Desativado'}.`, 'info');
             
             // Recarrega todo o conteúdo principal da página para aplicar as configurações de modo adulto
-            renderHomePageContent();
+        renderHomePageContent();
+
+        // NOVO: Atualiza a visibilidade do botão Waifus
+        updateWaifusButtonVisibility();
 
             if (currentPlayingSerie && currentPlayingSerie.isAdult && !newModoAdultoState) {
                  // Se desativar o modo adulto e estiver vendo algo +18, fecha o player
@@ -6112,6 +6132,9 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             renderHomePageContent();
 
             toggleCommentSection(false); // Esconde os campos de comentário
+
+            // NOVO: Esconde o botão Waifus se o usuário deslogar
+            updateWaifusButtonVisibility();
         }
     });
 

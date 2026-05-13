@@ -1891,6 +1891,227 @@
             z-index: 5;
         }
 
+/* --- NOVOS ESTILOS PARA SEÇÃO WAIFUS --- */
+
+/* Ajuste para aura rosa no root e light-mode */
+:root { 
+    /* ... mantenha suas outras variáveis ... */
+    --waifu-aura: 0 0 8px 3px rgba(255, 192, 203, 0.6); /* Aura rosa para waifus */
+}
+body.light-mode {
+    /* ... mantenha suas outras variáveis ... */
+    --waifu-aura: 0 0 8px 3px rgba(255, 105, 180, 0.4); /* Aura rosa mais suave para light mode */
+}
+
+/* Estilos para a página de Waifus */
+#waifusPage .create-post-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--primary);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px; /* Bordas arredondadas */
+    border: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 20px;
+    width: fit-content; /* Ajusta a largura ao conteúdo */
+    margin-left: auto;
+    margin-right: auto;
+}
+#waifusPage .create-post-btn:hover {
+    background-color: var(--primary-light);
+    box-shadow: var(--highlight-glow);
+}
+#waifusPage .create-post-btn svg {
+    fill: white;
+    width: 24px;
+    height: 24px;
+}
+
+/* Grid de Waifus */
+.waifu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 4 colunas em telas maiores */
+    gap: 15px;
+}
+@media (min-width: 600px) {
+    .waifu-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas maiores */
+    }
+}
+@media (min-width: 900px) {
+    .waifu-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas maiores */
+    }
+}
+
+/* Card de Waifu */
+.waifu-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none; 
+    color: inherit; 
+    cursor: pointer;
+}
+.waifu-card {
+    background: var(--card); 
+    border-radius: 12px; /* Bordas arredondadas */
+    overflow: hidden; 
+    border: 1px solid rgba(255, 192, 203, 0.4); /* Borda rosa suave */
+    box-shadow: var(--waifu-aura); /* Aura rosa */
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; 
+}
+.waifu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px 5px rgba(255, 192, 203, 0.8); /* Aura mais intensa no hover */
+}
+.waifu-card img { 
+    width: 100%; 
+    aspect-ratio: 9/16; /* Proporção de imagem vertical (retrato) */
+    object-fit: cover; 
+    display: block; 
+}
+
+/* Texto abaixo do card de waifu */
+.waifu-card-title-below {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    margin-top: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.waifu-card-anime-below {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+/* Botões de interação (Like/Save) no card de waifu */
+.waifu-card-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    background: var(--card);
+    border-top: 1px solid rgba(255, 192, 203, 0.2);
+}
+.waifu-card-actions button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+}
+.waifu-card-actions button:hover {
+    color: var(--primary);
+}
+.waifu-card-actions button.active {
+    color: var(--primary);
+}
+.waifu-card-actions button.like-active {
+    color: #007bff; /* Azul para likes */
+}
+.waifu-card-actions button.save-active {
+    color: #ff00ff; /* Rosa para salvos */
+}
+.waifu-card-actions button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Indicador de Top Waifu */
+.waifu-card.top-waifu::before {
+    content: 'TOP WAIFU';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+/* Estilos para a barra de pesquisa de série no modal de waifu */
+#createWaifuPostModal .search-series-for-waifu-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+#createWaifuPostModal .search-series-for-waifu-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid #444;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+#createWaifuPostModal .search-series-for-waifu-results .result-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+}
+#createWaifuPostModal .search-series-for-waifu-results .result-item:last-child {
+    border-bottom: none;
+}
+#createWaifuPostModal .search-series-for-waifu-results .result-item:hover {
+    background-color: var(--secondary-bg);
+}
+
+/* Modificações para SavedAnimesPage para incluir waifus */
+#savedAnimesPage .saved-content-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+#savedAnimesPage .saved-content-toggle button {
+    background-color: var(--secondary-bg);
+    color: var(--text);
+    padding: 8px 15px;
+    border: 1px solid #444;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-size: 0.9em;
+}
+#savedAnimesPage .saved-content-toggle button.active,
+#savedAnimesPage .saved-content-toggle button:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+#savedAnimesPage .no-content-message {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 20px;
+}
+
+/* FIM DOS NOVOS ESTILOS */
+
 
     </style>
 </head>
@@ -1914,7 +2135,20 @@
         <!-- Ícone de mais SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
     </button>
+    <!-- NOVO BOTÃO WAIFUS -->
+<button class="icon-btn" onclick="openWaifusPage()">
+    <!-- Ícone de Calcinha de Renda (Estilizado) -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+        <path d="M16 11c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4z"/>
+        <path d="M15 13.5c-.5 1-1.5 1.5-3 1.5s-2.5-.5-3-1.5"/>
+        <path d="M17 10h-2c0 1.1-.9 2-2 2s-2-.9-2-2H7"/>
+        <path d="M17 9.5c.5-.5 1-1 1-2.5s-1-2-2-2"/>
+        <path d="M7 9.5c-.5-.5-1-1-1-2.5s1-2 2-2"/>
+    </svg>
+</button>
 </header>
+
 
 <!-- Barra de Pesquisa -->
 <div id="searchContainer" class="search-container">
@@ -2165,6 +2399,29 @@
     </div>
 </div>
 
+<!-- Página para Waifus -->
+<div id="waifusPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title">Waifus</div>
+        <div></div>
+    </div>
+    <div class="modal-page-content">
+        <!-- Botão "Criar Postagem" -->
+        <button class="create-post-btn" onclick="openCreateWaifuPostModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Criar Postagem
+        </button>
+        <div id="waifusGrid" class="waifu-grid">
+            <!-- Cards de waifus serão carregados aqui -->
+        </div>
+        <p id="loadingWaifus" style="text-align: center; color: var(--text-secondary); margin-top: 20px; display: none;">Carregando mais waifus...</p>
+    </div>
+</div>
+
+
 <!-- Página para Visualização de Episódios da Série -->
 <div id="episodeListPage" class="modal-page">
     <div class="modal-page-header">
@@ -2308,6 +2565,33 @@
     </div>
 </div>
 
+        <!-- Modal para Criar Postagem de Waifu -->
+<div id="createWaifuPostModal" class="modal">
+    <div class="modal-card">
+        <h3 style="color:var(--primary); margin:0 0 10px 0;">Criar Postagem de Waifu</h3>
+
+        <div class="search-series-for-waifu-container">
+            <label for="searchSerieForWaifuInput">Selecione o Anime Existente:</label>
+            <input type="text" id="searchSerieForWaifuInput" placeholder="Digite o nome do anime..." oninput="searchExistingSeriesForWaifu(this.value)">
+            <div id="searchSerieForWaifuResults" class="search-series-for-waifu-results" style="display:none;"></div>
+        </div>
+        <p id="selectedAnimeForWaifu" style="font-weight: bold; margin-bottom: 15px;">Anime Selecionado: Nenhum</p>
+        <input type="hidden" id="selectedAnimeIdForWaifu">
+
+        <div class="form-group">
+            <label for="waifuImageUrl">Link URL da Imagem:</label>
+            <input type="url" id="waifuImageUrl" placeholder="https://exemplo.com/imagem.jpg">
+        </div>
+        <div class="form-group">
+            <label for="waifuTitle">Título da Imagem / Nome do Personagem:</label>
+            <input type="text" id="waifuTitle" placeholder="Ex: Rem de Re:Zero">
+        </div>
+        <button class="btn-post" onclick="postWaifu()">PUBLICAR WAIFU</button>
+        <button class="cancel-btn" onclick="closeModal('createWaifuPostModal')">Cancelar</button>
+    </div>
+</div>
+
+
         <!-- Modal de Compartilhamento (popup) -->
 <div id="shareModal" class="modal">
     <div class="modal-card">
@@ -2425,20 +2709,25 @@
     </div>
 </div>
 
-<!-- Página de Animes Salvos -->
-<div id="savedAnimesPage" class="content-page">
-    <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Meus Animes Salvos</div>
-        <div></div>
+<!-- NOVO CONTEÚDO PARA A PÁGINA savedAnimesPage -->
+<div class="page-content">
+    <div class="saved-content-toggle">
+        <button id="toggleSavedAnimesBtn" class="active" onclick="toggleSavedContent('animes')">Animes</button>
+        <button id="toggleSavedWaifusBtn" onclick="toggleSavedContent('waifus')">Waifus</button>
     </div>
-    <div class="page-content">
-        <div id="savedAnimesGrid" class="category-grid">
-            <!-- Animes salvos serão carregados aqui -->
-            <p>Você não tem animes salvos.</p>
-        </div>
+
+    <!-- Área para Animes Salvos -->
+    <div id="savedAnimesContent" class="category-grid">
+        <p class="no-content-message">Você não tem animes salvos.</p>
+    </div>
+
+    <!-- Área para Waifus Salvas -->
+    <div id="savedWaifusContent" class="waifu-grid" style="display: none;">
+        <p class="no-content-message">Você não tem waifus salvas.</p>
     </div>
 </div>
+<!-- FIM DO NOVO CONTEÚDO PARA savedAnimesPage -->
+
 
 <!-- Página de Contribuições -->
 <div id="contributionsPage" class="content-page">
@@ -5945,6 +6234,777 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
     function nextHeroSlide() {
         showHeroSlide(currentHeroSlideIndex + 1);
     }
+// --- NOVAS VARIÁVEIS GLOBAIS PARA WAIFUS ---
+let lastWaifuDoc = null; // Para o scroll infinito de waifus
+let isLoadingWaifus = false; // Para evitar múltiplas requisições durante o scroll
+let currentWaifusFilter = 'top'; // 'top', 'recentes', 'salvos' (se for implementado mais tarde)
+
+// --- NOVAS FUNÇÕES PARA WAIFUS ---
+
+// Função para abrir a página de Waifus
+async function openWaifusPage() {
+    openPage('waifusPage');
+    const waifusGrid = document.getElementById('waifusGrid');
+    if (waifusGrid) {
+        waifusGrid.innerHTML = ''; // Limpa o grid antes de carregar
+    }
+    lastWaifuDoc = null; // Reseta para carregar do início
+    loadWaifus(); // Carrega as primeiras waifus
+}
+
+// Função para abrir o modal de criação de postagem de Waifu
+function openCreateWaifuPostModal() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para criar postagens de Waifu.");
+        openModal('authModal');
+        return;
+    }
+    // Limpa o formulário antes de abrir
+    document.getElementById('searchSerieForWaifuInput').value = '';
+    document.getElementById('selectedAnimeForWaifu').textContent = 'Anime Selecionado: Nenhum';
+    document.getElementById('selectedAnimeIdForWaifu').value = '';
+    document.getElementById('waifuImageUrl').value = '';
+    document.getElementById('waifuTitle').value = '';
+    document.getElementById('searchSerieForWaifuResults').innerHTML = '';
+    document.getElementById('searchSerieForWaifuResults').style.display = 'none';
+
+    openModal('createWaifuPostModal');
+}
+
+// Função para pesquisar séries existentes para o modal de Waifu
+async function searchExistingSeriesForWaifu(searchTerm) {
+    const searchResultsDiv = document.getElementById('searchSerieForWaifuResults');
+    if (!searchResultsDiv) {
+        console.error("Erro: Elemento 'searchSerieForWaifuResults' não encontrado no DOM.");
+        return;
+    }
+    searchResultsDiv.innerHTML = '';
+    if (searchTerm.length < 3) {
+        searchResultsDiv.style.display = 'none';
+        return;
+    }
+    searchResultsDiv.style.display = 'block';
+
+    try {
+        const seriesSnapshot = await db.collection("series")
+                                        .where('nomeLowerCase', '>=', searchTerm.toLowerCase())
+                                        .where('nomeLowerCase', '<=', searchTerm.toLowerCase() + '\uf8ff')
+                                        .limit(5)
+                                        .get();
+        if (seriesSnapshot.empty) {
+            searchResultsDiv.innerHTML = '<p style="padding: 10px;">Nenhuma série encontrada.</p>';
+            return;
+        }
+
+        seriesSnapshot.forEach(doc => {
+            const serie = { id: doc.id, ...doc.data() };
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+            resultItem.textContent = serie.nome;
+            resultItem.onclick = () => selectSerieForWaifu(serie.id, serie.nome);
+            searchResultsDiv.appendChild(resultItem);
+        });
+
+    } catch (error) {
+        console.error("Erro ao buscar séries existentes para Waifu:", error);
+        searchResultsDiv.innerHTML = '<p>Erro ao buscar séries.</p>';
+    }
+}
+
+// Função para selecionar uma série no modal de Waifu
+function selectSerieForWaifu(serieId, serieName) {
+    const selectedAnimeForWaifu = document.getElementById('selectedAnimeForWaifu');
+    const selectedAnimeIdForWaifu = document.getElementById('selectedAnimeIdForWaifu');
+    const searchSerieForWaifuInput = document.getElementById('searchSerieForWaifuInput');
+    const searchSerieForWaifuResults = document.getElementById('searchSerieForWaifuResults');
+
+    if (!selectedAnimeForWaifu || !selectedAnimeIdForWaifu || !searchSerieForWaifuInput || !searchSerieForWaifuResults) {
+        console.error("Erro: Um ou mais elementos para selecionar série para Waifu não encontrados no DOM.");
+        return;
+    }
+
+    selectedAnimeForWaifu.textContent = `Anime Selecionado: ${serieName}`;
+    selectedAnimeIdForWaifu.value = serieId;
+    searchSerieForWaifuInput.value = serieName; // Preenche o input com o nome da série
+    searchSerieForWaifuResults.style.display = 'none'; // Esconde os resultados
+}
+
+// Função para postar a Waifu no Firestore
+async function postWaifu() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para postar waifus.");
+        return;
+    }
+
+    const serieId = document.getElementById('selectedAnimeIdForWaifu').value;
+    const imageUrl = document.getElementById('waifuImageUrl').value;
+    const title = document.getElementById('waifuTitle').value;
+
+    if (!serieId || !imageUrl || !title) {
+        showMessage("Por favor, preencha todos os campos.");
+        return;
+    }
+
+    try {
+        // Obter o nome do anime para o post
+        const serieDoc = await db.collection("series").doc(serieId).get();
+        if (!serieDoc.exists) {
+            showMessage("Série selecionada não existe.");
+            return;
+        }
+        const serieName = serieDoc.data().nome;
+
+        await db.collection("waifus").add({
+            serieId: serieId,
+            serieName: serieName,
+            imageUrl: imageUrl,
+            title: title,
+            postedBy: auth.currentUser.uid,
+            userName: auth.currentUser.displayName || auth.currentUser.email,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            likes: 0,
+            usersWhoLiked: [],
+        });
+
+        showMessage("Waifu postada com sucesso!");
+        closeModal('createWaifuPostModal');
+        // Recarrega as waifus na página principal para mostrar a nova
+        const waifusGrid = document.getElementById('waifusGrid');
+        if (waifusGrid) {
+            waifusGrid.innerHTML = '';
+        }
+        lastWaifuDoc = null;
+        loadWaifus();
+
+    } catch (error) {
+        console.error("Erro ao postar waifu:", error);
+        showMessage("Erro ao postar waifu: " + error.message);
+    }
+}
+
+// Função para carregar as waifus (com scroll infinito)
+async function loadWaifus() {
+    const waifusGrid = document.getElementById('waifusGrid');
+    const loadingWaifus = document.getElementById('loadingWaifus');
+
+    if (!waifusGrid || !loadingWaifus) {
+        console.error("Erro: Elementos 'waifusGrid' ou 'loadingWaifus' não encontrados.");
+        return;
+    }
+
+    if (isLoadingWaifus) return; // Evita múltiplas cargas
+    isLoadingWaifus = true;
+    loadingWaifus.style.display = 'block';
+
+    let query = db.collection("waifus")
+                    .orderBy("likes", "desc") // Começa ordenando por likes para os "top"
+                    .orderBy("timestamp", "desc") // Em caso de empate, as mais recentes
+                    .limit(12); // Carrega 12 waifus por vez
+
+    if (lastWaifuDoc) {
+        query = query.startAfter(lastWaifuDoc);
+    }
+
+    try {
+        const snapshot = await query.get();
+        if (snapshot.empty) {
+            loadingWaifus.textContent = 'Todas as waifus foram carregadas.';
+            isLoadingWaifus = false;
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const waifu = { id: doc.id, ...doc.data() };
+            displayWaifuCard(waifusGrid, waifu);
+        });
+
+        lastWaifuDoc = snapshot.docs[snapshot.docs.length - 1];
+        loadingWaifus.style.display = 'none';
+        isLoadingWaifus = false;
+
+    } catch (error) {
+        console.error("Erro ao carregar waifus:", error);
+        loadingWaifus.textContent = 'Erro ao carregar waifus.';
+        isLoadingWaifus = false;
+    }
+}
+
+// Função para exibir um único card de Waifu
+async function displayWaifuCard(gridElement, waifu) {
+    if (!gridElement) {
+        console.error("Erro: gridElement não fornecido para displayWaifuCard.");
+        return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'waifu-card-wrapper';
+    wrapper.onclick = () => openEpisodeListPage(waifu.serieId); // Redireciona para a série da waifu
+
+    const card = document.createElement('div');
+    card.className = 'waifu-card';
+
+    // Se tiver mais de 10 likes, adicionar classe de destaque
+    if (waifu.likes && waifu.likes > 10) { // Você pode ajustar o limiar de "top waifu"
+        card.classList.add('top-waifu');
+    }
+
+    card.innerHTML = `<img src="${waifu.imageUrl}" alt="${waifu.title}">`;
+    wrapper.appendChild(card);
+
+    // Adiciona os botões de interação
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'waifu-card-actions';
+
+    const likeButton = document.createElement('button');
+    likeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/></svg> <span id="waifuLikeCount-${waifu.id}">${waifu.likes || 0}</span>`;
+    likeButton.onclick = (e) => {
+        e.stopPropagation(); // Evita que o clique abra a página da série
+        toggleLikeWaifu(waifu.id, waifu.serieId);
+    };
+    if (auth.currentUser && waifu.usersWhoLiked && waifu.usersWhoLiked.includes(auth.currentUser.uid)) {
+        likeButton.classList.add('like-active');
+    }
+    actionsDiv.appendChild(likeButton);
+
+    const saveButton = document.createElement('button');
+    saveButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>`;
+    saveButton.onclick = (e) => {
+        e.stopPropagation(); // Evita que o clique abra a página da série
+        toggleSaveWaifu(waifu.id);
+    };
+    // Verifica se a waifu está salva pelo usuário
+    if (auth.currentUser && currentUserData && currentUserData.waifusSalvas && currentUserData.waifusSalvas.includes(waifu.id)) {
+        saveButton.classList.add('save-active');
+    }
+    actionsDiv.appendChild(saveButton);
+
+    wrapper.appendChild(actionsDiv);
+
+    wrapper.innerHTML += `
+        <div class="waifu-card-title-below">${waifu.title}</div>
+        <div class="waifu-card-anime-below">${waifu.serieName}</div>
+    `;
+
+    gridElement.appendChild(wrapper);
+}
+
+
+// Função para curtir/descurtir uma Waifu
+async function toggleLikeWaifu(waifuId) {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para curtir waifus.");
+        openModal('authModal');
+        return;
+    }
+
+    const userId = auth.currentUser.uid;
+    const waifuRef = db.collection("waifus").doc(waifuId);
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const waifuDoc = await transaction.get(waifuRef);
+            if (!waifuDoc.exists) {
+                throw "Waifu não encontrada!";
+            }
+
+            const waifuData = waifuDoc.data();
+            let currentLikes = waifuData.likes || 0;
+            let usersWhoLiked = waifuData.usersWhoLiked || [];
+
+            const userAlreadyLiked = usersWhoLiked.includes(userId);
+
+            if (userAlreadyLiked) {
+                // Já curtiu, então remove o like
+                usersWhoLiked = usersWhoLiked.filter(id => id !== userId);
+                currentLikes--;
+            } else {
+                // Não curtiu, então adiciona o like
+                usersWhoLiked.push(userId);
+                currentLikes++;
+            }
+
+            transaction.update(waifuRef, {
+                likes: currentLikes,
+                usersWhoLiked: usersWhoLiked
+            });
+        });
+
+        // Atualiza a UI após a transação (apenas o contador e o estado do botão)
+        const likeCountSpan = document.getElementById(`waifuLikeCount-${waifuId}`);
+        const likeButton = likeCountSpan ? likeCountSpan.closest('button') : null; 
+        
+        if (likeCountSpan) {
+            const newWaifuDoc = await db.collection("waifus").doc(waifuId).get(); // Busca os dados atualizados
+            const newLikes = newWaifuDoc.exists ? newWaifuDoc.data().likes : 0;
+            const newUsersWhoLiked = newWaifuDoc.exists ? newWaifuDoc.data().usersWhoLiked : [];
+
+            likeCountSpan.textContent = newLikes;
+            if (likeButton) {
+                if (auth.currentUser && newUsersWhoLiked.includes(auth.currentUser.uid)) {
+                    likeButton.classList.add('like-active');
+                } else {
+                    likeButton.classList.remove('like-active');
+                }
+            }
+        }
+        
+        // Para refletir a "subida ao topo" por likes, recarregamos a página de waifus.
+        // Em um app de produção, você pode considerar atualizar apenas os elementos do DOM afetados
+        // ou usar uma biblioteca reativa para melhor performance.
+        const waifusGrid = document.getElementById('waifusGrid');
+        if (waifusGrid) {
+            waifusGrid.innerHTML = ''; // Limpa o grid
+        }
+        lastWaifuDoc = null; // Reseta para carregar do início
+        loadWaifus(); // Recarrega todas as waifus para refletir a nova ordem de destaque
+        
+        showMessage("Sua reação foi registrada!");
+
+    } catch (e) {
+        console.error("Erro ao curtir/descurtir waifu:", e);
+        showMessage("Erro ao registrar sua reação: " + e.message);
+    }
+}
+
+// Função para salvar/remover Waifu da lista de salvos do usuário
+async function toggleSaveWaifu(waifuId) {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para salvar waifus.");
+        openModal('authModal');
+        return;
+    }
+
+    const userId = auth.currentUser.uid;
+    const userRef = db.collection("users").doc(userId);
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists) {
+                throw "Documento do usuário não existe!";
+            }
+
+            let waifusSalvas = userDoc.data().waifusSalvas || [];
+            // O seletor abaixo precisa ser mais específico para pegar o botão correto
+            // Se você tiver um ID único para cada botão de salvar waifu, use-o
+            // Por enquanto, vamos buscar o botão dentro do card de waifu específico
+            const saveButton = document.querySelector(`#waifusGrid .waifu-card-wrapper[data-waifu-id="${waifuId}"] .waifu-card-actions button:last-child`);
+
+            if (waifusSalvas.includes(waifuId)) {
+                // Waifu já salva, remover
+                waifusSalvas = waifusSalvas.filter(id => id !== waifuId);
+                if (saveButton) saveButton.classList.remove('save-active');
+                showMessage("Waifu removida da sua lista de salvos.");
+            } else {
+                // Waifu não salva, adicionar
+                waifusSalvas.push(waifuId);
+                if (saveButton) saveButton.classList.add('save-active');
+                showMessage("Waifu salva na sua lista!");
+            }
+            transaction.update(userRef, { waifusSalvas: waifusSalvas });
+            
+            // Atualiza o currentUserData localmente
+            if (currentUserData) {
+                currentUserData.waifusSalvas = waifusSalvas;
+            }
+        });
+        
+        // Se a página de salvos estiver aberta e mostrando waifus, recarregar para refletir a mudança
+        if (document.getElementById('savedAnimesPage').classList.contains('active') && currentUserData && currentUserData.savedContentType === 'waifus') {
+             loadSavedWaifus();
+        }
+
+    } catch (error) {
+        console.error("Erro ao salvar/remover waifu:", error);
+        showMessage("Erro ao salvar/remover waifu: " + error.message);
+    }
+}
+
+
+// --- ATUALIZAÇÕES EM FUNÇÕES EXISTENTES ---
+
+// ATUALIZAÇÃO: carregarDadosUsuario - Adicionar waifusSalvas e savedContentType ao currentUserData
+async function carregarDadosUsuario(uid) {
+    try {
+        const userDocRef = db.collection("users").doc(uid);
+        const userDoc = await userDocRef.get();
+
+        if (userDoc.exists) {
+            currentUserData = userDoc.data();
+            // Garante que waifusSalvas e savedContentType existem no currentUserData, mesmo que vazios/padrão
+            if (!currentUserData.waifusSalvas) {
+                currentUserData.waifusSalvas = [];
+            }
+            if (!currentUserData.savedContentType) {
+                currentUserData.savedContentType = 'animes'; // Padrão 'animes' para a página de salvos
+            }
+        } else {
+            console.log("Documento de usuário não encontrado no Firestore. Criando um novo.");
+            currentUserData = {
+                email: auth.currentUser.email,
+                photoURL: 'https://via.placeholder.com/60?text=AP',
+                animesSalvos: [],
+                waifusSalvas: [], // NOVO CAMPO
+                animesAssistidos: [],
+                modoAdulto: false,
+                theme: 'dark',
+                displayName: auth.currentUser.email.split('@')[0],
+                notifications: [],
+                status: 'novo',
+                statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
+                savedContentType: 'animes' // NOVO CAMPO
+            };
+            await userDocRef.set(currentUserData);
+            showMessage("Perfil de usuário criado com dados padrão no Firestore.");
+        }
+        
+        // Agora que currentUserData está garantido, podemos exibir as informações
+        const userInfoDisplay = document.getElementById('userInfoDisplay');
+        if (!userInfoDisplay) {
+            console.error("Erro: Elemento 'userInfoDisplay' não encontrado no DOM.");
+            return;
+        }
+        userInfoDisplay.innerHTML = ''; // Limpa o conteúdo anterior
+
+        // Upload de foto de perfil
+        const profilePicArea = document.createElement('div');
+        profilePicArea.className = 'profile-pic-upload-area';
+        profilePicArea.innerHTML = `
+            <div class="profile-pic-preview" onclick="openSettingsPage()">
+                <img id="profileImage" src="${currentUserData.photoURL || 'https://via.placeholder.com/80?text=' + (currentUserData.displayName ? currentUserData.displayName.charAt(0).toUpperCase() : currentUserData.email.charAt(0).toUpperCase())}" alt="Foto de Perfil">
+            </div>
+            <!-- Não teremos mais o botão de upload aqui, apenas na página de configurações -->
+        `;
+        userInfoDisplay.appendChild(profilePicArea);
+
+        const pName = document.createElement('p');
+        pName.className = 'user-name';
+        pName.textContent = currentUserData.displayName || currentUserData.email;
+        userInfoDisplay.appendChild(pName);
+
+        const pEmail = document.createElement('p');
+        pEmail.className = 'user-email';
+        pEmail.textContent = currentUserData.email;
+        userInfoDisplay.appendChild(pEmail);
+
+        // Exibe status do usuário
+        let userStatus = currentUserData.status || 'fantasma'; // Padrão
+        let statusIcon = '😶';
+        let statusClass = 'status-fantasma';
+
+        // Lógica para atualização do status (simplificada aqui)
+        if (userStatus === 'novo') {
+            statusIcon = '🙂';
+            statusClass = 'status-novo';
+            // Verifica se o status 'novo' expirou
+            if (currentUserData.statusExpiration && currentUserData.statusExpiration.toDate() < new Date()) {
+                userStatus = 'espectador';
+                await userDocRef.update({ status: userStatus, statusExpiration: null }); // Atualiza no Firestore
+                currentUserData.status = userStatus; // Atualiza o dado local
+            }
+        } else if (userStatus === 'espectador') {
+            statusIcon = '😐';
+            statusClass = 'status-espectador';
+        } else if (userStatus === 'colaborador') {
+            statusIcon = '🤝';
+            statusClass = 'status-colaborador';
+        } else if (userStatus === 'comentador') {
+            statusIcon = '🤯';
+            statusClass = 'status-comentador';
+        } else if (userStatus === 'especialista') {
+            statusIcon = '🤓';
+            statusClass = 'status-especialista';
+        } else if (userStatus === 'exigente') {
+            statusIcon = '🤔';
+            statusClass = 'status-exigente';
+        } else if (userStatus === 'critico') {
+            statusIcon = '🧐';
+            statusClass = 'status-critico';
+        }
+        const statusBadge = document.createElement('div');
+        statusBadge.className = `user-status-badge ${statusClass}`;
+        statusBadge.innerHTML = `${statusIcon} ${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}`;
+        userInfoDisplay.appendChild(statusBadge);
+
+        // Atualiza o estado dos toggles no menu
+        const modoAdultoToggle = document.getElementById('modoAdultoToggle');
+        if (modoAdultoToggle) modoAdultoToggle.checked = currentUserData.modoAdulto;
+        else console.warn("Elemento 'modoAdultoToggle' não encontrado.");
+
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.checked = (currentUserData.theme === 'light');
+        else console.warn("Elemento 'themeToggle' não encontrado.");
+
+        // Aplica o tema imediatamente
+        aplicarTema(currentUserData.theme);
+
+    } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
+        showMessage("Erro ao carregar dados do usuário: " + error.message);
+    }
+}
+
+// ATUALIZAÇÃO: openSavedAnimesPage - Agora lida com Animes E Waifus salvos
+async function openSavedAnimesPage() {
+    if (!auth.currentUser || !currentUserData) {
+        showMessage("Você precisa estar logado para ver seus itens salvos.");
+        openModal('authModal');
+        return;
+    }
+    openPage('savedAnimesPage');
+
+    // Inicializa o estado dos botões de alternância
+    const toggleAnimesBtn = document.getElementById('toggleSavedAnimesBtn');
+    const toggleWaifusBtn = document.getElementById('toggleSavedWaifusBtn');
+    const savedAnimesContent = document.getElementById('savedAnimesContent');
+    const savedWaifusContent = document.getElementById('savedWaifusContent');
+
+    if (!toggleAnimesBtn || !toggleWaifusBtn || !savedAnimesContent || !savedWaifusContent) {
+        console.error("Erro: Elementos da página de itens salvos não encontrados no DOM.");
+        return;
+    }
+
+    // Aplica a visualização salva do usuário ou o padrão 'animes'
+    const defaultView = currentUserData.savedContentType || 'animes';
+    toggleSavedContent(defaultView); // Isso irá chamar a função de carregamento correta
+}
+
+// NOVA FUNÇÃO: Alternar entre animes salvos e waifus salvas
+async function toggleSavedContent(contentType) {
+    const toggleAnimesBtn = document.getElementById('toggleSavedAnimesBtn');
+    const toggleWaifusBtn = document.getElementById('toggleSavedWaifusBtn');
+    const savedAnimesContent = document.getElementById('savedAnimesContent');
+    const savedWaifusContent = document.getElementById('savedWaifusContent');
+
+    if (!toggleAnimesBtn || !toggleWaifusBtn || !savedAnimesContent || !savedWaifusContent) {
+        console.error("Erro: Elementos da alternância de conteúdo salvo não encontrados no DOM.");
+        return;
+    }
+
+    toggleAnimesBtn.classList.remove('active');
+    toggleWaifusBtn.classList.remove('active');
+    savedAnimesContent.style.display = 'none';
+    savedWaifusContent.style.display = 'none';
+
+    if (contentType === 'animes') {
+        toggleAnimesBtn.classList.add('active');
+        savedAnimesContent.style.display = 'grid'; // Ou 'block' se preferir
+        loadSavedAnimes();
+    } else if (contentType === 'waifus') {
+        toggleWaifusBtn.classList.add('active');
+        savedWaifusContent.style.display = 'grid'; // Ou 'block' se preferir
+        loadSavedWaifus();
+    }
+
+    // Salva a preferência do usuário no Firestore
+    if (auth.currentUser && currentUserData.savedContentType !== contentType) {
+        try {
+            await db.collection("users").doc(auth.currentUser.uid).update({ savedContentType: contentType });
+            currentUserData.savedContentType = contentType; // Atualiza o dado local
+        } catch (error) {
+            console.error("Erro ao salvar preferência de conteúdo salvo:", error);
+        }
+    }
+}
+
+// ATUALIZAÇÃO: loadSavedAnimes - Refatorada para usar a nova estrutura e ser chamada por toggleSavedContent
+async function loadSavedAnimes() {
+    const savedAnimesGrid = document.getElementById('savedAnimesContent'); // Alterado para savedAnimesContent
+    if (!savedAnimesGrid) {
+        console.error("Erro: Elemento 'savedAnimesContent' não encontrado no DOM.");
+        return;
+    }
+    savedAnimesGrid.innerHTML = '<p class="no-content-message">Carregando animes salvos...</p>';
+
+    try {
+        if (!currentUserData.animesSalvos || currentUserData.animesSalvos.length === 0) {
+            savedAnimesGrid.innerHTML = '<p class="no-content-message">Você não possui animes salvos.</p>';
+            return;
+        }
+        savedAnimesGrid.innerHTML = ''; // Limpa antes de adicionar cards
+
+        const savedSeriesPromises = currentUserData.animesSalvos.map(serieId => db.collection("series").doc(serieId).get());
+        const savedSeriesSnapshots = await Promise.all(savedSeriesPromises);
+
+        savedSeriesSnapshots.forEach(doc => {
+            if (doc.exists) {
+                const serie = { id: doc.id, ...doc.data() };
+                // Garante que animes +18 sejam exibidos apenas com modo adulto ativado
+                if (serie.isAdult && (!auth.currentUser || !currentUserData.modoAdulto)) {
+                    displaySerieCard(savedAnimesGrid, serie, false, true); // Blur para +18
+                } else {
+                    displaySerieCard(savedAnimesGrid, serie, false, false, true); // Último param true para mostrar botão remover
+                }
+            }
+        });
+
+        if (savedAnimesGrid.innerHTML.trim() === '') {
+            savedAnimesGrid.innerHTML = '<p class="no-content-message">Nenhum anime salvo encontrado que corresponda às suas preferências.</p>';
+        }
+
+    } catch (error) {
+        console.error("Erro ao carregar animes salvos:", error);
+        savedAnimesGrid.innerHTML = '<p class="no-content-message">Erro ao carregar animes salvos.</p>';
+        showMessage("Erro ao carregar animes salvos: " + error.message);
+    }
+}
+
+// NOVA FUNÇÃO: Carregar Waifus Salvas
+async function loadSavedWaifus() {
+    const savedWaifusGrid = document.getElementById('savedWaifusContent');
+    if (!savedWaifusGrid) {
+        console.error("Erro: Elemento 'savedWaifusContent' não encontrado no DOM.");
+        return;
+    }
+    savedWaifusGrid.innerHTML = '<p class="no-content-message">Carregando waifus salvas...</p>';
+
+    try {
+        if (!currentUserData.waifusSalvas || currentUserData.waifusSalvas.length === 0) {
+            savedWaifusGrid.innerHTML = '<p class="no-content-message">Você não possui waifus salvas.</p>';
+            return;
+        }
+        savedWaifusGrid.innerHTML = ''; // Limpa antes de adicionar cards
+
+        const savedWaifusPromises = currentUserData.waifusSalvas.map(waifuId => db.collection("waifus").doc(waifuId).get());
+        const savedWaifusSnapshots = await Promise.all(savedWaifusPromises);
+
+        savedWaifusSnapshots.forEach(doc => {
+            if (doc.exists) {
+                const waifu = { id: doc.id, ...doc.data() };
+                // Você pode adicionar lógica de conteúdo adulto aqui para waifus, se aplicável
+                displayWaifuCard(savedWaifusGrid, waifu);
+            }
+        });
+
+        if (savedWaifusGrid.innerHTML.trim() === '') {
+            savedWaifusGrid.innerHTML = '<p class="no-content-message">Nenhuma waifu salva encontrada.</p>';
+        }
+
+    } catch (error) {
+        console.error("Erro ao carregar waifus salvas:", error);
+        savedWaifusGrid.innerHTML = '<p class="no-content-message">Erro ao carregar waifus salvas.</p>';
+        showMessage("Erro ao carregar waifus salvas: " + error.message);
+    }
+}
+
+// ATUALIZAÇÃO: removeSavedAnime - Adicionar a lógica para remover waifu salva
+async function removeSavedAnime(serieIdToRemove) {
+    if (!auth.currentUser || !currentUserData) return;
+
+    const userId = auth.currentUser.uid;
+    const userRef = db.collection("users").doc(userId);
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists) {
+                throw "Documento do usuário não existe!";
+            }
+            let currentAnimesSalvos = userDoc.data().animesSalvos || [];
+
+            const updatedAnimesSalvos = currentAnimesSalvos.filter(id => id !== serieIdToRemove);
+            
+            transaction.update(userRef, { animesSalvos: updatedAnimesSalvos });
+            currentUserData.animesSalvos = updatedAnimesSalvos; // Atualiza o dado local
+        });
+        showMessage("Anime removido dos salvos.");
+        loadSavedAnimes(); // Recarrega a página de salvos (apenas a seção de animes)
+    } catch (e) {
+        console.error("Erro ao remover anime dos salvos:", e);
+        showMessage("Erro ao remover anime dos salvos: " + e.message);
+    }
+}
+
+
+// ATUALIZAÇÃO: deleteUserAccount - Adicionar a remoção de waifus criadas pelo usuário
+async function deleteUserAccount() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para excluir sua conta.");
+        return;
+    }
+
+    const isConfirmed = confirm("ATENÇÃO: Ao excluir sua conta, todos os seus dados (animes salvos, waifus salvas, histórico, contribuições, etc.) serão PERMANENTEMENTE apagados. Esta ação não pode ser desfeita. Tem certeza que deseja continuar?");
+    if (!isConfirmed) return;
+
+    try {
+        // Primeiro, excluir os dados do usuário no Firestore (animesSalvos, animesAssistidos, waifusSalvas, etc.)
+        await db.collection("users").doc(auth.currentUser.uid).delete();
+
+        // Segundo, excluir as waifus que o usuário postou
+        const userWaifusSnapshot = await db.collection("waifus")
+                                            .where("postedBy", "==", auth.currentUser.uid)
+                                            .get();
+        const deleteWaifuPromises = [];
+        userWaifusSnapshot.forEach(doc => {
+            deleteWaifuPromises.push(db.collection("waifus").doc(doc.id).delete());
+        });
+        await Promise.all(deleteWaifuPromises);
+
+        // Depois, excluir a conta de autenticação
+        await auth.currentUser.delete();
+
+        showMessage("Sua conta foi excluída com sucesso.");
+        closeCurrentPage(); // Fecha a página de configurações
+        // onAuthStateChanged irá lidar com o logout e resetar a UI
+    } catch (error) {
+        console.error("Erro ao excluir conta:", error);
+        if (error.code === 'auth/requires-recent-login') {
+            showMessage("Por segurança, faça login novamente para excluir sua conta. (Re-autentique-se e tente novamente)");
+            // Opcional: redirecionar para tela de login ou re-autenticação
+        } else {
+            showMessage("Erro ao excluir conta: " + error.message);
+        }
+    }
+}
+
+
+// ATUALIZAÇÃO: onAuthStateChanged - Adicionar o listener para scroll infinito na página de Waifus
+auth.onAuthStateChanged(user => {
+    if (user) {
+        console.log("Usuário logado:", user.email);
+        carregarDadosUsuario(user.uid).then(() => {
+            renderHomePageContent();
+        });
+    } else {
+        console.log("Usuário deslogado.");
+        currentUserData = null;
+        const userMenu = document.getElementById('userMenu');
+        if (userMenu) {
+            userMenu.classList.remove('open');
+            userMenu.style.display = 'none';
+        } else {
+            console.error("Erro: Elemento 'userMenu' não encontrado no DOM.");
+        }
+        aplicarTema('dark');
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.checked = false;
+        
+        const userInfoDisplay = document.getElementById('userInfoDisplay');
+        if (userInfoDisplay) userInfoDisplay.innerHTML = '';
+        
+        renderHomePageContent();
+        toggleCommentSection(false);
+    }
+});
+
+// Listener de scroll para o carregamento infinito de waifus
+document.getElementById('waifusPage').addEventListener('scroll', () => {
+    const waifusPage = document.getElementById('waifusPage');
+    if (waifusPage.scrollTop + waifusPage.clientHeight >= waifusPage.scrollHeight - 100) { // Carrega quando estiver a 100px do final
+        loadWaifus();
+    }
+});
+
+// Inicia o carregamento de animes e catálogo A-Z quando a página é carregada
+document.addEventListener('DOMContentLoaded', () => {
+    generateAZCatalog();
+    // A função onAuthStateChanged cuidará da primeira carga do Hero Slider e carregarAnimes
+    // após a autenticação ser resolvida.
+});
+
+
+
+
 </script>
 </body>
 </html>

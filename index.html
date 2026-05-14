@@ -2110,670 +2110,7 @@ body.light-mode {
     padding: 20px;
 }
 
-/* --- NOVOS ESTILOS PARA SEÇÃO WAIFUS (CONTINUAÇÃO E DETALHES) --- */
-
-/* Variáveis para cores de destaque dos ícones e fundos */
-:root {
-    /* ... (mantenha suas variáveis existentes aqui, como --bg, --card, --text, --primary, etc.) ... */
-    --waifu-like-active: #007bff; /* Azul para like ativo */
-    --waifu-save-active: #9c27b0; /* Roxo para salvar ativo */
-    --transparent-card-bg: rgba(0,0,0,0.5); /* Fundo transparente escuro para actions */
-    --follow-btn-bg: rgba(98, 0, 234, 0.1); /* Fundo roxo transparente para botão seguir */
-    --follow-btn-border: 1px solid var(--primary);
-    --kebab-menu-bg: var(--card);
-}
-body.light-mode {
-    /* ... (mantenha suas variáveis light-mode existentes aqui) ... */
-    --transparent-card-bg: rgba(255,255,255,0.7); /* Fundo transparente claro para light mode */
-    --follow-btn-bg: rgba(98, 0, 234, 0.05); /* Fundo roxo transparente mais suave para light mode */
-    --kebab-menu-bg: var(--card);
-}
-
-/* Barra de pesquisa da página Waifus */
-.waifu-search-bar-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px; /* Ajustado para ter padding interno */
-    margin-bottom: 20px;
-    border: 1px solid var(--primary); /* Borda roxa */
-    border-radius: 12px;
-    background: var(--card);
-    box-shadow: 0 0 8px rgba(98, 0, 234, 0.3); /* Sombra roxa sutil */
-    text-align: center;
-}
-#waifuSearchInput {
-    width: 100%; /* Ocupa a largura total do container pai */
-    padding: 12px 15px;
-    background: var(--secondary-bg);
-    border: 1px solid #333;
-    color: var(--text);
-    border-radius: 25px; /* Bordas arredondadas */
-    box-sizing: border-box;
-    transition: box-shadow 0.3s ease-in-out, border-color 0.3s;
-}
-#waifuSearchInput:focus {
-    outline: none; /* Remove outline padrão */
-    border-color: var(--primary);
-    box-shadow: var(--highlight-glow);
-}
-.waifu-search-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    padding: 0; /* Remove padding extra, já que o container pai já tem */
-}
-.waifu-btn-random,
-.waifu-btn-search {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 25px; /* Bordas arredondadas */
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.waifu-btn-random {
-    background: var(--secondary-bg);
-    color: var(--text);
-    border: 1px solid #555;
-}
-.waifu-btn-random:hover {
-    background-color: #444;
-    box-shadow: 0 0 5px rgba(255,255,255,0.2);
-}
-.waifu-btn-search {
-    background: var(--primary);
-    color: white;
-    border: none;
-}
-.waifu-btn-search:hover {
-    background-color: var(--primary-light);
-    box-shadow: var(--highlight-glow);
-}
-
-/* Estilo para seções de waifu como "Seguindo", "Tags Salvas", "Veja Também" */
-.waifu-section {
-    margin-bottom: 25px;
-    padding-left: 0; /* Remove padding padrão para melhor controle */
-    padding-right: 0;
-}
-.waifu-section .section-header {
-    padding-left: 15px; /* Adiciona o padding apenas ao header da seção */
-    padding-right: 15px;
-}
-
-/* Seções de scroll horizontal (Seguindo, Tags Salvas) */
-.horizontal-scroll {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 15px 10px 15px; /* Padding nas laterais e inferior para scrollbar */
-    gap: 10px;
-}
-.horizontal-scroll::-webkit-scrollbar {
-    height: 5px;
-}
-.horizontal-scroll::-webkit-scrollbar-track {
-    background: var(--secondary-bg);
-    border-radius: 10px;
-}
-.horizontal-scroll::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 10px;
-}
-
-/* Card de autor na seção "Seguindo" */
-.author-card {
-    flex-shrink: 0;
-    width: 80px; /* Largura fixa para o card de autor */
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.author-card img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary);
-    margin-bottom: 5px;
-}
-.author-card span {
-    font-size: 0.8em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-}
-
-/* Tag na seção "Tags Salvas" */
-.tag-pill {
-    flex-shrink: 0;
-    background-color: var(--secondary-bg);
-    color: var(--text);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-    white-space: nowrap;
-    border: 1px solid #444;
-}
-.tag-pill:hover {
-    background-color: var(--primary);
-    color: white;
-}
-
-/* Grid de Waifus - 4 colunas */
-.waifu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Mínimo 180px, para telas pequenas */
-    gap: 15px;
-}
-@media (min-width: 600px) {
-    .waifu-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 colunas para tablets */
-    }
-}
-@media (min-width: 900px) {
-    .waifu-grid {
-        grid-template-columns: repeat(4, 1fr); /* 4 colunas para desktops */
-    }
-}
-
-/* Card de Waifu - Ajustes */
-.waifu-card-wrapper {
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    position: relative; /* Necessário para posicionar o overlay do álbum */
-    border-radius: 12px; /* Mantém as bordas arredondadas no wrapper */
-    overflow: hidden; /* Garante que o conteúdo respeite o border-radius */
-    transition: transform 0.2s, box-shadow 0.2s; /* Adiciona transição ao wrapper */
-}
-.waifu-card-wrapper:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.waifu-card {
-    background: var(--card);
-    border-radius: 12px; /* Mantém as bordas arredondadas */
-    overflow: hidden;
-    position: relative; /* Para badges internos */
-    border: 1px solid #333; /* Uma borda sutil no lugar da aura */
-    padding-bottom: 45px; /* Espaço para os botões de ação fixados */
-}
-.waifu-card img {
-    width: 100%;
-    aspect-ratio: 9/16; /* Proporção vertical padrão para ocupar a altura */
-    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção */
-    display: block;
-}
-/* Forçar imagens horizontais a caber no card vertical */
-.waifu-card.horizontal-image img {
-    aspect-ratio: 1/1; /* Quadrado */
-    object-fit: contain; /* Mostra a imagem inteira, com barras pretas se necessário */
-    background-color: black; /* Fundo preto para as barras */
-}
-
-/* Overlay para álbuns com múltiplas fotos (no card da grade) */
-.waifu-album-cover {
-    position: relative; /* Para posicionar o overlay sobre a imagem */
-}
-.waifu-album-cover .waifu-album-overlay-grid {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Película escura transparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5em;
-    font-weight: bold;
-    border-radius: 12px; /* Garante que o overlay também tenha bordas arredondadas */
-    z-index: 5; /* Acima da imagem */
-    pointer-events: none; /* Não interfere no clique do card */
-}
-
-/* Botões de interação (Like/Save) no card de waifu (grade) */
-.waifu-card-actions-grid {
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0;
-    background: var(--transparent-card-bg); /* Fundo transparente */
-    border-top: 1px solid rgba(255,255,255,0.1); /* Borda mais neutra */
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    position: absolute; /* Para ficar sobre a parte inferior do card */
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-}
-.waifu-card-actions-grid button {
-    background: none;
-    border: none;
-    color: #888; /* Cinza para ícones inativos */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.2s;
-    font-size: 1em; /* Ajusta tamanho do texto */
-    font-weight: bold;
-    padding: 0;
-}
-.waifu-card-actions-grid button:hover {
-    color: var(--primary); /* Roxo no hover */
-}
-.waifu-card-actions-grid button.like-active {
-    color: var(--waifu-like-active); /* Azul para likes ativos */
-}
-.waifu-card-actions-grid button.save-active {
-    color: var(--waifu-save-active); /* Roxo para salvos ativos */
-}
-.waifu-card-actions-grid button svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-}
-
-/* Texto abaixo do card de waifu */
-.waifu-card-title-below, .waifu-card-anime-below {
-    padding: 0 10px; /* Adiciona padding para o texto */
-}
-
-
-/* Modal de Detalhe da Waifu */
-.waifu-detail-card {
-    max-width: 500px;
-    width: 90%;
-    border: none;
-    padding: 0;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
-    max-height: 95vh; /* Limite de altura */
-    display: flex;
-    flex-direction: column;
-}
-.waifu-detail-card .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 20;
-    background: rgba(0,0,0,0.5);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5em;
-}
-
-.waifu-detail-header {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-}
-.waifu-detail-header img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: 9/16; /* Padrão vertical */
-    display: block;
-}
-/* Estilo para quando a imagem for horizontal no detalhe */
-.waifu-detail-header img.horizontal-image {
-    aspect-ratio: 1/1; /* Quadrado */
-    object-fit: contain;
-    background-color: black;
-}
-
-.waifu-detail-header .waifu-album-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Película escura */
-    display: flex;
-    flex-direction: column; /* Para alinhar o número abaixo do texto "álbum" */
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5em;
-    font-weight: bold;
-    cursor: pointer;
-    opacity: 0; /* Escondido por padrão, aparece se for álbum */
-    transition: opacity 0.3s;
-}
-.waifu-detail-header .waifu-album-overlay:hover {
-    opacity: 1;
-}
-.waifu-detail-header .waifu-album-overlay #waifuAlbumCount {
-    font-size: 2.5em; /* Tamanho maior para o número */
-    margin-top: 5px;
-}
-
-
-.waifu-detail-info {
-    padding: 15px;
-    background: var(--card);
-    flex-shrink: 0; /* Não encolhe se o conteúdo abaixo for grande */
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
-
-.waifu-detail-top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-.waifu-author-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-.waifu-author-pic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary);
-}
-.waifu-author-name {
-    font-weight: bold;
-    color: var(--text);
-}
-.waifu-actions-right {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Botão de Seguir Autor */
-.btn-follow {
-    background: var(--follow-btn-bg);
-    border: var(--follow-btn-border);
-    color: var(--primary);
-    padding: 8px 15px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-    margin-bottom: 15px;
-    width: fit-content; /* Ajusta ao conteúdo */
-}
-.btn-follow:hover {
-    background-color: var(--primary);
-    color: white;
-    box-shadow: var(--highlight-glow);
-}
-.btn-follow.following {
-    background-color: var(--primary);
-    color: white;
-}
-
-/* Kebab Menu (Menu de três pontinhos) */
-.kebab-menu {
-    position: relative;
-    display: inline-block;
-}
-.kebab-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 1.5em;
-    padding: 5px;
-}
-.kebab-btn:hover {
-    color: var(--primary);
-}
-.kebab-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: var(--kebab-menu-bg);
-    min-width: 120px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
-    z-index: 100; /* Alto z-index para ficar acima de outros elementos */
-    right: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #333;
-}
-.kebab-dropdown-content a {
-    color: var(--text);
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    transition: background-color 0.2s;
-}
-.kebab-dropdown-content a:hover {
-    background-color: var(--secondary-bg);
-}
-.kebab-menu.active .kebab-dropdown-content {
-    display: block;
-}
-
-/* Likes, Salvos e Comentários no detalhe */
-.waifu-detail-likes-comments {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Alinhamento à esquerda */
-    gap: 20px; /* Espaçamento entre os grupos de botões */
-    margin-top: 10px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #333;
-}
-.waifu-detail-likes-comments .like-btn-group {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Espaçamento entre like, save, comment */
-}
-.waifu-detail-likes-comments button {
-    background: none;
-    border: none;
-    color: #888; /* Cinza para ícones inativos */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.2s;
-    font-size: 1.0em;
-    font-weight: bold;
-}
-.waifu-detail-likes-comments button:hover {
-    color: var(--primary);
-}
-.waifu-detail-likes-comments button.like-active {
-    color: var(--waifu-like-active);
-}
-.waifu-detail-likes-comments button.save-active {
-    color: var(--waifu-save-active);
-}
-
-/* Tags de Waifu no detalhe */
-.waifu-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 15px;
-}
-.waifu-tags .tag-pill {
-    cursor: pointer;
-    font-size: 0.9em;
-}
-
-/* Seção de Recomendados no detalhe da Waifu */
-#waifuRecommendedSection .waifu-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Mais colunas e menores para recomendações */
-}
-@media (min-width: 600px) {
-    #waifuRecommendedSection .waifu-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-@media (min-width: 900px) {
-    #waifuRecommendedSection .waifu-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-
-/* Modal do Álbum de Waifu */
-.waifu-album-card {
-    max-width: 90%;
-    width: 600px; /* Largura máxima para visualizador de álbum */
-    padding: 20px;
-}
-#waifuAlbumScroll {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    gap: 10px;
-    padding-bottom: 10px;
-}
-#waifuAlbumScroll::-webkit-scrollbar {
-    height: 5px;
-}
-#waifuAlbumScroll::-webkit-scrollbar-track {
-    background: var(--secondary-bg);
-    border-radius: 10px;
-}
-#waifuAlbumScroll::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 10px;
-}
-.waifu-album-image-wrapper {
-    flex-shrink: 0;
-    width: 150px; /* Largura fixa para miniaturas no álbum */
-    height: 250px; /* Altura fixa */
-    overflow: hidden;
-    border-radius: 8px;
-    border: 1px solid #444;
-    position: relative;
-    cursor: pointer;
-}
-.waifu-album-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.waifu-album-image-wrapper .save-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
-    color: white;
-    padding: 5px;
-    text-align: center;
-    font-size: 0.8em;
-    display: none; /* Escondido por padrão */
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-.waifu-album-image-wrapper:hover .save-overlay {
-    display: flex; /* Mostra no hover */
-}
-.waifu-album-image-wrapper.saved .save-overlay {
-    background: var(--primary);
-    color: white;
-}
-
-
-/* Página de Tags */
-#tagPageTitle {
-    flex-grow: 1; /* Permite que o título ocupe o espaço */
-    text-align: center;
-    color: var(--primary);
-    font-size: 20px;
-    font-weight: bold;
-}
-.tag-follow-btn {
-    background: var(--follow-btn-bg);
-    border: var(--follow-btn-border);
-    color: var(--primary);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-    font-size: 0.9em;
-}
-.tag-follow-btn:hover {
-    background-color: var(--primary);
-    color: white;
-    box-shadow: var(--highlight-glow);
-}
-.tag-follow-btn.following {
-    background-color: var(--primary);
-    color: white;
-}
-
-
-/* Modal de Criação/Edição de Waifu - Campos para múltiplas imagens */
-#createWaifuPostModal .image-url-group,
-#editWaifuPostModal .image-url-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-}
-#createWaifuPostModal .image-url-group input,
-#editWaifuPostModal .image-url-group input {
-    flex-grow: 1;
-    margin: 0; /* Remove margem padrão para melhor controle no flex */
-}
-.remove-image-url-btn {
-    background: var(--danger);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 10px;
-    cursor: pointer;
-    font-weight: bold;
-    line-height: 1; /* Centraliza o 'X' */
-}
-.add-image-url-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-weight: bold;
-    display: block; /* Ocupa a largura disponível */
-    margin: 10px 0 15px 0;
-}
-
-/* Estilo para tags no modal de criação/edição */
-#waifuTagsInput, #editWaifuTagsInput {
-    margin-top: 5px;
-}
-
-
-
+/* FIM DOS NOVOS ESTILOS */
 
 
     </style>
@@ -3084,7 +2421,7 @@ body.light-mode {
     </div>
 </div>
 
-<!-- HTML para a Página Waifus (Substitua o conteúdo existente dentro de <div id="waifusPage" class="modal-page">) -->
+<!-- Página para Waifus -->
 <div id="waifusPage" class="modal-page">
     <div class="modal-page-header">
         <button class="icon-btn" onclick="closeCurrentPage()">
@@ -3094,171 +2431,17 @@ body.light-mode {
         <div></div>
     </div>
     <div class="modal-page-content">
-        <!-- Botão "Criar Postagem" (mantido no topo) -->
+        <!-- Botão "Criar Postagem" -->
         <button class="create-post-btn" onclick="openCreateWaifuPostModal()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
             Criar Postagem
         </button>
-
-        <!-- Barra de pesquisa da página Waifus -->
-        <div class="waifu-search-bar-container">
-            <input type="text" id="waifuSearchInput" placeholder="O que você gostaria de pesquisar?" oninput="filterWaifusBySearchDebounced()">
-            <div class="waifu-search-buttons">
-                <button class="waifu-btn-random" onclick="loadRandomWaifu()">Aleatório</button>
-                <button class="waifu-btn-search" onclick="filterWaifusBySearch()">Pesquisar</button>
-            </div>
-        </div>
-
-        <!-- Seção Seguindo -->
-        <section class="content-section waifu-section" id="followingAuthorsSection">
-            <div class="section-header">
-                <h2>Seguindo</h2>
-            </div>
-            <div class="horizontal-scroll" id="followingAuthorsScroll">
-                <p class="no-content-message">Você ainda não segue ninguém.</p>
-            </div>
-        </section>
-
-        <!-- Seção Tags Salvas -->
-        <section class="content-section waifu-section" id="savedTagsSection">
-            <div class="section-header">
-                <h2>Tags Salvas</h2>
-                <a href="#" class="see-more-btn hidden" onclick="openTagManagerPage()">GERENCIAR</a>
-            </div>
-            <div class="horizontal-scroll" id="savedTagsScroll">
-                <p class="no-content-message">Você não salvou nenhuma tag.</p>
-            </div>
-        </section>
-
-        <!-- Seção Veja Também -->
-        <section class="content-section waifu-section" id="seeAlsoSection">
-            <div class="section-header">
-                <h2>Veja Também</h2>
-            </div>
-            <div class="anime-grid scrollable" id="seeAlsoGrid">
-                <p class="no-content-message">Curta ou salve uma waifu para ver recomendações.</p>
-            </div>
-        </section>
-
-        <!-- Grid de Waifus (o principal feed) -->
         <div id="waifusGrid" class="waifu-grid">
             <!-- Cards de waifus serão carregados aqui -->
         </div>
         <p id="loadingWaifus" style="text-align: center; color: var(--text-secondary); margin-top: 20px; display: none;">Carregando mais waifus...</p>
     </div>
 </div>
-
-<!-- Modal para visualização de Waifu (NOVO - Adicione este e os próximos ao final do seu <body>) -->
-<div id="waifuDetailModal" class="modal">
-    <div class="modal-card waifu-detail-card">
-        <button class="close-btn" onclick="closeModal('waifuDetailModal')">&times;</button>
-        <div class="waifu-detail-header">
-            <img id="waifuDetailImage" src="" alt="Waifu Detalhe">
-            <div class="waifu-album-overlay" id="waifuAlbumOverlay" onclick="openWaifuAlbumViewer()">
-                <span id="waifuAlbumCount">+1</span>
-            </div>
-        </div>
-        <div class="waifu-detail-info">
-            <div class="waifu-detail-top-row">
-                <div class="waifu-author-info" onclick="openUserPage(currentWaifuDetail.postedBy)">
-                    <img id="waifuAuthorPic" src="https://via.placeholder.com/40?text=AP" alt="Autor" class="waifu-author-pic">
-                    <span id="waifuAuthorName" class="waifu-author-name"></span>
-                </div>
-                <div class="waifu-actions-right">
-                    <!-- Kebab menu para o próprio autor -->
-                    <div class="kebab-menu hidden" id="waifuKebabMenu">
-                        <button class="kebab-btn" onclick="toggleKebabMenu(event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
-                        <div class="kebab-dropdown-content">
-                            <a href="#" onclick="editWaifuPost()">Editar</a>
-                            <a href="#" onclick="deleteWaifuPost()">Excluir</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn-follow" id="btnFollowAuthor" onclick="toggleFollowAuthor()"></button>
-
-            <div class="waifu-detail-likes-comments">
-                <div class="like-btn-group">
-                    <button class="waifu-detail-like-btn" onclick="toggleLikeWaifuFromDetail()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/></svg>
-                        <span id="waifuDetailLikeCount">0</span>
-                    </button>
-                    <button class="waifu-detail-save-btn" onclick="toggleSaveWaifuFromDetail()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>
-                        <span id="waifuDetailSaveCount">0</span>
-                    </button>
-                    <button class="waifu-detail-comment-btn" onclick="openWaifuComments()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
-                        <span id="waifuDetailCommentCount">0</span>
-                    </button>
-                </div>
-            </div>
-            <div class="waifu-tags" id="waifuDetailTags"></div>
-        </div>
-        
-        <!-- Seção de Recomendados no modal de detalhe -->
-        <section class="content-section waifu-section" id="waifuRecommendedSection">
-            <div class="section-header">
-                <h2>Recomendados</h2>
-            </div>
-            <div class="waifu-grid" id="waifuRecommendedGrid">
-                <p class="no-content-message">Carregando recomendações...</p>
-            </div>
-        </section>
-    </div>
-</div>
-
-<!-- Modal para ver o Álbum de Waifu (NOVO) -->
-<div id="waifuAlbumViewerModal" class="modal">
-    <div class="modal-card waifu-album-card">
-        <button class="close-btn" onclick="closeModal('waifuAlbumViewerModal')">&times;</button>
-        <div class="horizontal-scroll" id="waifuAlbumScroll">
-            <!-- Imagens do álbum serão carregadas aqui -->
-        </div>
-    </div>
-</div>
-
-<!-- Página de tags (NOVO) -->
-<div id="tagPage" class="modal-page">
-    <div class="modal-page-header">
-        <button class="icon-btn" onclick="closeCurrentPage()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <div class="title" id="tagPageTitle"></div>
-        <div>
-            <button class="tag-follow-btn" id="btnFollowTag" onclick="toggleFollowTag()"></button>
-        </div>
-    </div>
-    <div class="modal-page-content">
-        <div id="tagWaifusGrid" class="waifu-grid">
-            <!-- Waifus com a tag serão carregadas aqui -->
-        </div>
-        <p id="loadingTagWaifus" style="text-align: center; color: var(--text-secondary); margin-top: 20px; display: none;">Carregando mais waifus...</p>
-    </div>
-</div>
-
-<!-- Modal de Edição de Waifu (NOVO) -->
-<div id="editWaifuPostModal" class="modal">
-    <div class="modal-card">
-        <h3 style="color:var(--primary); margin:0 0 10px 0;">Editar Postagem de Waifu</h3>
-        <div id="editWaifuImageUrlsContainer">
-            <!-- Campos de URL de imagem para edição -->
-        </div>
-        <button class="add-image-url-btn" onclick="addEditWaifuImageUrlField()">+</button>
-        <div class="form-group">
-            <label for="editWaifuTitle">Título da Imagem / Nome do Personagem:</label>
-            <input type="text" id="editWaifuTitle" placeholder="Ex: Rem de Re:Zero">
-        </div>
-        <div class="form-group">
-            <label for="editWaifuTagsInput">Tags (separadas por vírgula e com #):</label>
-            <input type="text" id="editWaifuTagsInput" placeholder="Ex: #olhosazuis, #cabelorosa">
-        </div>
-        <button class="btn-post" onclick="saveEditedWaifu()">SALVAR EDIÇÕES</button>
-        <button class="cancel-btn" onclick="closeModal('editWaifuPostModal')">Cancelar</button>
-    </div>
-</div>
-
-
 
 
 <!-- Página para Visualização de Episódios da Série -->
@@ -3610,444 +2793,115 @@ body.light-mode {
 
 <!-- Scripts Firebase e Lógica da Aplicação -->
 <script>
-    // 1. CONFIGURAÇÃO DO FIREBASE (SEUS DADOS DE PROJETO) - Mantenha este bloco no topo do seu <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHtQY2kw",
-    authDomain: "animesoracle-a60e9.firebaseapp.com",
-    projectId: "animesoracle-a60e9",
-    storageBucket: "animesoracle-a60e9.firebasestorage.app",
-    messagingSenderId: "751657326717",
-    appId: "1:751657326717:web:67ef63d01ffa3ad044f914"
-};
+    // 1. CONFIGURAÇÃO DO FIREBASE (SEUS DADOS DE PROJETO)
+    const firebaseConfig = { 
+      apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHtQY2kw", 
+      authDomain: "animesoracle-a60e9.firebaseapp.com", 
+      projectId: "animesoracle-a60e9", 
+      storageBucket: "animesoracle-a60e9.firebasestorage.app", 
+      messagingSenderId: "751657326717", 
+      appId: "1:751657326717:web:67ef63d01ffa3ad044f914" 
+    };
 
-// 2. INICIALIZAÇÃO DO FIREBASE - Mantenha este bloco no topo do seu <script>
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-const storage = firebase.storage(); // Inicializa o Firebase Storage
+    // 2. INICIALIZAÇÃO DO FIREBASE
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth(); 
+    const storage = firebase.storage(); // Inicializa o Firebase Storage
 
-// CORREÇÃO: Variável allGeneros definida aqui
-const allGeneros = [
-    'Ação', 'Aventura', 'Comédia', 'Drama', 'Fantasia', 'Ficção Científica',
-    'Horror', 'Mistério', 'Romance', 'Slice of Life', 'Esportes', 'Musical',
-    'Seinen', 'Shoujo', 'Shounen', 'Kodomomuke', 'Mecha', 'Militar', 'Policial',
-    'Psicológico', 'Sobrenatural', 'Thriller', 'Vampiros', 'Harem', 'Isekai',
-    'Magia', 'Artes Marciais', 'Histórico', 'Escolar', 'Superpoderes',
-    'Fantasia Urbana', 'Culinária', 'Robôs', 'Zumbis', 'Jogos', 'Virtual',
-    'Guerra', 'Espaço', 'Cyberpunk', 'Steampunk', 'Samurai', 'Ninja',
-    'Super-herói', 'Mistério', 'Detetive', 'Crime', 'Distopia', 'Utopia',
-    'Viagem no Tempo', 'Mundo Pós-apocalíptico', 'Apocalíptico', 'Sobrevivência',
-    'Terror Psicológico', 'Gore', 'Hentai', 'Ecchi', 'Yuri', 'Yaoi',
-    'Magical Girl', 'Demônios', 'Anjos', 'Dragões', 'Magia Negra', 'Mechas',
-    'Robôs Gigantes', 'Mundo Subaquático', 'Animais', 'Mitologia', 'Folclore',
-    'Crianças', 'Família', 'Cotidiano', 'Trabalho', 'Negócios', 'Finanças',
-    'Política', 'Sociedade', 'Cultura', 'Arte', 'Música', 'Dança', 'Fotografia',
-    'Moda', 'Design', 'Arquitetura', 'Engenharia', 'Medicina', 'Ciência',
-    'Tecnologia', 'Educação', 'Filosofia', 'Religião', 'Espiritualidade',
-    'Supernatural', 'Guerreiros', 'Artes Marciais', 'Samurai', 'Ninja',
-    'Esportes de Aventura', 'Esportes Radicais', 'Jogos de Tabuleiro',
-    'Jogos de Cartas', 'RPG', 'MMORPG', 'Realidade Virtual', 'Realidade Aumentada'
-];
-
-
-// Persistência de Login: Adiciona o Firebase Auth para usar a persistência local
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-        console.log("Persistência de login configurada para LOCAL.");
-    })
-    .catch((error) => {
-        console.error("Erro ao configurar persistência de login:", error);
-    });
-
-let currentUserData = null; // Para armazenar os dados do usuário logado e seus settings
-let currentFilter = 'recentes'; // Filtro de animes atual (recentes, legendados, dublados, salvos, search, genero, letter, watched, adult)
-let currentPlayingSerie = null; // Armazena a ID da série atualmente no player
-let currentPlayingEpisode = null; // Armazena o ID do episódio atualmente no player
-let currentPlayingPlayerIndex = 0; // Index do player atual (se houver múltiplos)
-let heroSliderInterval; // Variável para controlar o intervalo do Hero Slider
-let currentHeroSlideIndex = 0; // Index do slide atual do Hero Slider
-let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
-
-// Pilha de páginas abertas para gerenciamento de navegação (novo)
-const pageStack = ['main']; // Começa com a página principal
-
-// --- NOVAS VARIÁVEIS GLOBAIS PARA WAIFUS ---
-let lastWaifuDoc = null; // Para o scroll infinito de waifus
-let isLoadingWaifus = false; // Para evitar múltiplas requisições durante o scroll
-let waifuSearchTerm = ''; // Termo de busca para a página Waifus
-let currentWaifuDetail = null; // Armazena a waifu atualmente exibida no modal de detalhes
-let currentWaifuAlbum = []; // Armazena as URLs das imagens do álbum da waifu detalhe
-let currentWaifuTags = []; // Armazena as tags da waifu atualmente exibida
-let currentTagPageTag = null; // Armazena a tag da página de tags atualmente aberta
-let currentKebabWaifuId = null; // ID da waifu cujo kebab menu está aberto
-
-// IDs de usuários seguidos
-let usersBeingFollowed = [];
-// IDs de tags seguidas
-let tagsBeingFollowed = [];
-
-// Variável para debounce da busca de waifus
-let waifuSearchTimeout = null;
+    // CORREÇÃO: Variável allGeneros definida aqui
+    const allGeneros = [
+        'Ação', 'Aventura', 'Comédia', 'Drama', 'Fantasia', 'Ficção Científica',
+        'Horror', 'Mistério', 'Romance', 'Slice of Life', 'Esportes', 'Musical',
+        'Seinen', 'Shoujo', 'Shounen', 'Kodomomuke', 'Mecha', 'Militar', 'Policial',
+        'Psicológico', 'Sobrenatural', 'Thriller', 'Vampiros', 'Harem', 'Isekai',
+        'Magia', 'Artes Marciais', 'Histórico', 'Escolar', 'Superpoderes',
+        'Fantasia Urbana', 'Culinária', 'Robôs', 'Zumbis', 'Jogos', 'Virtual',
+        'Guerra', 'Espaço', 'Cyberpunk', 'Steampunk', 'Samurai', 'Ninja',
+        'Super-herói', 'Mistério', 'Detetive', 'Crime', 'Distopia', 'Utopia',
+        'Viagem no Tempo', 'Mundo Pós-apocalíptico', 'Apocalíptico', 'Sobrevivência',
+        'Terror Psicológico', 'Gore', 'Hentai', 'Ecchi', 'Yuri', 'Yaoi',
+        'Magical Girl', 'Demônios', 'Anjos', 'Dragões', 'Magia Negra', 'Mechas',
+        'Robôs Gigantes', 'Mundo Subaquático', 'Animais', 'Mitologia', 'Folclore',
+        'Crianças', 'Família', 'Cotidiano', 'Trabalho', 'Negócios', 'Finanças',
+        'Política', 'Sociedade', 'Cultura', 'Arte', 'Música', 'Dança', 'Fotografia',
+        'Moda', 'Design', 'Arquitetura', 'Engenharia', 'Medicina', 'Ciência',
+        'Tecnologia', 'Educação', 'Filosofia', 'Religião', 'Espiritualidade',
+        'Supernatural', 'Guerreiros', 'Artes Marciais', 'Samurai', 'Ninja',
+        'Esportes de Aventura', 'Esportes Radicais', 'Jogos de Tabuleiro',
+        'Jogos de Cartas', 'RPG', 'MMORPG', 'Realidade Virtual', 'Realidade Aumentada'
+    ];
 
 
-/* --- NOVAS FUNÇÕES GLOBAIS E HELPERS --- */
+    // Persistência de Login: Adiciona o Firebase Auth para usar a persistência local
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => {
+            console.log("Persistência de login configurada para LOCAL.");
+        })
+        .catch((error) => {
+            console.error("Erro ao configurar persistência de login:", error);
+        });
 
-// Helper para criar elementos SVG para ícones (Outline Icons)
-// Exemplo de uso: createSvgIcon("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z")
-function createSvgIcon(pathD) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("width", "24");
-    svg.setAttribute("height", "24");
-    svg.setAttribute("fill", "currentColor"); // Usará a cor do texto pai
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", pathD);
-    svg.appendChild(path);
-    return svg;
-}
+    let currentUserData = null; // Para armazenar os dados do usuário logado e seus settings
+    let currentFilter = 'recentes'; // Filtro de animes atual (recentes, legendados, dublados, salvos, search, genero, letter, watched, adult)
+    let currentPlayingSerie = null; // Armazena a ID da série atualmente no player
+    let currentPlayingEpisode = null; // Armazena o ID do episódio atualmente no player
+    let currentPlayingPlayerIndex = 0; // Index do player atual (se houver múltiplos)
+    let heroSliderInterval; // Variável para controlar o intervalo do Hero Slider
+    let currentHeroSlideIndex = 0; // Index do slide atual do Hero Slider
+    let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
 
-// Helper para fechar todos os kebabs abertos
-function closeAllKebabMenus() {
-    document.querySelectorAll('.kebab-menu.active').forEach(menu => {
-        menu.classList.remove('active');
-    });
-}
+    // Pilha de páginas abertas para gerenciamento de navegação (novo)
+    const pageStack = ['main']; // Começa com a página principal
 
-// Handler global para fechar kebabs ao clicar fora
-document.addEventListener('click', function(event) {
-    const kebabs = document.querySelectorAll('.kebab-menu');
-    kebabs.forEach(kebab => {
-        if (!kebab.contains(event.target)) {
-            kebab.classList.remove('active');
-        }
-    });
-});
-
-/* --- MODIFICAÇÕES EM FUNÇÕES EXISTENTES --- */
-
-// Adicionado ao início do JavaScript para controlar as páginas
-function openPage(pageId) {
-    // Esconde a página atual
-    const currentPage = document.getElementById(pageStack[pageStack.length - 1]);
-    if (currentPage) currentPage.classList.remove('active');
-
-    // Mostra a nova página
-    const newPage = document.getElementById(pageId);
-    if (newPage) newPage.classList.add('active');
-    
-    // Adiciona a nova página à pilha se não for a página atual E não for um modal pop-up
-    const isModalPopup = newPage && newPage.classList.contains('modal') && !newPage.classList.contains('modal-page');
-    if (pageStack[pageStack.length - 1] !== pageId && !isModalPopup) {
-        pageStack.push(pageId);
-    }
-    console.log("Pilha de páginas:", pageStack);
-}
-
-function closeCurrentPage() {
-    if (pageStack.length > 1) {
-        const currentPageId = pageStack[pageStack.length - 1];
-        const currentPage = document.getElementById(currentPageId);
-        
-        // Remove da pilha
-        pageStack.pop();
-
+    // Adicionado ao início do JavaScript para controlar as páginas
+    function openPage(pageId) {
+        // Esconde a página atual
+        const currentPage = document.getElementById(pageStack[pageStack.length - 1]);
         if (currentPage) currentPage.classList.remove('active');
 
-        const previousPageId = pageStack[pageStack.length - 1];
-        const previousPage = document.getElementById(previousPageId);
-        if (previousPage) previousPage.classList.add('active');
-
-        // Lógica específica para fechar o player
-        if (currentPageId === 'videoPage') {
-            const videoFrame = document.getElementById('videoFrame');
-            if (videoFrame) videoFrame.src = ""; // Para o vídeo
-            currentPlayingSerie = null;
-            currentPlayingEpisode = null;
-             // Remove o estado do modo cinema
-            document.body.classList.remove('cinema-mode');
-        }
-        // Lógica específica para fechar o userMenu
-        if (currentPageId === 'userMenu') {
-            toggleUserMenu(); // Reusa a função que já esconde e reseta
-        }
-        // Lógica específica para fechar os modais de waifu que usam pageStack
-        if (currentPageId === 'waifuDetailModal' || currentPageId === 'waifuAlbumViewerModal' || currentPageId === 'editWaifuPostModal' || currentPageId === 'tagPage') {
-            // Apenas esconde, a remoção da pilha já foi feita
-            if (currentPage) currentPage.style.display = 'none';
-        }
-
-    } else {
-        // Se for a última página (main), apenas garante que está ativa
-        const mainPage = document.getElementById('main');
-        if (mainPage) mainPage.classList.add('active');
-        // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
-        console.log("Você está na página principal.");
-    }
-    console.log("Pilha de páginas:", pageStack);
-}
-
-// Função para abrir modais genéricos (popup) - ATUALIZADA
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'flex';
-        // Adiciona à pilha APENAS se for um modal que se comporta como página (waifuDetailModal, waifuAlbumViewerModal, editWaifuPostModal)
-        // Isso é importante para o closeCurrentPage funcionar corretamente
-        if (modalId === 'waifuDetailModal' || modalId === 'waifuAlbumViewerModal' || modalId === 'editWaifuPostModal') {
-            // Verifica se já não está na pilha para evitar duplicatas
-            if (pageStack[pageStack.length - 1] !== modalId) {
-                pageStack.push(modalId);
-            }
-        }
-        console.log("Pilha de páginas:", pageStack);
-    } else {
-        console.error(`Erro: Modal com ID '${modalId}' não encontrado.`);
-    }
-}
-
-// Função para fechar modais genéricos (popup) - ATUALIZADA
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-        // Remove da pilha se for um modal que se comporta como página E estiver no topo
-        if ((modalId === 'waifuDetailModal' || modalId === 'waifuAlbumViewerModal' || modalId === 'editWaifuPostModal') && pageStack[pageStack.length - 1] === modalId) {
-            pageStack.pop();
-        }
-        console.log("Pilha de páginas:", pageStack);
-    } else {
-        console.warn(`Aviso: Modal com ID '${modalId}' não encontrado para fechar.`);
-    }
-}
-
-
-// Função para carregar dados do usuário (ATUALIZADA)
-async function carregarDadosUsuario(uid) {
-    try {
-        const userDocRef = db.collection("users").doc(uid); // Obter a referência do documento
-        const userDoc = await userDocRef.get(); // Tentar buscar o documento
-
-        if (userDoc.exists) {
-            currentUserData = userDoc.data();
-            // Carrega IDs de usuários seguidos e tags seguidas
-            usersBeingFollowed = currentUserData.followingAuthors || [];
-            tagsBeingFollowed = currentUserData.followedTags || [];
-        } else {
-            console.log("Documento de usuário não encontrado no Firestore. Criando um novo.");
-            currentUserData = {
-                email: auth.currentUser.email, // Pega o email da autenticação
-                photoURL: 'https://via.placeholder.com/60?text=AP', // Placeholder para foto de perfil
-                animesSalvos: [],
-                animesAssistidos: [],
-                modoAdulto: false,
-                theme: 'dark', // Padrão tema escuro
-                displayName: auth.currentUser.email.split('@')[0], // Nome padrão do email
-                notifications: [],
-                status: 'novo', // Status inicial para novos usuários
-                statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)), // Expira em 30 dias
-                followingAuthors: [], // Novo campo
-                followedTags: [], // Novo campo
-                waifusSalvas: [], // Novo campo para waifus salvas
-                savedTags: [], // Novo campo para tags salvas
-            };
-            await userDocRef.set(currentUserData); // Cria o documento no Firestore
-            showMessage("Perfil de usuário criado com dados padrão no Firestore.");
-        }
+        // Mostra a nova página
+        const newPage = document.getElementById(pageId);
+        if (newPage) newPage.classList.add('active');
         
-        // Agora que currentUserData está garantido, podemos exibir as informações
-        const userInfoDisplay = document.getElementById('userInfoDisplay');
-        if (!userInfoDisplay) {
-            console.error("Erro: Elemento 'userInfoDisplay' não encontrado no DOM.");
-            return;
+        // Adiciona a nova página à pilha se não for a página atual
+        if (pageStack[pageStack.length - 1] !== pageId) {
+            pageStack.push(pageId);
         }
-        userInfoDisplay.innerHTML = ''; // Limpa o conteúdo anterior
+        console.log("Pilha de páginas:", pageStack);
+    }
 
-        const profilePicArea = document.createElement('div');
-        profilePicArea.className = 'profile-pic-upload-area';
-        profilePicArea.innerHTML = `
-            <div class="profile-pic-preview" onclick="openSettingsPage()">
-                <img id="profileImage" src="${currentUserData.photoURL || 'https://via.placeholder.com/80?text=' + (currentUserData.displayName ? currentUserData.displayName.charAt(0).toUpperCase() : currentUserData.email.charAt(0).toUpperCase())}" alt="Foto de Perfil">
-            </div>
-        `;
-        userInfoDisplay.appendChild(profilePicArea);
+    function closeCurrentPage() {
+        if (pageStack.length > 1) {
+            const currentPage = document.getElementById(pageStack.pop());
+            if (currentPage) currentPage.classList.remove('active');
 
-        const pName = document.createElement('p');
-        pName.className = 'user-name';
-        pName.textContent = currentUserData.displayName || currentUserData.email;
-        userInfoDisplay.appendChild(pName);
+            const previousPage = document.getElementById(pageStack[pageStack.length - 1]);
+            if (previousPage) previousPage.classList.add('active');
 
-        const pEmail = document.createElement('p');
-        pEmail.className = 'user-email';
-        pEmail.textContent = currentUserData.email;
-        userInfoDisplay.appendChild(pEmail);
-
-        let userStatus = currentUserData.status || 'fantasma'; // Padrão
-        let statusIcon = '😶';
-        let statusClass = 'status-fantasma';
-
-        if (userStatus === 'novo') {
-            statusIcon = '🙂';
-            statusClass = 'status-novo';
-            if (currentUserData.statusExpiration && currentUserData.statusExpiration.toDate() < new Date()) {
-                userStatus = 'espectador';
-                await userDocRef.update({ status: userStatus, statusExpiration: null });
-                currentUserData.status = userStatus;
+            // Se for o player que está sendo fechado, pare o vídeo
+            if (currentPage.id === 'videoPage') {
+                const videoFrame = document.getElementById('videoFrame');
+                if (videoFrame) videoFrame.src = ""; // Para o vídeo
+                currentPlayingSerie = null;
+                currentPlayingEpisode = null;
+                 // Remove o estado do modo cinema
+                document.body.classList.remove('cinema-mode');
             }
-        } else if (userStatus === 'espectador') {
-            statusIcon = '😐';
-            statusClass = 'status-espectador';
-        } else if (userStatus === 'colaborador') {
-            statusIcon = '🤝';
-            statusClass = 'status-colaborador';
-        } else if (userStatus === 'comentador') {
-            statusIcon = '🤯';
-            statusClass = 'status-comentador';
-        } else if (userStatus === 'especialista') {
-            statusIcon = '🤓';
-            statusClass = 'status-especialista';
-        } else if (userStatus === 'exigente') {
-            statusIcon = '🤔';
-            statusClass = 'status-exigente';
-        } else if (userStatus === 'critico') {
-            statusIcon = '🧐';
-            statusClass = 'status-critico';
+            // Se for o userMenu, fechar de forma especial
+            if (currentPage.id === 'userMenu') {
+                toggleUserMenu(); // Reusa a função que já esconde e reseta
+            }
+        } else {
+            // Se for a última página (main), apenas garante que está ativa
+            const mainPage = document.getElementById('main');
+            if (mainPage) mainPage.classList.add('active');
+            // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
+            console.log("Você está na página principal.");
         }
-        const statusBadge = document.createElement('div');
-        statusBadge.className = `user-status-badge ${statusClass}`;
-        statusBadge.innerHTML = `${statusIcon} ${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}`;
-        userInfoDisplay.appendChild(statusBadge);
-
-        const modoAdultoToggle = document.getElementById('modoAdultoToggle');
-        if (modoAdultoToggle) modoAdultoToggle.checked = currentUserData.modoAdulto;
-        else console.warn("Elemento 'modoAdultoToggle' não encontrado.");
-
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) themeToggle.checked = (currentUserData.theme === 'light');
-        else console.warn("Elemento 'themeToggle' não encontrado.");
-
-        aplicarTema(currentUserData.theme);
-        updateWaifusButtonVisibility();
-
-    } catch (error) {
-        console.error("Erro ao carregar dados do usuário:", error);
-        showMessage("Erro ao carregar dados do usuário: " + error.message);
-    }
-}
-
-
-// Função para Salvar/Remover Anime da Lista de Salvos
-async function toggleSalvarAnime() {
-    if (!auth.currentUser) {
-        showMessage("Você precisa estar logado para salvar animes.");
-        openModal('authModal');
-        return;
-    }
-    if (!currentPlayingSerie) {
-        showMessage("Nenhuma série selecionada para salvar.");
-        return;
+        console.log("Pilha de páginas:", pageStack);
     }
 
-    const serieId = currentPlayingSerie.id;
-    const userId = auth.currentUser.uid;
-    const userRef = db.collection("users").doc(userId);
-
-    try {
-        await db.runTransaction(async (transaction) => {
-            const userDoc = await transaction.get(userRef);
-            if (!userDoc.exists) {
-                console.warn("Documento do usuário não encontrado. Não é possível salvar anime.");
-                throw new Error("Documento do usuário não encontrado.");
-            }
-
-            let animesSalvos = userDoc.data().animesSalvos || [];
-            const btnSalvarAnime = document.getElementById('btnSalvarAnime');
-            if (!btnSalvarAnime) {
-                 console.error("Erro: Elemento 'btnSalvarAnime' não encontrado no DOM.");
-                 return;
-            }
-
-            if (animesSalvos.includes(serieId)) {
-                // Anime já salvo, remover
-                animesSalvos = animesSalvos.filter(id => id !== serieId);
-                btnSalvarAnime.querySelector('span').textContent = "Salvar Anime";
-                btnSalvarAnime.classList.remove('saved');
-                showMessage("Anime removido da sua lista.");
-            } else {
-                // Anime não salvo, adicionar
-                animesSalvos.push(serieId);
-                btnSalvarAnime.querySelector('span').textContent = "Remover da Lista";
-                btnSalvarAnime.classList.add('saved');
-                showMessage("Anime salvo na sua lista!");
-            }
-            transaction.update(userRef, { animesSalvos: animesSalvos });
-            
-            // Atualiza o currentUserData localmente
-            if (currentUserData) {
-                currentUserData.animesSalvos = animesSalvos;
-            }
-        });
-    } catch (error) {
-        console.error("Erro ao salvar/remover anime:", error);
-        showMessage("Erro ao salvar/remover anime: " + error.message);
-    }
-}
-
-// Função para exibir animes com base no filtro (agora para séries)
-async function filterAnimesByStatus(filtro) { // 'legendado', 'dublado', 'assistidos', 'salvos' etc
-    if (!auth.currentUser || !currentUserData) {
-        showMessage("Você precisa estar logado para ver esta seção.");
-        openModal('authModal');
-        return;
-    }
-
-    // Não precisa mais de toda essa lógica aqui, pois openCategoryViewPage já lida com isso
-    // Esta função agora apenas chama a página de categoria apropriada
-    let categoryId;
-    switch (filtro) {
-        case 'assistidos':
-            categoryId = 'watchedAnimes';
-            break;
-        case 'salvos':
-            categoryId = 'savedAnimes';
-            break;
-        case 'legendado':
-            categoryId = 'filteredByLegendado';
-            break;
-        case 'dublado':
-            categoryId = 'filteredByDublado';
-            break;
-        case 'adult':
-            categoryId = 'adultAnimes';
-            break;
-        case 'recentes_series':
-            categoryId = 'recentSeries';
-            break;
-        case 'recentes_episodios':
-            categoryId = 'recentEpisodes';
-            break;
-        case 'recentMovies':
-            categoryId = 'recentMovies';
-            break;
-        case 'liveContent':
-            categoryId = 'liveContent';
-            break;
-        case 'recentCartoons':
-            categoryId = 'recentCartoons';
-            break;
-        default:
-            console.warn(`Filtro desconhecido: ${filtro}`);
-            return;
-    }
-    openCategoryViewPage(categoryId);
-}
-
-// Função para renderizar o conteúdo principal da página (home)
-function renderHomePageContent() {
-    const mainContentArea = document.querySelector('main');
-    if (!mainContentArea) {
-        console.error("Erro: Elemento 'main' não encontrado no DOM.");
-        return;
-    }
     // Função para abrir o menu do usuário (Drawer)
         async function toggleUserMenu() {
         const userMenu = document.getElementById('userMenu');
@@ -7799,6 +6653,14 @@ async function toggleSaveWaifu(waifuId) {
 
 
 // --- ATUALIZAÇÕES EM FUNÇÕES EXISTENTES ---
+
+// Inicia o carregamento de animes e catálogo A-Z quando a página é carregada
+            // Inicia o carregamento de animes e catálogo A-Z quando a página é carregada
+document.addEventListener('DOMContentLoaded', () => {
+    generateAZCatalog();
+    // A função onAuthStateChanged cuidará da primeira carga do Hero Slider e carregarAnimes
+    // após a autenticação ser resolvida.
+});
 
 
 

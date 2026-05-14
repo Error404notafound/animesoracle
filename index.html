@@ -7070,7 +7070,35 @@ async function openWaifusPage() {
     loadWaifuFollowingList(); // Carrega a lista de quem o usuário segue
     loadWaifuSavedTags(); // Carrega as tags salvas
     loadWaifuSeeAlso(); // Carrega o "Veja Também"
+
+// Função para gerar o catálogo A-Z
+function generateAZCatalog() {
+    const azCatalogDiv = document.getElementById('azCatalog');
+    if (!azCatalogDiv) {
+        console.error("Erro: Elemento 'azCatalog' não encontrado no DOM.");
+        return;
+    }
+    azCatalogDiv.innerHTML = ''; // Limpa antes de gerar
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    // Adiciona um item para números e símbolos se desejar
+    azCatalogDiv.innerHTML += `<span onclick="filterByLetter('#')">#</span>`; 
+
+    for (let i = 0; i < alphabet.length; i++) {
+        const letter = alphabet[i];
+        const span = document.createElement('span');
+        span.textContent = letter;
+        span.onclick = () => filterByLetter(letter);
+        azCatalogDiv.appendChild(span);
+    }
 }
+
+// Inicia o carregamento de animes e catálogo A-Z quando a página é carregada
+document.addEventListener('DOMContentLoaded', () => {
+    generateAZCatalog(); // Esta chamada é para a página principal (home)
+    // A função onAuthStateChanged cuidará da primeira carga do Hero Slider e carregarAnimes
+    // após a autenticação ser resolvida.
+});
 
 // Função para carregar a lista de quem o usuário segue
 async function loadWaifuFollowingList() {

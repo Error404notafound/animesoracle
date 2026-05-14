@@ -3610,115 +3610,444 @@ body.light-mode {
 
 <!-- Scripts Firebase e Lógica da Aplicação -->
 <script>
-    // 1. CONFIGURAÇÃO DO FIREBASE (SEUS DADOS DE PROJETO)
-    const firebaseConfig = { 
-      apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHtQY2kw", 
-      authDomain: "animesoracle-a60e9.firebaseapp.com", 
-      projectId: "animesoracle-a60e9", 
-      storageBucket: "animesoracle-a60e9.firebasestorage.app", 
-      messagingSenderId: "751657326717", 
-      appId: "1:751657326717:web:67ef63d01ffa3ad044f914" 
-    };
+    // 1. CONFIGURAÇÃO DO FIREBASE (SEUS DADOS DE PROJETO) - Mantenha este bloco no topo do seu <script>
+const firebaseConfig = {
+    apiKey: "AIzaSyBlhgf82RL_uSWChpBwzuUAfi_SHtQY2kw",
+    authDomain: "animesoracle-a60e9.firebaseapp.com",
+    projectId: "animesoracle-a60e9",
+    storageBucket: "animesoracle-a60e9.firebasestorage.app",
+    messagingSenderId: "751657326717",
+    appId: "1:751657326717:web:67ef63d01ffa3ad044f914"
+};
 
-    // 2. INICIALIZAÇÃO DO FIREBASE
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth(); 
-    const storage = firebase.storage(); // Inicializa o Firebase Storage
+// 2. INICIALIZAÇÃO DO FIREBASE - Mantenha este bloco no topo do seu <script>
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+const storage = firebase.storage(); // Inicializa o Firebase Storage
 
-    // CORREÇÃO: Variável allGeneros definida aqui
-    const allGeneros = [
-        'Ação', 'Aventura', 'Comédia', 'Drama', 'Fantasia', 'Ficção Científica',
-        'Horror', 'Mistério', 'Romance', 'Slice of Life', 'Esportes', 'Musical',
-        'Seinen', 'Shoujo', 'Shounen', 'Kodomomuke', 'Mecha', 'Militar', 'Policial',
-        'Psicológico', 'Sobrenatural', 'Thriller', 'Vampiros', 'Harem', 'Isekai',
-        'Magia', 'Artes Marciais', 'Histórico', 'Escolar', 'Superpoderes',
-        'Fantasia Urbana', 'Culinária', 'Robôs', 'Zumbis', 'Jogos', 'Virtual',
-        'Guerra', 'Espaço', 'Cyberpunk', 'Steampunk', 'Samurai', 'Ninja',
-        'Super-herói', 'Mistério', 'Detetive', 'Crime', 'Distopia', 'Utopia',
-        'Viagem no Tempo', 'Mundo Pós-apocalíptico', 'Apocalíptico', 'Sobrevivência',
-        'Terror Psicológico', 'Gore', 'Hentai', 'Ecchi', 'Yuri', 'Yaoi',
-        'Magical Girl', 'Demônios', 'Anjos', 'Dragões', 'Magia Negra', 'Mechas',
-        'Robôs Gigantes', 'Mundo Subaquático', 'Animais', 'Mitologia', 'Folclore',
-        'Crianças', 'Família', 'Cotidiano', 'Trabalho', 'Negócios', 'Finanças',
-        'Política', 'Sociedade', 'Cultura', 'Arte', 'Música', 'Dança', 'Fotografia',
-        'Moda', 'Design', 'Arquitetura', 'Engenharia', 'Medicina', 'Ciência',
-        'Tecnologia', 'Educação', 'Filosofia', 'Religião', 'Espiritualidade',
-        'Supernatural', 'Guerreiros', 'Artes Marciais', 'Samurai', 'Ninja',
-        'Esportes de Aventura', 'Esportes Radicais', 'Jogos de Tabuleiro',
-        'Jogos de Cartas', 'RPG', 'MMORPG', 'Realidade Virtual', 'Realidade Aumentada'
-    ];
+// CORREÇÃO: Variável allGeneros definida aqui
+const allGeneros = [
+    'Ação', 'Aventura', 'Comédia', 'Drama', 'Fantasia', 'Ficção Científica',
+    'Horror', 'Mistério', 'Romance', 'Slice of Life', 'Esportes', 'Musical',
+    'Seinen', 'Shoujo', 'Shounen', 'Kodomomuke', 'Mecha', 'Militar', 'Policial',
+    'Psicológico', 'Sobrenatural', 'Thriller', 'Vampiros', 'Harem', 'Isekai',
+    'Magia', 'Artes Marciais', 'Histórico', 'Escolar', 'Superpoderes',
+    'Fantasia Urbana', 'Culinária', 'Robôs', 'Zumbis', 'Jogos', 'Virtual',
+    'Guerra', 'Espaço', 'Cyberpunk', 'Steampunk', 'Samurai', 'Ninja',
+    'Super-herói', 'Mistério', 'Detetive', 'Crime', 'Distopia', 'Utopia',
+    'Viagem no Tempo', 'Mundo Pós-apocalíptico', 'Apocalíptico', 'Sobrevivência',
+    'Terror Psicológico', 'Gore', 'Hentai', 'Ecchi', 'Yuri', 'Yaoi',
+    'Magical Girl', 'Demônios', 'Anjos', 'Dragões', 'Magia Negra', 'Mechas',
+    'Robôs Gigantes', 'Mundo Subaquático', 'Animais', 'Mitologia', 'Folclore',
+    'Crianças', 'Família', 'Cotidiano', 'Trabalho', 'Negócios', 'Finanças',
+    'Política', 'Sociedade', 'Cultura', 'Arte', 'Música', 'Dança', 'Fotografia',
+    'Moda', 'Design', 'Arquitetura', 'Engenharia', 'Medicina', 'Ciência',
+    'Tecnologia', 'Educação', 'Filosofia', 'Religião', 'Espiritualidade',
+    'Supernatural', 'Guerreiros', 'Artes Marciais', 'Samurai', 'Ninja',
+    'Esportes de Aventura', 'Esportes Radicais', 'Jogos de Tabuleiro',
+    'Jogos de Cartas', 'RPG', 'MMORPG', 'Realidade Virtual', 'Realidade Aumentada'
+];
 
 
-    // Persistência de Login: Adiciona o Firebase Auth para usar a persistência local
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-            console.log("Persistência de login configurada para LOCAL.");
-        })
-        .catch((error) => {
-            console.error("Erro ao configurar persistência de login:", error);
-        });
+// Persistência de Login: Adiciona o Firebase Auth para usar a persistência local
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+        console.log("Persistência de login configurada para LOCAL.");
+    })
+    .catch((error) => {
+        console.error("Erro ao configurar persistência de login:", error);
+    });
 
-    let currentUserData = null; // Para armazenar os dados do usuário logado e seus settings
-    let currentFilter = 'recentes'; // Filtro de animes atual (recentes, legendados, dublados, salvos, search, genero, letter, watched, adult)
-    let currentPlayingSerie = null; // Armazena a ID da série atualmente no player
-    let currentPlayingEpisode = null; // Armazena o ID do episódio atualmente no player
-    let currentPlayingPlayerIndex = 0; // Index do player atual (se houver múltiplos)
-    let heroSliderInterval; // Variável para controlar o intervalo do Hero Slider
-    let currentHeroSlideIndex = 0; // Index do slide atual do Hero Slider
-    let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
+let currentUserData = null; // Para armazenar os dados do usuário logado e seus settings
+let currentFilter = 'recentes'; // Filtro de animes atual (recentes, legendados, dublados, salvos, search, genero, letter, watched, adult)
+let currentPlayingSerie = null; // Armazena a ID da série atualmente no player
+let currentPlayingEpisode = null; // Armazena o ID do episódio atualmente no player
+let currentPlayingPlayerIndex = 0; // Index do player atual (se houver múltiplos)
+let heroSliderInterval; // Variável para controlar o intervalo do Hero Slider
+let currentHeroSlideIndex = 0; // Index do slide atual do Hero Slider
+let heroSlides = []; // Array para armazenar os dados dos slides do Hero Slider
 
-    // Pilha de páginas abertas para gerenciamento de navegação (novo)
-    const pageStack = ['main']; // Começa com a página principal
+// Pilha de páginas abertas para gerenciamento de navegação (novo)
+const pageStack = ['main']; // Começa com a página principal
 
-    // Adicionado ao início do JavaScript para controlar as páginas
-    function openPage(pageId) {
-        // Esconde a página atual
-        const currentPage = document.getElementById(pageStack[pageStack.length - 1]);
+// --- NOVAS VARIÁVEIS GLOBAIS PARA WAIFUS ---
+let lastWaifuDoc = null; // Para o scroll infinito de waifus
+let isLoadingWaifus = false; // Para evitar múltiplas requisições durante o scroll
+let waifuSearchTerm = ''; // Termo de busca para a página Waifus
+let currentWaifuDetail = null; // Armazena a waifu atualmente exibida no modal de detalhes
+let currentWaifuAlbum = []; // Armazena as URLs das imagens do álbum da waifu detalhe
+let currentWaifuTags = []; // Armazena as tags da waifu atualmente exibida
+let currentTagPageTag = null; // Armazena a tag da página de tags atualmente aberta
+let currentKebabWaifuId = null; // ID da waifu cujo kebab menu está aberto
+
+// IDs de usuários seguidos
+let usersBeingFollowed = [];
+// IDs de tags seguidas
+let tagsBeingFollowed = [];
+
+// Variável para debounce da busca de waifus
+let waifuSearchTimeout = null;
+
+
+/* --- NOVAS FUNÇÕES GLOBAIS E HELPERS --- */
+
+// Helper para criar elementos SVG para ícones (Outline Icons)
+// Exemplo de uso: createSvgIcon("M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z")
+function createSvgIcon(pathD) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "24");
+    svg.setAttribute("height", "24");
+    svg.setAttribute("fill", "currentColor"); // Usará a cor do texto pai
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", pathD);
+    svg.appendChild(path);
+    return svg;
+}
+
+// Helper para fechar todos os kebabs abertos
+function closeAllKebabMenus() {
+    document.querySelectorAll('.kebab-menu.active').forEach(menu => {
+        menu.classList.remove('active');
+    });
+}
+
+// Handler global para fechar kebabs ao clicar fora
+document.addEventListener('click', function(event) {
+    const kebabs = document.querySelectorAll('.kebab-menu');
+    kebabs.forEach(kebab => {
+        if (!kebab.contains(event.target)) {
+            kebab.classList.remove('active');
+        }
+    });
+});
+
+/* --- MODIFICAÇÕES EM FUNÇÕES EXISTENTES --- */
+
+// Adicionado ao início do JavaScript para controlar as páginas
+function openPage(pageId) {
+    // Esconde a página atual
+    const currentPage = document.getElementById(pageStack[pageStack.length - 1]);
+    if (currentPage) currentPage.classList.remove('active');
+
+    // Mostra a nova página
+    const newPage = document.getElementById(pageId);
+    if (newPage) newPage.classList.add('active');
+    
+    // Adiciona a nova página à pilha se não for a página atual E não for um modal pop-up
+    const isModalPopup = newPage && newPage.classList.contains('modal') && !newPage.classList.contains('modal-page');
+    if (pageStack[pageStack.length - 1] !== pageId && !isModalPopup) {
+        pageStack.push(pageId);
+    }
+    console.log("Pilha de páginas:", pageStack);
+}
+
+function closeCurrentPage() {
+    if (pageStack.length > 1) {
+        const currentPageId = pageStack[pageStack.length - 1];
+        const currentPage = document.getElementById(currentPageId);
+        
+        // Remove da pilha
+        pageStack.pop();
+
         if (currentPage) currentPage.classList.remove('active');
 
-        // Mostra a nova página
-        const newPage = document.getElementById(pageId);
-        if (newPage) newPage.classList.add('active');
-        
-        // Adiciona a nova página à pilha se não for a página atual
-        if (pageStack[pageStack.length - 1] !== pageId) {
-            pageStack.push(pageId);
+        const previousPageId = pageStack[pageStack.length - 1];
+        const previousPage = document.getElementById(previousPageId);
+        if (previousPage) previousPage.classList.add('active');
+
+        // Lógica específica para fechar o player
+        if (currentPageId === 'videoPage') {
+            const videoFrame = document.getElementById('videoFrame');
+            if (videoFrame) videoFrame.src = ""; // Para o vídeo
+            currentPlayingSerie = null;
+            currentPlayingEpisode = null;
+             // Remove o estado do modo cinema
+            document.body.classList.remove('cinema-mode');
+        }
+        // Lógica específica para fechar o userMenu
+        if (currentPageId === 'userMenu') {
+            toggleUserMenu(); // Reusa a função que já esconde e reseta
+        }
+        // Lógica específica para fechar os modais de waifu que usam pageStack
+        if (currentPageId === 'waifuDetailModal' || currentPageId === 'waifuAlbumViewerModal' || currentPageId === 'editWaifuPostModal' || currentPageId === 'tagPage') {
+            // Apenas esconde, a remoção da pilha já foi feita
+            if (currentPage) currentPage.style.display = 'none';
+        }
+
+    } else {
+        // Se for a última página (main), apenas garante que está ativa
+        const mainPage = document.getElementById('main');
+        if (mainPage) mainPage.classList.add('active');
+        // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
+        console.log("Você está na página principal.");
+    }
+    console.log("Pilha de páginas:", pageStack);
+}
+
+// Função para abrir modais genéricos (popup) - ATUALIZADA
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex';
+        // Adiciona à pilha APENAS se for um modal que se comporta como página (waifuDetailModal, waifuAlbumViewerModal, editWaifuPostModal)
+        // Isso é importante para o closeCurrentPage funcionar corretamente
+        if (modalId === 'waifuDetailModal' || modalId === 'waifuAlbumViewerModal' || modalId === 'editWaifuPostModal') {
+            // Verifica se já não está na pilha para evitar duplicatas
+            if (pageStack[pageStack.length - 1] !== modalId) {
+                pageStack.push(modalId);
+            }
         }
         console.log("Pilha de páginas:", pageStack);
+    } else {
+        console.error(`Erro: Modal com ID '${modalId}' não encontrado.`);
     }
+}
 
-    function closeCurrentPage() {
-        if (pageStack.length > 1) {
-            const currentPage = document.getElementById(pageStack.pop());
-            if (currentPage) currentPage.classList.remove('active');
+// Função para fechar modais genéricos (popup) - ATUALIZADA
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+        // Remove da pilha se for um modal que se comporta como página E estiver no topo
+        if ((modalId === 'waifuDetailModal' || modalId === 'waifuAlbumViewerModal' || modalId === 'editWaifuPostModal') && pageStack[pageStack.length - 1] === modalId) {
+            pageStack.pop();
+        }
+        console.log("Pilha de páginas:", pageStack);
+    } else {
+        console.warn(`Aviso: Modal com ID '${modalId}' não encontrado para fechar.`);
+    }
+}
 
-            const previousPage = document.getElementById(pageStack[pageStack.length - 1]);
-            if (previousPage) previousPage.classList.add('active');
 
-            // Se for o player que está sendo fechado, pare o vídeo
-            if (currentPage.id === 'videoPage') {
-                const videoFrame = document.getElementById('videoFrame');
-                if (videoFrame) videoFrame.src = ""; // Para o vídeo
-                currentPlayingSerie = null;
-                currentPlayingEpisode = null;
-                 // Remove o estado do modo cinema
-                document.body.classList.remove('cinema-mode');
-            }
-            // Se for o userMenu, fechar de forma especial
-            if (currentPage.id === 'userMenu') {
-                toggleUserMenu(); // Reusa a função que já esconde e reseta
-            }
+// Função para carregar dados do usuário (ATUALIZADA)
+async function carregarDadosUsuario(uid) {
+    try {
+        const userDocRef = db.collection("users").doc(uid); // Obter a referência do documento
+        const userDoc = await userDocRef.get(); // Tentar buscar o documento
+
+        if (userDoc.exists) {
+            currentUserData = userDoc.data();
+            // Carrega IDs de usuários seguidos e tags seguidas
+            usersBeingFollowed = currentUserData.followingAuthors || [];
+            tagsBeingFollowed = currentUserData.followedTags || [];
         } else {
-            // Se for a última página (main), apenas garante que está ativa
-            const mainPage = document.getElementById('main');
-            if (mainPage) mainPage.classList.add('active');
-            // Opcional: mostrar uma mensagem ou fazer algo quando não há mais páginas para fechar
-            console.log("Você está na página principal.");
+            console.log("Documento de usuário não encontrado no Firestore. Criando um novo.");
+            currentUserData = {
+                email: auth.currentUser.email, // Pega o email da autenticação
+                photoURL: 'https://via.placeholder.com/60?text=AP', // Placeholder para foto de perfil
+                animesSalvos: [],
+                animesAssistidos: [],
+                modoAdulto: false,
+                theme: 'dark', // Padrão tema escuro
+                displayName: auth.currentUser.email.split('@')[0], // Nome padrão do email
+                notifications: [],
+                status: 'novo', // Status inicial para novos usuários
+                statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)), // Expira em 30 dias
+                followingAuthors: [], // Novo campo
+                followedTags: [], // Novo campo
+                waifusSalvas: [], // Novo campo para waifus salvas
+                savedTags: [], // Novo campo para tags salvas
+            };
+            await userDocRef.set(currentUserData); // Cria o documento no Firestore
+            showMessage("Perfil de usuário criado com dados padrão no Firestore.");
         }
-        console.log("Pilha de páginas:", pageStack);
+        
+        // Agora que currentUserData está garantido, podemos exibir as informações
+        const userInfoDisplay = document.getElementById('userInfoDisplay');
+        if (!userInfoDisplay) {
+            console.error("Erro: Elemento 'userInfoDisplay' não encontrado no DOM.");
+            return;
+        }
+        userInfoDisplay.innerHTML = ''; // Limpa o conteúdo anterior
+
+        const profilePicArea = document.createElement('div');
+        profilePicArea.className = 'profile-pic-upload-area';
+        profilePicArea.innerHTML = `
+            <div class="profile-pic-preview" onclick="openSettingsPage()">
+                <img id="profileImage" src="${currentUserData.photoURL || 'https://via.placeholder.com/80?text=' + (currentUserData.displayName ? currentUserData.displayName.charAt(0).toUpperCase() : currentUserData.email.charAt(0).toUpperCase())}" alt="Foto de Perfil">
+            </div>
+        `;
+        userInfoDisplay.appendChild(profilePicArea);
+
+        const pName = document.createElement('p');
+        pName.className = 'user-name';
+        pName.textContent = currentUserData.displayName || currentUserData.email;
+        userInfoDisplay.appendChild(pName);
+
+        const pEmail = document.createElement('p');
+        pEmail.className = 'user-email';
+        pEmail.textContent = currentUserData.email;
+        userInfoDisplay.appendChild(pEmail);
+
+        let userStatus = currentUserData.status || 'fantasma'; // Padrão
+        let statusIcon = '😶';
+        let statusClass = 'status-fantasma';
+
+        if (userStatus === 'novo') {
+            statusIcon = '🙂';
+            statusClass = 'status-novo';
+            if (currentUserData.statusExpiration && currentUserData.statusExpiration.toDate() < new Date()) {
+                userStatus = 'espectador';
+                await userDocRef.update({ status: userStatus, statusExpiration: null });
+                currentUserData.status = userStatus;
+            }
+        } else if (userStatus === 'espectador') {
+            statusIcon = '😐';
+            statusClass = 'status-espectador';
+        } else if (userStatus === 'colaborador') {
+            statusIcon = '🤝';
+            statusClass = 'status-colaborador';
+        } else if (userStatus === 'comentador') {
+            statusIcon = '🤯';
+            statusClass = 'status-comentador';
+        } else if (userStatus === 'especialista') {
+            statusIcon = '🤓';
+            statusClass = 'status-especialista';
+        } else if (userStatus === 'exigente') {
+            statusIcon = '🤔';
+            statusClass = 'status-exigente';
+        } else if (userStatus === 'critico') {
+            statusIcon = '🧐';
+            statusClass = 'status-critico';
+        }
+        const statusBadge = document.createElement('div');
+        statusBadge.className = `user-status-badge ${statusClass}`;
+        statusBadge.innerHTML = `${statusIcon} ${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}`;
+        userInfoDisplay.appendChild(statusBadge);
+
+        const modoAdultoToggle = document.getElementById('modoAdultoToggle');
+        if (modoAdultoToggle) modoAdultoToggle.checked = currentUserData.modoAdulto;
+        else console.warn("Elemento 'modoAdultoToggle' não encontrado.");
+
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.checked = (currentUserData.theme === 'light');
+        else console.warn("Elemento 'themeToggle' não encontrado.");
+
+        aplicarTema(currentUserData.theme);
+        updateWaifusButtonVisibility();
+
+    } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
+        showMessage("Erro ao carregar dados do usuário: " + error.message);
+    }
+}
+
+
+// Função para Salvar/Remover Anime da Lista de Salvos
+async function toggleSalvarAnime() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para salvar animes.");
+        openModal('authModal');
+        return;
+    }
+    if (!currentPlayingSerie) {
+        showMessage("Nenhuma série selecionada para salvar.");
+        return;
     }
 
+    const serieId = currentPlayingSerie.id;
+    const userId = auth.currentUser.uid;
+    const userRef = db.collection("users").doc(userId);
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists) {
+                console.warn("Documento do usuário não encontrado. Não é possível salvar anime.");
+                throw new Error("Documento do usuário não encontrado.");
+            }
+
+            let animesSalvos = userDoc.data().animesSalvos || [];
+            const btnSalvarAnime = document.getElementById('btnSalvarAnime');
+            if (!btnSalvarAnime) {
+                 console.error("Erro: Elemento 'btnSalvarAnime' não encontrado no DOM.");
+                 return;
+            }
+
+            if (animesSalvos.includes(serieId)) {
+                // Anime já salvo, remover
+                animesSalvos = animesSalvos.filter(id => id !== serieId);
+                btnSalvarAnime.querySelector('span').textContent = "Salvar Anime";
+                btnSalvarAnime.classList.remove('saved');
+                showMessage("Anime removido da sua lista.");
+            } else {
+                // Anime não salvo, adicionar
+                animesSalvos.push(serieId);
+                btnSalvarAnime.querySelector('span').textContent = "Remover da Lista";
+                btnSalvarAnime.classList.add('saved');
+                showMessage("Anime salvo na sua lista!");
+            }
+            transaction.update(userRef, { animesSalvos: animesSalvos });
+            
+            // Atualiza o currentUserData localmente
+            if (currentUserData) {
+                currentUserData.animesSalvos = animesSalvos;
+            }
+        });
+    } catch (error) {
+        console.error("Erro ao salvar/remover anime:", error);
+        showMessage("Erro ao salvar/remover anime: " + error.message);
+    }
+}
+
+// Função para exibir animes com base no filtro (agora para séries)
+async function filterAnimesByStatus(filtro) { // 'legendado', 'dublado', 'assistidos', 'salvos' etc
+    if (!auth.currentUser || !currentUserData) {
+        showMessage("Você precisa estar logado para ver esta seção.");
+        openModal('authModal');
+        return;
+    }
+
+    // Não precisa mais de toda essa lógica aqui, pois openCategoryViewPage já lida com isso
+    // Esta função agora apenas chama a página de categoria apropriada
+    let categoryId;
+    switch (filtro) {
+        case 'assistidos':
+            categoryId = 'watchedAnimes';
+            break;
+        case 'salvos':
+            categoryId = 'savedAnimes';
+            break;
+        case 'legendado':
+            categoryId = 'filteredByLegendado';
+            break;
+        case 'dublado':
+            categoryId = 'filteredByDublado';
+            break;
+        case 'adult':
+            categoryId = 'adultAnimes';
+            break;
+        case 'recentes_series':
+            categoryId = 'recentSeries';
+            break;
+        case 'recentes_episodios':
+            categoryId = 'recentEpisodes';
+            break;
+        case 'recentMovies':
+            categoryId = 'recentMovies';
+            break;
+        case 'liveContent':
+            categoryId = 'liveContent';
+            break;
+        case 'recentCartoons':
+            categoryId = 'recentCartoons';
+            break;
+        default:
+            console.warn(`Filtro desconhecido: ${filtro}`);
+            return;
+    }
+    openCategoryViewPage(categoryId);
+}
+
+// Função para renderizar o conteúdo principal da página (home)
+function renderHomePageContent() {
+    const mainContentArea = document.querySelector('main');
+    if (!mainContentArea) {
+        console.error("Erro: Elemento 'main' não encontrado no DOM.");
+        return;
+    }
     // Função para abrir o menu do usuário (Drawer)
         async function toggleUserMenu() {
         const userMenu = document.getElementById('userMenu');

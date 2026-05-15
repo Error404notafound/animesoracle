@@ -1931,8 +1931,8 @@ body.light-mode {
 /* Estilos para a página de Waifus */
 #waifusPage .waifu-top-actions {
     margin-bottom: 20px;
-    padding: 0 15px; /* Garante alinhamento com o conteúdo principal */
-    max-width: 1200px;
+    padding: 0 8px; /* Ajusta o padding lateral para ser consistente com a página */
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -1992,9 +1992,11 @@ body.light-mode {
     display: flex;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 10px; /* Espaço para a scrollbar */
-    gap: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 10px; /* Mantém o padding inferior para a scrollbar */
+    gap: 10px; /* Mantém o gap entre os itens */
+    margin-bottom: 20px; /* Mantém a margem inferior */
+    padding-left: 8px;   /* Ajusta o padding lateral */
+    padding-right: 8px;  /* Ajusta o padding lateral */
 }
 .horizontal-scroll::-webkit-scrollbar {
     height: 5px;
@@ -2075,12 +2077,14 @@ body.light-mode {
 /* Grid de Waifus (Principal) */
 .waifu-grid {
     display: grid;
-    /* Altere de 'repeat(3, 1fr)' para 'repeat(2, 1fr)' */
-    grid-template-columns: repeat(2, 1fr); /* Agora 2 colunas */
-    gap: 15px;
-    padding: 15px;
-    max-width: 1200px;
-    margin: 0 auto;
+    /* Mantém as 3 colunas como solicitado */
+    grid-template-columns: repeat(3, 1fr);
+    /* Reduz o espaço entre os cards para um valor menor */
+    gap: 8px; /* Você pode ajustar para 5px, 10px, etc., conforme preferir */
+    /* Remove padding, max-width e margin, deixando que o #waifusPage .modal-page-content controle o espaçamento externo */
+    padding: 0;
+    max-width: none;
+    margin: 0;
 }
 
 /* As media queries anteriores para 600px e 900px não são mais necessárias aqui,

@@ -7900,10 +7900,10 @@ async function displayWaifuCard(gridElement, waifu) {
     }
     actionsDiv.appendChild(likeButton);
 
-        // NOVO: Botão de Salvar Waifu (Coração Curvado SVGSilh)
+            // NOVO: Botão de Salvar Waifu (Coração Curvado Vazado)
     const saveButton = document.createElement('button');
     saveButton.innerHTML = `
-        <svg class="outline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="20" height="20" fill="currentColor">
+        <svg class="outline-icon" xmlns="http://w3.org" viewBox="0 0 100 100" width="20" height="20" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
             <path d="M91.9,13.2C85.5,5.1,75,0.7,63.9,1.1c-11.2,0.4-21.2,5.8-27,14.6c-4.4-6.7-11.4-11.4-19.4-13.2c-1.6-0.4-3.3-0.5-4.9-0.5 c-10,0-19.3,4.7-25.2,12.7c-7,9.4-8.5,22.2-4.1,33c4.1,10,12.1,17.9,23,22.8c14,6.2,28.8,10.6,43.9,13.1c1.3,0.2,2.6,0.3,3.9,0.3 c0.9,0,1.9-0.1,2.8-0.3c10-2,19.8-5,29.1-9c6.4-2.8,12.2-6.8,16.8-12c5.9-6.6,8.9-15.4,8.4-24.3C100.7,29.1,97.2,20,91.9,13.2z"/>
         </svg>
         <span id="waifuCardSaveCount-${waifu.id}">${waifu.saves || 0}</span>
@@ -7912,6 +7912,7 @@ async function displayWaifuCard(gridElement, waifu) {
         e.stopPropagation(); // Evita que o clique abra a página de detalhes
         toggleSaveWaifu(waifu.id);
     };
+
 
     // Verifica se a waifu já está salva pelo usuário atual
     if (auth.currentUser && currentUserData && currentUserData.waifusSalvas && currentUserData.waifusSalvas.includes(waifu.id)) {

@@ -1927,11 +1927,7 @@ body.light-mode {
     /* ... mantenha suas outras variáveis ... */
     --waifu-aura: none; /* Aura rosa removida */
 }
-/* Isso reduz o espaço lateral da página para que o conteúdo se expanda mais */
-#waifusPage .modal-page-content {
-    padding: 20px 8px; /* Reduz o padding lateral de 15px para 8px */
-    /* O max-width e margin: auto do .modal-page-content geral ainda o centralizarão em telas muito largas. */
-        }
+
 /* Estilos para a página de Waifus */
 #waifusPage .waifu-top-actions {
     margin-bottom: 20px;
@@ -1941,64 +1937,14 @@ body.light-mode {
     margin-right: auto;
 }
 
-#waifusPage .waifu-search-bar-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--card);
-    border: 1px solid #333;
-    border-radius: 25px;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-}
-
-#waifusPage #waifuSearchInput {
-    flex-grow: 1;
-    border: none;
-    background: transparent;
-    color: var(--text);
-    padding: 8px 10px;
-    margin: 0;
-    outline: none;
-    border-radius: 0; /* O container já tem o border-radius */
-}
-#waifusPage #waifuSearchInput::placeholder {
-    color: var(--text-secondary);
-}
-
-#waifusPage #waifuRandomBtn,
-#waifusPage #waifuSearchBtn {
-    padding: 8px 15px;
-    font-size: 0.9em;
-    font-weight: bold;
-    white-space: nowrap; /* Evita que o texto quebre */
-    margin: 0;
-}
-#waifusPage #waifuRandomBtn {
-    background-color: var(--secondary-bg);
-    border: 1px solid #444;
-    color: var(--text);
-}
-#waifusPage #waifuRandomBtn:hover {
-    background-color: #333;
-}
-#waifusPage #waifuSearchBtn {
-    background-color: var(--primary);
-    border: none;
-    color: white;
-}
-#waifusPage #waifuSearchBtn:hover {
-    background-color: var(--primary-light);
-}
-
 /* Seções de scroll horizontal para Seguindo e Tags Salvas */
 .horizontal-scroll {
     display: flex;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 10px; /* Mantém o padding inferior para a scrollbar */
-    gap: 10px; /* Mantém o gap entre os itens */
-    margin-bottom: 20px; /* Mantém a margem inferior */
+    padding-bottom: 10px; /* Espaço para a scrollbar */
+    gap: 10px;
+    margin-bottom: 20px;
     padding-left: 8px;   /* Ajusta o padding lateral */
     padding-right: 8px;  /* Ajusta o padding lateral */
 }
@@ -2078,58 +2024,58 @@ body.light-mode {
 }
 
 
+/* Dentro da sua tag <style> */
+
 /* Grid de Waifus (Principal) */
 .waifu-grid {
     display: grid;
-    /* Mantém as 3 colunas como solicitado */
-    grid-template-columns: repeat(3, 1fr);
-    /* Reduz o espaço entre os cards para um valor menor */
-    gap: 8px; /* Você pode ajustar para 5px, 10px, etc., conforme preferir */
-    /* Remove padding, max-width e margin, deixando que o #waifusPage .modal-page-content controle o espaçamento externo */
-    padding: 0;
+    grid-template-columns: repeat(3, 1fr); /* Mantém 3 colunas */
+    gap: 8px; /* Espaçamento mínimo entre cards */
+    padding: 0; /* Removido padding, agora controlado pelo #waifusPage .modal-page-content */
     max-width: none;
     margin: 0;
 }
+#waifusPage .modal-page-content {
+    padding: 20px 8px; /* Controla o padding lateral da página de waifus */
+    max-width: 1200px; /* Garante que não fique muito largo em monitores grandes */
+    margin: 0 auto;
+}
 
-/* As media queries anteriores para 600px e 900px não são mais necessárias aqui,
-   pois o 'repeat(3, 1fr)' já será aplicado por padrão a todas as telas. */
 
-
-/* Card de Waifu */
+/* Card de Waifu - NOVO LAYOUT */
 .waifu-card-wrapper {
-    display: flex;
-    flex-direction: column;
-    text-decoration: none; 
-    color: inherit; 
+    display: flex; /* Transforma em um container flexível */
+    flex-direction: column; /* Para empilhar os filhos verticalmente */
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
-    border-radius: 12px; /* Bordas arredondadas do wrapper */
+    background: var(--card); /* Fundo do card completo */
+    border-radius: 12px; /* Bordas arredondadas do card COMPLETO */
     overflow: hidden; /* Garante que o conteúdo respeite o border-radius */
-    position: relative; /* Para posicionamento do álbum/tags */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Sombra suave, sem aura */
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
+    /* Remover o hover glow de waifu-aura se não for mais desejado */
+    /* box-shadow: var(--waifu-aura); */ /* Se desejar remover, comente ou remova esta linha */
 }
 .waifu-card-wrapper:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.waifu-card { /* Este é apenas o container da imagem */
+.waifu-card { /* Contém apenas a imagem e o overlay do álbum */
     width: 100%;
-    /* REMOVA esta linha (aspect-ratio: 9/16;) */
-    /* aspect-ratio: 9/16; */ /* <--- REMOVA ESTA LINHA */
+    /* remove aspect-ratio fixo para que a imagem determine a altura */
     overflow: hidden;
     position: relative; /* Para o overlay do álbum */
-    background-color: var(--card); /* Fundo padrão do card */
-    border-radius: 12px 12px 0 0; /* Cantos arredondados apenas no topo */
-    /* A altura deste contêiner agora será definida pela imagem interna */
+    /* background-color: var(--card); */ /* O background é do wrapper agora */
+    /* remove border-radius pois o wrapper já define */
 }
 
 .waifu-card img {
     width: 100%;
-    height: auto; /* <-- ALTERE PARA 'auto' AQUI */
-    /* object-fit: cover; */ /* <-- Esta linha não é mais necessária, pois height: auto já mantém a proporção */
-    object-fit: contain; /* Opcional: use 'contain' se quiser garantir que a imagem inteira sempre caiba, com barras vazias se a proporção não for exata */
-                         /* Ou, se o objetivo é APENAS que a imagem defina sua altura, pode remover esta linha */
+    height: auto; /* A imagem define sua própria altura, mantendo a proporção */
+    /* object-fit: contain; */ /* Opcional: use 'contain' se quiser barras, ou remova para default */
     display: block;
 }
 
@@ -2148,46 +2094,45 @@ body.light-mode {
     font-size: 2em;
     font-weight: bold;
     z-index: 5; /* Acima da imagem */
-    border-radius: 12px 12px 0 0;
+    /* remove border-radius pois o wrapper já define */
 }
 
-/* Seção de autor e tags abaixo da imagem */
+/* Seção de autor e tags ABAIXO da imagem */
 .waifu-card-details-bottom {
-    background: var(--card); /* Fundo do card */
+    /* background: var(--card); */ /* Já é o background do wrapper */
     padding: 10px;
-    border-radius: 0 0 12px 12px; /* Cantos arredondados na parte inferior */
+    /* remove border-radius inferior pois o wrapper já define */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
+    border-top: 1px solid rgba(0,0,0,0.1); /* Linha fina separadora da imagem */
+    /* Isso garante que a linha apareça mesmo no light-mode */
 }
+body.light-mode .waifu-card-details-bottom {
+    border-top: 1px solid rgba(0,0,0,0.05); /* Linha mais clara para light mode */
+}
+
 
 .waifu-card-author {
     display: flex;
     align-items: center;
-    gap: 3px; /* Aumentado de 1px para 3px */
+    gap: 8px; /* Aumentado o espaçamento */
     margin-bottom: 5px;
 }
 .waifu-card-author img {
-    width: 10px; /* Aumentado de 7px para 10px (~43% de aumento) */
-    height: 10px; /* Aumentado de 7px para 10px */
+    width: 28px; /* Aumentado o tamanho da foto do autor */
+    height: 28px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--primary);
+    border: 2px solid var(--primary);
 }
 .waifu-card-author span {
     font-weight: bold;
     color: var(--text);
-    font-size: 0.4em; /* Aumentado de 0.3em para 0.4em (~33% de aumento) */
+    font-size: 0.9em; /* Aumentado o tamanho da fonte do nome do autor */
     line-height: 1;
 }
-
-
-
-
-
-
-
 
 .waifu-card-tags {
     display: flex;
@@ -2215,16 +2160,13 @@ body.light-mode {
     display: flex;
     justify-content: space-around;
     padding: 8px 0;
-    background: transparent; /* Agora transparente */
-    border-top: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
-    position: absolute; /* Para ficar por cima da imagem */
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
+    /* background: transparent; */ /* O background é do wrapper agora */
+    border-top: 1px solid rgba(0,0,0,0.1); /* Linha fina separadora dos detalhes */
+    /* Remove posicionamento absoluto, agora é um bloco dentro do wrapper */
+    /* bottom: 0; left: 0; right: 0; z-index: 10; */
 }
 body.light-mode .waifu-card-actions {
-    border-top: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(0,0,0,0.05); /* Linha mais clara para light mode */
 }
 
 .waifu-card-actions button {
@@ -2267,6 +2209,7 @@ body.light-mode .waifu-card-actions {
     border-radius: 5px;
     z-index: 10;
 } */
+
 
 /* Estilos para a barra de pesquisa de série no modal de waifu */
 #createWaifuPostModal .search-series-for-waifu-container {

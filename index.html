@@ -2075,14 +2075,14 @@ body.light-mode {
 /* Grid de Waifus (Principal) */
 .waifu-grid {
     display: grid;
-    /* Força 3 colunas em todas as telas, incluindo as de celular.
-       A largura de cada coluna será 1/3 do espaço disponível menos os gaps. */
-    grid-template-columns: repeat(3, 1fr);
+    /* Altere de 'repeat(3, 1fr)' para 'repeat(2, 1fr)' */
+    grid-template-columns: repeat(2, 1fr); /* Agora 2 colunas */
     gap: 15px;
-    padding: 15px; /* Adicionado padding para melhor espaçamento */
+    padding: 15px;
     max-width: 1200px;
     margin: 0 auto;
 }
+
 /* As media queries anteriores para 600px e 900px não são mais necessárias aqui,
    pois o 'repeat(3, 1fr)' já será aplicado por padrão a todas as telas. */
 

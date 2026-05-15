@@ -2075,22 +2075,17 @@ body.light-mode {
 /* Grid de Waifus (Principal) */
 .waifu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 4 colunas em telas maiores */
+    /* Força 3 colunas em todas as telas, incluindo as de celular.
+       A largura de cada coluna será 1/3 do espaço disponível menos os gaps. */
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     padding: 15px; /* Adicionado padding para melhor espaçamento */
     max-width: 1200px;
     margin: 0 auto;
 }
-@media (min-width: 600px) {
-    .waifu-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas médias */
-    }
-}
-@media (min-width: 900px) {
-    .waifu-grid {
-        grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas maiores */
-    }
-}
+/* As media queries anteriores para 600px e 900px não são mais necessárias aqui,
+   pois o 'repeat(3, 1fr)' já será aplicado por padrão a todas as telas. */
+
 
 /* Card de Waifu */
 .waifu-card-wrapper {

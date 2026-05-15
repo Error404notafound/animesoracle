@@ -4543,6 +4543,7 @@ body.light-mode .waifu-card-actions {
                 currentUserData.following = currentUserData.following || [];
                 currentUserData.savedTags = currentUserData.savedTags || [];
                 currentUserData.likedWaifuTags = currentUserData.likedWaifuTags || [];
+    currentUserData.waifusSalvas = currentUserData.waifusSalvas || []; // Adicionado esta linha
             } else {
                 // CORREÇÃO: Se o documento NÃO existe, vamos criá-lo com dados padrão
                 console.log("Documento de usuário não encontrado no Firestore. Criando um novo.");
@@ -4558,7 +4559,8 @@ body.light-mode .waifu-card-actions {
                     notifications: [],
                     following: [], // NOVO: Campo para quem o usuário segue
                     savedTags: [], // NOVO: Campo para tags salvas
-                    likedWaifuTags: [], // NOVO: Campo para tags de waifus curtidas
+                     likedWaifuTags: [],
+        waifusSalvas: [], // Adicionado esta linha para novos usuários
                     status: 'novo', // Status inicial para novos usuários
                     statusExpiration: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)) // Expira em 30 dias
                 };
@@ -7342,10 +7344,14 @@ async function loadWaifuSeeAlso() {
     }
     seeAlsoListDiv.innerHTML = '<p style="padding: 10px;">Carregando...</p>';
 
-    if (!auth.currentUser || !currentUserData || (!currentUserData.likedWaifuTags.length && !currentUserData.waifusSalvas.length)) {
-        seeAlsoListDiv.innerHTML = '<p style="padding: 10px;">Curta ou salve waifus para ver animes relacionados aqui.</p>';
-        return;
-    }
+    if (!auth.currentUser || !currentUserData ||
+    ((!currentUserData.likedWaifuTags || currentUserData.likedWaifuTags.length === 0) &&
+     (!currentUserData.waifusSalvas || currentUserData.waifusSalvas.length === 0))
+) {
+    seeAlsoListDiv.innerHTML = '<p style="padding: 10px;">Curta ou salve waifus para ver animes relacionados aqui.</p>';
+    return;
+}
+
 
     try {
         const relatedSerieIds = new Set();

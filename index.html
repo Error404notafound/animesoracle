@@ -2024,8 +2024,6 @@ body.light-mode {
 }
 
 
-/* Dentro da sua tag <style> */
-
 /* Grid de Waifus (Principal) */
 .waifu-grid {
     display: grid;
@@ -2041,41 +2039,41 @@ body.light-mode {
     margin: 0 auto;
 }
 
-
-/* Card de Waifu - NOVO LAYOUT */
+/* Waifu Card - Replicando estilo do Anime Card */
 .waifu-card-wrapper {
-    display: flex; /* Transforma em um container flexível */
-    flex-direction: column; /* Para empilhar os filhos verticalmente */
+    display: flex; /* Para organizar o conteúdo em coluna */
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     cursor: pointer;
     background: var(--card); /* Fundo do card completo */
     border-radius: 12px; /* Bordas arredondadas do card COMPLETO */
     overflow: hidden; /* Garante que o conteúdo respeite o border-radius */
-    position: relative;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
-    /* Remover o hover glow de waifu-aura se não for mais desejado */
-    /* box-shadow: var(--waifu-aura); */ /* Se desejar remover, comente ou remova esta linha */
+    position: relative; /* Para hover, etc. */
 }
 .waifu-card-wrapper:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.waifu-card { /* Contém apenas a imagem e o overlay do álbum */
+.waifu-card { /* Este é o contêiner da IMAGEM, com proporção fixa */
     width: 100%;
-    /* remove aspect-ratio fixo para que a imagem determine a altura */
+    aspect-ratio: 9/16; /* Força proporção vertical como os cards de série */
     overflow: hidden;
     position: relative; /* Para o overlay do álbum */
-    /* background-color: var(--card); */ /* O background é do wrapper agora */
-    /* remove border-radius pois o wrapper já define */
+    border-radius: 12px 12px 0 0; /* Bordas arredondadas APENAS na parte superior */
+    background-color: black; /* Cor de fundo para as "barras" (pillarboxing) */
+    display: flex; /* Para centralizar a imagem dentro do contêiner */
+    align-items: center;
+    justify-content: center;
 }
 
 .waifu-card img {
     width: 100%;
-    height: auto; /* A imagem define sua própria altura, mantendo a proporção */
-    /* object-fit: contain; */ /* Opcional: use 'contain' se quiser barras, ou remova para default */
+    height: 100%; /* Ocupa 100% do contêiner da imagem */
+    object-fit: contain; /* <-- GARANTE QUE A IMAGEM NÃO É CORTADA, ADICIONA BARRAS LATERAIS SE NECESSÁRIO */
     display: block;
 }
 
@@ -2094,106 +2092,112 @@ body.light-mode {
     font-size: 2em;
     font-weight: bold;
     z-index: 5; /* Acima da imagem */
-    /* remove border-radius pois o wrapper já define */
+    border-radius: 12px 12px 0 0; /* Para ser consistente com o .waifu-card */
 }
 
-/* Seção de autor e tags ABAIXO da imagem */
-.waifu-card-details-bottom {
-    /* background: var(--card); */ /* Já é o background do wrapper */
-    padding: 10px;
-    /* remove border-radius inferior pois o wrapper já define */
+/* Estilos para as informações abaixo da imagem (título, autor, tags, botões) */
+.waifu-card-content-below {
+    padding: 8px 10px; /* Padding interno para o bloco de texto e botões */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    border-top: 1px solid rgba(0,0,0,0.1); /* Linha fina separadora da imagem */
-    /* Isso garante que a linha apareça mesmo no light-mode */
-}
-body.light-mode .waifu-card-details-bottom {
-    border-top: 1px solid rgba(0,0,0,0.05); /* Linha mais clara para light mode */
+    flex-grow: 1; /* Ocupa o espaço restante verticalmente */
+    justify-content: space-between; /* Empurra as ações para baixo se houver espaço */
 }
 
-
-.waifu-card-author {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Aumentado o espaçamento */
-    margin-bottom: 5px;
-}
-.waifu-card-author img {
-    width: 28px; /* Aumentado o tamanho da foto do autor */
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary);
-}
-.waifu-card-author span {
+.waifu-card-title-below {
+    font-size: 14px;
     font-weight: bold;
     color: var(--text);
-    font-size: 0.9em; /* Aumentado o tamanho da fonte do nome do autor */
-    line-height: 1;
+    margin-bottom: 4px; /* Espaçamento abaixo do título */
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
-.waifu-card-tags {
+.waifu-card-author-below { /* Estilo para o autor abaixo do card */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px; /* Espaçamento abaixo do autor */
+}
+.waifu-card-author-below img {
+    width: 20px; /* Tamanho da foto do autor */
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--primary);
+    flex-shrink: 0; /* Evita que a imagem encolha */
+}
+.waifu-card-author-below span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.waifu-card-tags-below {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    margin-top: 5px;
+    margin-bottom: 8px; /* Espaçamento abaixo das tags */
 }
-.waifu-card-tags .tag-item {
+.waifu-card-tags-below .tag-item {
     background-color: var(--tag-bg);
     color: var(--primary);
-    padding: 3px 8px;
+    padding: 3px 6px;
     border-radius: 15px;
-    font-size: 0.75em;
+    font-size: 0.7em;
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.2s, color 0.2s;
 }
-.waifu-card-tags .tag-item:hover {
+.waifu-card-tags-below .tag-item:hover {
     background-color: var(--primary);
     color: white;
 }
 
-/* Botões de interação (Like/Save) no card de waifu */
-.waifu-card-actions {
+/* Botões de interação (Like/Save) agora no rodapé do card */
+.waifu-card-actions-below {
     display: flex;
     justify-content: space-around;
-    padding: 8px 0;
-    /* background: transparent; */ /* O background é do wrapper agora */
-    border-top: 1px solid rgba(0,0,0,0.1); /* Linha fina separadora dos detalhes */
-    /* Remove posicionamento absoluto, agora é um bloco dentro do wrapper */
-    /* bottom: 0; left: 0; right: 0; z-index: 10; */
+    padding-top: 8px; /* Espaço acima dos botões */
+    border-top: 1px solid rgba(0,0,0,0.1); /* Linha divisória */
+    margin-top: auto; /* Empurra para o final do waifu-card-content-below */
 }
-body.light-mode .waifu-card-actions {
-    border-top: 1px solid rgba(0,0,0,0.05); /* Linha mais clara para light mode */
+body.light-mode .waifu-card-actions-below {
+    border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-.waifu-card-actions button {
+.waifu-card-actions-below button {
     background: none;
     border: none;
-    color: var(--text-secondary); /* Cor cinza padrão para ícones */
+    color: var(--text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
     transition: color 0.2s;
     padding: 5px;
+    font-size: 0.9em; /* Reduz o tamanho da fonte */
 }
-.waifu-card-actions button:hover {
-    color: var(--primary); /* Cor de hover genérica */
+.waifu-card-actions-below button:hover {
+    color: var(--primary);
 }
-.waifu-card-actions button.like-active {
-    color: var(--waifu-like-color); /* Azul para likes */
+.waifu-card-actions-below button.like-active {
+    color: var(--waifu-like-color);
 }
-.waifu-card-actions button.save-active {
-    color: var(--waifu-save-color); /* Roxo para salvos */
+.waifu-card-actions-below button.save-active {
+    color: var(--waifu-save-color);
 }
-.waifu-card-actions button svg {
-    width: 20px;
-    height: 20px;
+.waifu-card-actions-below button svg {
+    width: 18px; /* Reduz o tamanho dos ícones */
+    height: 18px;
     fill: currentColor;
 }
+
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
 /* .waifu-card.top-waifu::before {
@@ -7793,45 +7797,52 @@ async function displayWaifuCard(gridElement, waifu) {
 
     const wrapper = document.createElement('div');
     wrapper.className = 'waifu-card-wrapper';
-    wrapper.dataset.waifuId = waifu.id; // Adiciona ID para facilitar a busca do botão de salvar
-    wrapper.onclick = () => openWaifuDetailModal(waifu.id); // Abre o novo modal de detalhes
+    wrapper.dataset.waifuId = waifu.id;
+    wrapper.onclick = () => openWaifuDetailModal(waifu.id);
 
-    const card = document.createElement('div');
-    card.className = 'waifu-card';
+    // Contêiner da imagem com proporção 9/16 e bordas arredondadas no topo
+    const cardImageContainer = document.createElement('div');
+    cardImageContainer.className = 'waifu-card';
 
-    // Se tiver mais de 10 likes, adicionar classe de destaque (pode ser ajustado)
-    if (waifu.likes && waifu.likes > 10) {
-        card.classList.add('top-waifu');
-    }
-
-    // Exibe a primeira imagem do álbum ou uma imagem padrão
-    const mainImage = waifu.imageUrls && waifu.imageUrls.length > 0 ? waifu.imageUrls[0] : 'https://via.placeholder.com/200x300?text=Waifu';
-    card.innerHTML = `<img src="${mainImage}" alt="${waifu.title}">`;
+    // Imagem principal (primeira do álbum ou placeholder)
+    const mainImage = waifu.imageUrls && waifu.imageUrls.length > 0 ? waifu.imageUrls[0] : 'https://via.placeholder.com/200x355?text=Waifu'; // Ajuste o placeholder para 9:16
+    const imgElement = document.createElement('img');
+    imgElement.src = mainImage;
+    imgElement.alt = waifu.title;
+    cardImageContainer.appendChild(imgElement);
 
     // Overlay para álbuns de fotos com contagem
     if (waifu.imageUrls && waifu.imageUrls.length > 1) {
         const albumOverlay = document.createElement('div');
         albumOverlay.className = 'album-overlay';
-        albumOverlay.textContent = `+${Math.min(waifu.imageUrls.length - 1, 99)}`; // Limite +99
-        card.appendChild(albumOverlay);
+        albumOverlay.textContent = `+${Math.min(waifu.imageUrls.length - 1, 99)}`;
+        cardImageContainer.appendChild(albumOverlay);
     }
+    wrapper.appendChild(cardImageContainer); // Adiciona o contêiner da imagem ao wrapper
 
-    wrapper.appendChild(card);
+    // Contêiner para o conteúdo abaixo da imagem (título, autor, tags, botões)
+    const contentBelow = document.createElement('div');
+    contentBelow.className = 'waifu-card-content-below';
 
-    // Detalhes abaixo da imagem (autor e tags)
-    const detailsBottom = document.createElement('div');
-    detailsBottom.className = 'waifu-card-details-bottom';
+    // Título da Waifu
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'waifu-card-title-below';
+    titleDiv.textContent = waifu.title;
+    contentBelow.appendChild(titleDiv);
 
+    // Informações do Autor (foto e nome)
     const authorDiv = document.createElement('div');
-    authorDiv.className = 'waifu-card-author';
-    const authorPhoto = waifu.authorPhotoURL || 'https://via.placeholder.com/30?text=AP'; // Assume que 'authorPhotoURL' virá nos dados da waifu
-    authorDiv.innerHTML = `<img src="${authorPhoto}" alt="${waifu.userName}"><span>${waifu.userName}</span>`;
-    detailsBottom.appendChild(authorDiv);
+    authorDiv.className = 'waifu-card-author-below';
+    const authorPhoto = waifu.authorPhotoURL || 'https://via.placeholder.com/20?text=AP';
+    authorDiv.innerHTML = `<img src="${authorPhoto}" alt="${waifu.userName || 'Usuário'}"><span>${waifu.userName || 'Usuário'}</span>`;
+    contentBelow.appendChild(authorDiv);
 
+    // Tags
     const tagsDiv = document.createElement('div');
-    tagsDiv.className = 'waifu-card-tags';
+    tagsDiv.className = 'waifu-card-tags-below';
     if (waifu.tags && waifu.tags.length > 0) {
-        waifu.tags.slice(0, 3).forEach(tag => { // Mostra as primeiras 3 tags
+        // Exibe as primeiras 3 tags, ou todas se forem poucas
+        waifu.tags.slice(0, 3).forEach(tag => {
             const tagSpan = document.createElement('span');
             tagSpan.className = 'tag-item';
             tagSpan.textContent = `#${tag}`;
@@ -7839,18 +7850,16 @@ async function displayWaifuCard(gridElement, waifu) {
             tagsDiv.appendChild(tagSpan);
         });
     }
-    detailsBottom.appendChild(tagsDiv);
-
-    wrapper.appendChild(detailsBottom);
+    contentBelow.appendChild(tagsDiv);
 
     // Botões de interação (Like/Save)
     const actionsDiv = document.createElement('div');
-    actionsDiv.className = 'waifu-card-actions';
+    actionsDiv.className = 'waifu-card-actions-below';
 
     const likeButton = document.createElement('button');
-    likeButton.innerHTML = `<svg class="outline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/></svg> <span id="waifuCardLikeCount-${waifu.id}">${waifu.likes || 0}</span>`;
+    likeButton.innerHTML = `<svg class="outline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/></svg> <span id="waifuCardLikeCount-${waifu.id}">${waifu.likes || 0}</span>`;
     likeButton.onclick = (e) => {
-        e.stopPropagation(); // Evita que o clique abra a página de detalhes
+        e.stopPropagation();
         toggleLikeWaifu(waifu.id);
     };
     if (auth.currentUser && waifu.usersWhoLiked && waifu.usersWhoLiked.includes(auth.currentUser.uid)) {
@@ -7858,30 +7867,27 @@ async function displayWaifuCard(gridElement, waifu) {
     }
     actionsDiv.appendChild(likeButton);
 
-                // NOVO: Botão de Salvar Waifu (Coração Curvado Otimizado)
     const saveButton = document.createElement('button');
     saveButton.innerHTML = `
-        <svg class="outline-icon" xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="outline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
         <span id="waifuCardSaveCount-${waifu.id}">${waifu.saves || 0}</span>
     `;
     saveButton.onclick = (e) => {
-        e.stopPropagation(); // Evita que o clique abra a página de detalhes
+        e.stopPropagation();
         toggleSaveWaifu(waifu.id);
     };
-
-
-
-    // Verifica se a waifu já está salva pelo usuário atual
     if (auth.currentUser && currentUserData && currentUserData.waifusSalvas && currentUserData.waifusSalvas.includes(waifu.id)) {
         saveButton.classList.add('save-active');
     }
     actionsDiv.appendChild(saveButton);
+    contentBelow.appendChild(actionsDiv); // Adiciona os botões ao contêiner de conteúdo abaixo
 
-    wrapper.appendChild(actionsDiv);
+    wrapper.appendChild(contentBelow); // Adiciona o contêiner de conteúdo abaixo ao wrapper
     gridElement.appendChild(wrapper);
 }
+
 
 
 

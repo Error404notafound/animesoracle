@@ -2143,18 +2143,26 @@ body.light-mode {
 
 /* Seção de autor e tags abaixo da imagem */
 /* Detalhes inferiores colados e transparentes */
+/* Container de detalhes (ocupa a base do card de forma organizada) */
 .waifu-card-details-bottom {
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); /* Efeito degrade cinematográfico */
-    position: absolute;       /* Joga as informações para cima da foto, no rodapé dela */
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.4) 100%);
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 8px;
+    padding: 10px 8px 6px 8px; /* Mais espaço interno */
     display: flex;
-    flex-direction: row;      /* Autor e likes na mesma linha para economizar espaço vertical */
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Separa os textos dos botões */
+    align-items: flex-end; /* Alinha tudo pela base */
     z-index: 5;
+}
+
+/* Bloco da esquerda: Força Autor em cima e Tags embaixo */
+.waifu-card-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 65%; /* Não deixa o texto invadir os botões */
 }
 
 /* Informações do Criador */
@@ -2162,7 +2170,6 @@ body.light-mode {
     display: flex;
     align-items: center;
     gap: 4px;
-    max-width: 60%;          /* Impede que nomes longos empurrem os botões */
 }
 
 .waifu-card-author img {
@@ -2173,40 +2180,50 @@ body.light-mode {
 }
 
 .waifu-card-author span {
-    color: #ccc;              /* Cinza claro minimalista */
-    font-size: 11px;          /* Texto pequeno e elegante */
-    font-weight: 400;
+    color: #ffffff; /* Texto branco para dar leitura perfeita */
+    font-size: 11px;
+    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Área dos botões reduzida */
+/* Ajuste das Tags (Linha de baixo) */
+.waifu-card-tags {
+    display: block;
+    font-size: 10px;
+    color: #aaa; /* Cinza claro para não brigar com o nome do autor */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 2px;
+}
+
+/* Bloco da direita: Área dos botões compacta */
 .waifu-card-actions {
     display: flex;
     gap: 6px;
-    padding: 0;
-    background: transparent;
-    border: none;
+    padding-bottom: 2px;
 }
 
 .waifu-card-actions button {
     background: none;
     border: none;
-    color: #999;              /* Ícones discretos */
-    font-size: 11px;
+    color: #ccc; /* Ícones cinzas claros legíveis */
+    font-size: 10px;
     display: flex;
     align-items: center;
     gap: 2px;
-    padding: 2px;
+    padding: 0;
     cursor: pointer;
 }
 
 .waifu-card-actions button svg {
-    width: 12px;              /* Ícones pequenos combinando com o layout profissional */
-    height: 12px;
+    width: 11px;
+    height: 11px;
     fill: currentColor;
 }
+
 
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
@@ -2643,6 +2660,77 @@ body.light-mode {
 #waifuDetailModal .waifu-recommended-grid .waifu-card-actions {
     display: none; /* Esconder ações nos cards recomendados */
 }
+/* ==========================================
+   <!-- BANANA --> INÍCIO DO AJUSTE VISUAL PINTEREST
+   ========================================== */
+
+/* Ativa o formato de colunas do Pinterest */
+#waifuGridPinterest {
+    column-count: 2 !important;
+    column-gap: 8px !important;
+    padding: 8px !important;
+    display: block !important;
+}
+
+/* Força os textos a se organizarem em linhas verticais na base da foto */
+.waifu-card-details-bottom {
+    display: flex !important;
+    flex-direction: column !important; /* Empilha autor, tag e botões */
+    align-items: flex-start !important;
+    gap: 4px !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent) !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 10px 8px !important;
+}
+
+/* Garante que o nome do autor fique visível e em linha inteira */
+.waifu-card-author {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+}
+
+.waifu-card-author span {
+    color: #ffffff !important; /* Texto branco perfeito para ler no escuro */
+    font-size: 11px !important;
+    font-weight: 500 !important;
+}
+
+/* Força a hashtag a descer para a linha de baixo sozinha */
+.waifu-card-details-bottom > span {
+    font-size: 10px !important;
+    color: #aaa !important; /* Cinza discreto igual à referência */
+    display: block !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Alinha os botões de curtida e salvamento abaixo dos textos */
+.waifu-card-actions {
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    margin-top: 2px !important;
+}
+
+.waifu-card-actions button {
+    font-size: 10px !important;
+    color: #ccc !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* ==========================================
+   <!-- BANANA --> FIM DO AJUSTE VISUAL PINTEREST
+   ========================================== */
 
 /* ----- Fim dos Novos Estilos para o Modal de Detalhes da Waifu ----- */
 
@@ -3073,13 +3161,16 @@ body.light-mode {
             </div>
         </section>
 
-        <!-- Grid Principal de Waifus -->
-        <div id="waifusGrid" class="waifu-grid">
+                <!-- BANANA INICIO -->
+        <!-- Grid Principal de Waifus no estilo Pinterest -->
+        <div id="waifuGridPinterest" class="waifu-grid">
             <!-- Cards de waifus serão carregados aqui -->
         </div>
         <p id="loadingWaifus" style="text-align: center; color: var(--text-secondary); margin-top: 20px; display: none;">Carregando mais waifus...</p>
+        <!-- BANANA FIM -->
     </div>
 </div>
+
 
 
 <!-- Modal de Detalhes da Waifu (NOVO) -->

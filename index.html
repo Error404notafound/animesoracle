@@ -2187,7 +2187,31 @@ body.light-mode {
 body.light-mode .waifu-card-actions {
     border-top: 1px solid rgba(0,0,0,0.05);
 }
-
+.waifu-card-actions button {
+    background: none;
+    border: none;
+    color: var(--text-secondary); /* Cor cinza padrão para ícones */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+    padding: 5px;
+}
+.waifu-card-actions button:hover {
+    color: var(--primary); /* Cor de hover genérica */
+}
+.waifu-card-actions button.like-active {
+    color: var(--waifu-like-color); /* Azul para likes */
+}
+.waifu-card-actions button.save-active {
+    color: var(--waifu-save-color); /* Roxo para salvos */
+}
+.waifu-card-actions button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+        }
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
 /* .waifu-card.top-waifu::before {

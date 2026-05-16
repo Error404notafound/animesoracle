@@ -2144,79 +2144,59 @@ body.light-mode {
 /* Seção de autor e tags abaixo da imagem */
 /* Detalhes inferiores colados e transparentes */
 /* Container de detalhes (ocupa a base do card de forma organizada) */
+/* AJUSTE PARA O ESTILO PINTEREST SEAART */
 .waifu-card-details-bottom {
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.4) 100%);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px 8px 6px 8px; /* Mais espaço interno */
-    display: flex;
-    justify-content: space-between; /* Separa os textos dos botões */
-    align-items: flex-end; /* Alinha tudo pela base */
-    z-index: 5;
+    display: flex !important;
+    flex-direction: column !important; /* Empilha autor, tag e botões */
+    align-items: flex-start !important;
+    gap: 4px !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent) !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 10px 8px !important;
 }
 
-/* Bloco da esquerda: Força Autor em cima e Tags embaixo */
-.waifu-card-text-block {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    max-width: 65%; /* Não deixa o texto invadir os botões */
-}
-
-/* Informações do Criador */
 .waifu-card-author {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.waifu-card-author img {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    object-fit: cover;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
 }
 
 .waifu-card-author span {
-    color: #ffffff; /* Texto branco para dar leitura perfeita */
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #ffffff !important; /* Nome do autor em branco legível */
+    font-size: 11px !important;
+    font-weight: 500 !important;
 }
 
-/* Ajuste das Tags (Linha de baixo) */
-.waifu-card-tags {
-    display: block;
-    font-size: 10px;
-    color: #aaa; /* Cinza claro para não brigar com o nome do autor */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-left: 2px;
+.waifu-card-details-bottom > span {
+    font-size: 10px !important;
+    color: #aaa !important; /* Hashtags em cinza na linha de baixo */
+    display: block !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
-/* Bloco da direita: Área dos botões compacta */
 .waifu-card-actions {
-    display: flex;
-    gap: 6px;
-    padding-bottom: 2px;
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    margin-top: 2px !important;
 }
 
 .waifu-card-actions button {
-    background: none;
-    border: none;
-    color: #ccc; /* Ícones cinzas claros legíveis */
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding: 0;
-    cursor: pointer;
+    font-size: 10px !important;
+    color: #ccc !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
 }
+
 
 .waifu-card-actions button svg {
     width: 11px;

@@ -2102,53 +2102,42 @@ body.light-mode {
     text-decoration: none;
     color: inherit;
     cursor: pointer;
-    border-radius: 12px; /* As bordas arredondadas finais estarão aqui */
-    overflow: hidden; /* Garante que tudo dentro do wrapper seja recortado */
-    position: relative; /* Necessário para posicionar o álbum/tags */
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
-    background: var(--card); /* Fundo padrão do card */
+    background: var(--card);
 }
 .waifu-card-wrapper:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* NOVO: Contêiner para a imagem e seu overlay, que terá o border-radius */
 .waifu-image-container {
-    position: relative; /* Para o overlay ser absoluto em relação a ele */
+    position: relative;
     width: 100%;
-    /* Remova o aspect-ratio: 9/16; se você quer que a altura da imagem defina a altura */
-    /* Se a intenção é que a imagem sempre preencha e seja recortada, use object-fit: cover na imagem */
-    /* Se a intenção é que a imagem caiba inteira, use object-fit: contain */
-    /* Border-radius e overflow aqui para o recorte da imagem e do overlay */
     border-radius: 12px;
     overflow: hidden;
 }
 
-/* O elemento .waifu-card agora conterá APENAS a imagem */
 .waifu-card {
     width: 100%;
-    /* Remova todas as propriedades de border-radius, overflow e background-color daqui */
-    /* Ele servirá como um wrapper simples para a img dentro do .waifu-image-container */
-    /* Remove `position: relative;` */
 }
 
 .waifu-card img {
     width: 100%;
-    height: auto; /* A imagem define sua altura */
-    object-fit: cover; /* Pode ser 'cover' para preencher e recortar, ou 'contain' para caber inteira */
+    height: auto;
+    object-fit: cover;
     display: block;
-    /* Remova o border-radius daqui, o .waifu-image-container já fará o recorte */
 }
 
-/* Overlay para álbuns de fotos */
 .album-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* Cobre todo o .waifu-image-container */
+    height: 100%;
     background-color: rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
@@ -2157,61 +2146,32 @@ body.light-mode {
     font-size: 2em;
     font-weight: bold;
     z-index: 5;
-    border-radius: 12px; /* O overlay também terá as 4 bordas arredondadas */
-    pointer-events: none; /* Permite que o clique no wrapper passe por ele */
+    border-radius: 12px;
+    pointer-events: none;
 }
 
-/* Seção de autor e tags abaixo da imagem */
 .waifu-card-details-bottom {
     padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
-    /* Garante que o fundo venha do wrapper pai */
     background: transparent;
-    border-radius: 0; /* Remove qualquer arredondamento inferior extra */
+    border-radius: 0;
 }
 
-/* Botões de interação (Like/Save) no card de waifu */
 .waifu-card-actions {
     display: flex;
     justify-content: space-around;
     padding: 8px 0;
-    background: transparent; /* Fundo transparente */
-    border-top: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
-    margin-top: auto; /* Empurra para o fundo do wrapper */
-    border-radius: 0 0 12px 12px; /* Adiciona borda arredondada SOMENTE na parte inferior dos botões */
+    background: transparent;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin-top: auto;
+    border-radius: 0 0 12px 12px;
 }
-/* No light mode, a borda do actions também deve ser ajustada */
 body.light-mode .waifu-card-actions {
     border-top: 1px solid rgba(0,0,0,0.05);
 }
-.waifu-card-actions button {
-    background: none;
-    border: none;
-    color: var(--text-secondary); /* Cor cinza padrão para ícones */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.2s;
-    padding: 5px;
-}
-.waifu-card-actions button:hover {
-    color: var(--primary); /* Cor de hover genérica */
-}
-.waifu-card-actions button.like-active {
-    color: var(--waifu-like-color); /* Azul para likes */
-}
-.waifu-card-actions button.save-active {
-    color: var(--waifu-save-color); /* Roxo para salvos */
-}
-.waifu-card-actions button svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-        }
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
 /* .waifu-card.top-waifu::before {

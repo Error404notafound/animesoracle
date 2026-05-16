@@ -2140,11 +2140,11 @@ body.light-mode {
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    /* Degradê suave de preto para transparente apenas para dar leitura ao texto branco */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%) !important;
-    padding: 12px 10px 8px 10px !important;
+    /* Degradê um pouco mais alto e escuro na base para destacar bem os ícones */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%) !important;
+    padding: 12px 10px 10px 10px !important; /* Aumentado o padding inferior */
     display: flex !important;
-    flex-direction: column !important; /* Organiza os textos em linhas verticais limpas */
+    flex-direction: column !important;
     align-items: flex-start !important;
     gap: 4px !important;
     width: 100% !important;
@@ -2168,47 +2168,57 @@ body.light-mode {
 }
 
 .waifu-card-author span {
-    color: #ffffff !important;         /* Texto branco de alta leitura no fundo escuro */
+    color: #ffffff !important; /* Branco puro */
     font-size: 11px !important;
     font-weight: 600 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important; /* Corta nomes gigantes com '...' para não quebrar a linha */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
 }
 
 /* Hashtags Discretas (Linha 2) */
 .waifu-card-details-bottom > span {
     font-size: 10px !important;
-    color: #b3b3b3 !important;         /* Cinza claro elegante igual ao do SeaArt */
+    color: #e1e1e6 !important; /* Mudado para um cinza bem mais claro para dar leitura */
     display: block !important;
     width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     padding-left: 2px !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
 }
 
 /* Botões de Ações (Linha 3) */
 .waifu-card-actions {
     display: flex !important;
-    gap: 12px !important;              /* Espaçamento bom entre curtida e salvamento */
+    gap: 14px !important; /* Um pouquinho mais de espaço entre eles */
+    margin-top: 6px !important; /* Afasta um tiquinho da hashtag */
     width: 100% !important;
     justify-content: flex-start !important;
-    margin-top: 4px !important;
 }
 
 .waifu-card-actions button {
-    font-size: 10px !important;
-    color: #e1e1e6 !important;         /* Ícones claros e visíveis */
+    font-size: 11px !important; /* Aumentado levemente */
+    color: #ffffff !important; /* FORÇA OS ÍCONES A FICAREM BRANCOS VISÍVEIS */
     background: none !important;
     border: none !important;
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
-    gap: 3px !important;
+    gap: 4px !important;
     cursor: pointer !important;
+    opacity: 0.85 !important; /* Opacidade sutil para um efeito elegante */
+    transition: opacity 0.2s !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
 }
 
+.waifu-card-actions button:hover {
+    opacity: 1 !important; /* Acende ao passar o dedo/mouse */
+}
+
+/* Garante que se você usar caracteres de texto (♥ e ★) em vez de SVG, eles também acendam */
+.waifu-card-actions button span {
+    color: #ffffff !important;
+}
 .waifu-card-actions button svg {
     width: 12px !important;
     height: 12px !important;

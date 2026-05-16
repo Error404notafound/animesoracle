@@ -2078,155 +2078,180 @@ body.light-mode {
 }
 
 
-/* Grid de Waifus (Principal) - ESTILO PINTEREST MASONRY CORRIGIDO */
+/* Grid de Waifus (Principal) */
 .waifu-grid {
-    column-count: 2 !important;        /* Divide a tela perfeitamente em 2 colunas no celular */
-    column-gap: 10px !important;       /* Espaçamento moderno e fino entre as colunas */
-    padding: 8px !important;           /* Margem nas laterais da tela */
-    width: 100% !important;
-    display: block !important;         /* Desativa o formato antigo que amassava tudo */
-    box-sizing: border-box !important;
+    display: grid;
+    /* Mantém as 3 colunas como solicitado */
+    grid-template-columns: repeat(3, 1fr);
+    /* Reduz o espaço entre os cards para um valor menor */
+    gap: 8px; /* Você pode ajustar para 5px, 10px, etc., conforme preferir */
+    /* Remove padding, max-width e margin, deixando que o #waifusPage .modal-page-content controle o espaçamento externo */
+    padding: 0;
+    max-width: none;
+    margin: 0;
 }
 
-/* Card de Waifu Individual */
+/* As media queries anteriores para 600px e 900px não são mais necessárias aqui,
+   pois o 'repeat(3, 1fr)' já será aplicado por padrão a todas as telas. */
+
+
+/* Card de Waifu */
 .waifu-card-wrapper {
-    display: inline-block !important;  /* Impede que o card quebre ou se divida entre as colunas */
-    width: 100% !important;
-    margin-bottom: 10px !important;    /* Espaço vertical entre um card e o de baixo */
-    background: #16161a !important;   /* Fundo escuro sutil e profissional */
-    border-radius: 8px !important;     /* Bordas arredondadas idênticas à referência */
-    overflow: hidden !important;
-    position: relative !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none; 
+    color: inherit; 
+    cursor: pointer;
+    border-radius: 12px; /* Bordas arredondadas do wrapper */
+    overflow: hidden; /* Garante que o conteúdo respeite o border-radius */
+    position: relative; /* Para posicionamento do álbum/tags */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Sombra suave, sem aura */
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .waifu-card-wrapper:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.waifu-card {
-    width: 100% !important;
-    height: auto !important;           /* Permite que o card acompanhe a altura natural da foto */
-    position: relative !important;
-    display: block !important;
+.waifu-card { /* Este é apenas o container da imagem */
+    width: 100%;
+    /* REMOVA esta linha (aspect-ratio: 9/16;) */
+    /* aspect-ratio: 9/16; */ /* <--- REMOVA ESTA LINHA */
+    overflow: hidden;
+    position: relative; /* Para o overlay do álbum */
+    background-color: var(--card); /* Fundo padrão do card */
+    border-radius: 12px 12px 0 0; /* Cantos arredondados apenas no topo */
+    /* A altura deste contêiner agora será definida pela imagem interna */
 }
 
 .waifu-card img {
-    width: 100% !important;
-    height: auto !important;           /* Faz a imagem respeitar sua proporção original (sem esticar) */
-    display: block !important;
-    object-fit: cover !important;      /* Encaixe perfeito da arte na coluna */
+    width: 100%;
+    height: auto; /* <-- ALTERE PARA 'auto' AQUI */
+    /* object-fit: cover; */ /* <-- Esta linha não é mais necessária, pois height: auto já mantém a proporção */
+    object-fit: contain; /* Opcional: use 'contain' se quiser garantir que a imagem inteira sempre caiba, com barras vazias se a proporção não for exata */
+                         /* Ou, se o objetivo é APENAS que a imagem defina sua altura, pode remover esta linha */
+    display: block;
 }
 
 /* Overlay para álbuns de fotos */
 .album-overlay {
-    position: absolute !important;
-    top: 8px !important;
-    right: 8px !important;
-    background-color: rgba(0,0,0,0.6) !important;
-    padding: 4px 8px !important;
-    border-radius: 6px !important;
-    color: white !important;
-    font-size: 11px !important;
-    font-weight: bold !important;
-    z-index: 5 !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4); /* Película escura transparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    z-index: 5; /* Acima da imagem */
+    border-radius: 12px 12px 0 0;
 }
 
-/* Container de Detalhes Inferiores (Transparentes e sobrepostos à foto) */
+/* Seção de autor e tags abaixo da imagem */
 .waifu-card-details-bottom {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    /* Degradê um pouco mais alto e escuro na base para destacar bem os ícones */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%) !important;
-    padding: 12px 10px 10px 10px !important; /* Aumentado o padding inferior */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 4px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    z-index: 4 !important;
+    background: var(--card); /* Fundo do card */
+    padding: 10px;
+    border-radius: 0 0 12px 12px; /* Cantos arredondados na parte inferior */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
-/* Informações do Criador (Linha 1) */
 .waifu-card-author {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
+    display: flex;
+    align-items: center;
+    gap: 3px; /* Aumentado de 1px para 3px */
+    margin-bottom: 5px;
 }
-
 .waifu-card-author img {
-    width: 16px !important;
-    height: 16px !important;
-    border-radius: 50% !important;    /* Avatar perfeitamente redondo */
-    object-fit: cover !important;
+    width: 10px; /* Aumentado de 7px para 10px (~43% de aumento) */
+    height: 10px; /* Aumentado de 7px para 10px */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--primary);
 }
-
 .waifu-card-author span {
-    color: #ffffff !important; /* Branco puro */
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
+    font-weight: bold;
+    color: var(--text);
+    font-size: 0.4em; /* Aumentado de 0.3em para 0.4em (~33% de aumento) */
+    line-height: 1;
 }
 
-/* Hashtags Discretas (Linha 2) */
-.waifu-card-details-bottom > span {
-    font-size: 10px !important;
-    color: #e1e1e6 !important; /* Mudado para um cinza bem mais claro para dar leitura */
-    display: block !important;
-    width: 100% !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    padding-left: 2px !important;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
+
+
+
+
+
+
+
+.waifu-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+.waifu-card-tags .tag-item {
+    background-color: var(--tag-bg);
+    color: var(--primary);
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+.waifu-card-tags .tag-item:hover {
+    background-color: var(--primary);
+    color: white;
 }
 
-/* Botões de Ações (Linha 3) */
+/* Botões de interação (Like/Save) no card de waifu */
 .waifu-card-actions {
-    display: flex !important;
-    gap: 14px !important; /* Um pouquinho mais de espaço entre eles */
-    margin-top: 6px !important; /* Afasta um tiquinho da hashtag */
-    width: 100% !important;
-    justify-content: flex-start !important;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    background: transparent; /* Agora transparente */
+    border-top: 1px solid rgba(0,0,0,0.1); /* Borda muito fina */
+    position: absolute; /* Para ficar por cima da imagem */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+body.light-mode .waifu-card-actions {
+    border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .waifu-card-actions button {
-    font-size: 11px !important; /* Aumentado levemente */
-    color: #ffffff !important; /* FORÇA OS ÍCONES A FICAREM BRANCOS VISÍVEIS */
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    cursor: pointer !important;
-    opacity: 0.85 !important; /* Opacidade sutil para um efeito elegante */
-    transition: opacity 0.2s !important;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.9) !important;
+    background: none;
+    border: none;
+    color: var(--text-secondary); /* Cor cinza padrão para ícones */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+    padding: 5px;
 }
-
 .waifu-card-actions button:hover {
-    opacity: 1 !important; /* Acende ao passar o dedo/mouse */
+    color: var(--primary); /* Cor de hover genérica */
 }
-
-/* Garante que se você usar caracteres de texto (♥ e ★) em vez de SVG, eles também acendam */
-.waifu-card-actions button span {
-    color: #ffffff !important;
+.waifu-card-actions button.like-active {
+    color: var(--waifu-like-color); /* Azul para likes */
+}
+.waifu-card-actions button.save-active {
+    color: var(--waifu-save-color); /* Roxo para salvos */
 }
 .waifu-card-actions button svg {
-    width: 12px !important;
-    height: 12px !important;
-    fill: currentColor !important;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
 }
-
-
-
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
 /* .waifu-card.top-waifu::before {
@@ -2662,77 +2687,6 @@ body.light-mode {
 #waifuDetailModal .waifu-recommended-grid .waifu-card-actions {
     display: none; /* Esconder ações nos cards recomendados */
 }
-/* ==========================================
-   <!-- BANANA --> INÍCIO DO AJUSTE VISUAL PINTEREST
-   ========================================== */
-
-/* Ativa o formato de colunas do Pinterest */
-#waifuGridPinterest {
-    column-count: 2 !important;
-    column-gap: 8px !important;
-    padding: 8px !important;
-    display: block !important;
-}
-
-/* Força os textos a se organizarem em linhas verticais na base da foto */
-.waifu-card-details-bottom {
-    display: flex !important;
-    flex-direction: column !important; /* Empilha autor, tag e botões */
-    align-items: flex-start !important;
-    gap: 4px !important;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent) !important;
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    padding: 10px 8px !important;
-}
-
-/* Garante que o nome do autor fique visível e em linha inteira */
-.waifu-card-author {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-}
-
-.waifu-card-author span {
-    color: #ffffff !important; /* Texto branco perfeito para ler no escuro */
-    font-size: 11px !important;
-    font-weight: 500 !important;
-}
-
-/* Força a hashtag a descer para a linha de baixo sozinha */
-.waifu-card-details-bottom > span {
-    font-size: 10px !important;
-    color: #aaa !important; /* Cinza discreto igual à referência */
-    display: block !important;
-    width: 100% !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-
-/* Alinha os botões de curtida e salvamento abaixo dos textos */
-.waifu-card-actions {
-    display: flex !important;
-    gap: 10px !important;
-    width: 100% !important;
-    justify-content: flex-start !important;
-    margin-top: 2px !important;
-}
-
-.waifu-card-actions button {
-    font-size: 10px !important;
-    color: #ccc !important;
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-}
-
-/* ==========================================
-   <!-- BANANA --> FIM DO AJUSTE VISUAL PINTEREST
-   ========================================== */
 
 /* ----- Fim dos Novos Estilos para o Modal de Detalhes da Waifu ----- */
 
@@ -2813,56 +2767,7 @@ body.light-mode {
 /* ----- Fim dos Novos Estilos para o Modal de Edição da Waifu ----- */
 
 
-        /* ----- BANANA: FORÇAR TEXTOS E BOTÕES ACESOS NO PINTEREST ----- */
-        /* Força o texto da hashtag a clarear */
-        #waifusGrid .waifu-card-details-bottom > span, 
-        #waifusGrid .waifu-card-tags {
-            color: #f1f1f5 !important;
-            font-size: 11px !important;
-            font-weight: 500 !important;
-            text-shadow: 1px 1px 3px rgba(0,0,0,1) !important;
-            display: block !important;
-        }
-
-        /* Força os botões de curtir e salvar a ficarem brancos e visíveis */
-        #waifusGrid .waifu-card-actions {
-            display: flex !important;
-            gap: 15px !important;
-            margin-top: 6px !important;
-            width: 100% !important;
-        }
-
-        #waifusGrid .waifu-card-actions button,
-        #waifusGrid .waifu-card-actions button span {
-            color: #ffffff !important; /* Força o branco puro nos ícones e números */
-            font-size: 12px !important;
-            font-weight: bold !important;
-            text-shadow: 1px 1px 4px rgba(0,0,0,1) !important;
-            opacity: 1 !important;
-        }
-
-        /* Garante que o fundo preto do degradê suba o suficiente para dar leitura */
-        #waifusGrid .waifu-card-details-bottom {
-            background: linear-gradient(to top, rgba(0,0,0,0.98) 40%, rgba(0,0,0,0.7) 70%, transparent 100%) !important;
-            padding: 12px 10px !important;
-        }
-    /* ==========================================
-   <!-- BANANA --> CORREÇÃO DE CLIQUE DO MENU HAMBÚRGUER
-   ========================================= */
-
-/* Força a barra do topo e o menu hambúrguer a ficarem acima das Waifus */
-header, .navbar, .nav-container, .menu-hamburger {
-    position: relative !important;
-    z-index: 99999 !important; /* Joga o menu para a camada mais alta de todas */
-}
-
-/* Garante que o menu lateral que abre fique visível */
-#userMenu, #generosMenu, .sidebar-menu {
-    z-index: 100000 !important;
-}
-
     </style>
-
 </head>
 <body>
 
@@ -3212,14 +3117,13 @@ header, .navbar, .nav-container, .menu-hamburger {
             </div>
         </section>
 
-                        <!-- Grid Principal de Waifus -->
+        <!-- Grid Principal de Waifus -->
         <div id="waifusGrid" class="waifu-grid">
             <!-- Cards de waifus serão carregados aqui -->
         </div>
         <p id="loadingWaifus" style="text-align: center; color: var(--text-secondary); margin-top: 20px; display: none;">Carregando mais waifus...</p>
-
-
-
+    </div>
+</div>
 
 
 <!-- Modal de Detalhes da Waifu (NOVO) -->

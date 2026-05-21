@@ -2229,10 +2229,11 @@ body.light-mode .waifu-card-actions {
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;    /* <--- Reduzido pela metade */
     transition: color 0.2s;
-    padding: 5px;
+    padding: 2px; /* <--- Reduzido para um valor arredondado próximo da metade */
 }
+
 .waifu-card-actions button:hover {
     color: var(--primary); /* Cor de hover genérica */
 }
@@ -2243,10 +2244,11 @@ body.light-mode .waifu-card-actions {
     color: var(--waifu-save-color); /* Roxo para salvos */
 }
 .waifu-card-actions button svg {
-    width: 20px;
-    height: 20px;
+    width: 10px;   /* <--- Reduzido pela metade */
+    height: 10px;  /* <--- Reduzido pela metade */
     fill: currentColor;
 }
+
 
 /* Indicador de Top Waifu (se necessário, pode ser reintroduzido) */
 /* .waifu-card.top-waifu::before {

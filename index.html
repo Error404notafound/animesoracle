@@ -2182,14 +2182,6 @@ body.light-mode {
     font-size: 0.4em; /* Aumentado de 0.3em para 0.4em (~33% de aumento) */
     line-height: 1;
 }
-
-
-
-
-
-
-
-
 .waifu-card-tags {
     display: flex;
     flex-wrap: wrap;
@@ -2199,13 +2191,14 @@ body.light-mode {
 .waifu-card-tags .tag-item {
     background-color: var(--tag-bg);
     color: var(--primary);
-    padding: 2px 6px; /* <--- Ajuste no padding */
-    border-radius: 10px; /* <--- Ajuste no arredondamento */
-    font-size: 0.65em; /* <--- Ajuste no tamanho da fonte */
+    padding: 1px 3px;   /* <--- REDUZIDO PELA METADE */
+    border-radius: 5px; /* <--- REDUZIDO PELA METADE */
+    font-size: 0.35em;  /* <--- REDUZIDO PARA FICAR MAIS PRÓXIMO DA METADE, E MENOR QUE O NOME DO AUTOR (0.4em) */
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.2s, color 0.2s;
 }
+
 
 .waifu-card-tags .tag-item:hover {
     background-color: var(--primary);

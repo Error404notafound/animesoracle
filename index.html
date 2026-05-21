@@ -2107,7 +2107,9 @@ body.light-mode {
     position: relative; /* Para posicionamento do álbum/tags */
     box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Sombra suave, sem aura */
     transition: transform 0.2s, box-shadow 0.2s;
+    background: var(--card); /* <--- ADICIONE OU VERIFIQUE ESTA LINHA */
 }
+
 .waifu-card-wrapper:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -2115,14 +2117,12 @@ body.light-mode {
 
 .waifu-card { /* Este é apenas o container da imagem */
     width: 100%;
-    /* REMOVA esta linha (aspect-ratio: 9/16;) */
-    /* aspect-ratio: 9/16; */ /* <--- REMOVA ESTA LINHA */
     overflow: hidden;
     position: relative; /* Para o overlay do álbum */
     background-color: var(--card); /* Fundo padrão do card */
-    border-radius: 12px 12px 0 0; /* Cantos arredondados apenas no topo */
-    /* A altura deste contêiner agora será definida pela imagem interna */
+    border-radius: 12px; /* <--- Mudei aqui para arredondar todos os cantos */
 }
+
 
 .waifu-card img {
     width: 100%;
@@ -2155,12 +2155,13 @@ body.light-mode {
 .waifu-card-details-bottom {
     background: var(--card); /* Fundo do card */
     padding: 10px;
-    border-radius: 0 0 12px 12px; /* Cantos arredondados na parte inferior */
+    border-radius: 0; /* <--- Mudei aqui, removemos o arredondamento inferior */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
 }
+
 
 .waifu-card-author {
     display: flex;

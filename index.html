@@ -620,14 +620,14 @@
         .modal-page {
     display: none;
     position: fixed;
-    top: 120px; /* Começa abaixo do cabeçalho */
+    top: 60px; /* Começa abaixo do cabeçalho */
     left: 0;
     width: 100%;
     height: calc(100% - 60px);
-    background: var(--bg); /* Fundo da "página" */
-    z-index: 5000; /* ESTA É A LINHA A SER MODIFICADA */
-    flex-direction: column; /* Conteúdo em coluna */
-    overflow-y: auto; /* Permite rolagem do conteúdo */
+    background: var(--bg);
+    z-index: 15000; /* ALTERADO: Agora é maior que #azCatalog (9997). Isto fará com que a página cubra o catálogo A-Z. */
+    flex-direction: column;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 

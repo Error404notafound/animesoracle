@@ -8626,17 +8626,6 @@ function configurarBotoesAcaoInstagram(waifuId, dados) {
         // Kebab Menu (Editar/Excluir)
 
         // Tags
-        const waifuDetailTagsDiv = document.getElementById('waifuDetailTags');
-        waifuDetailTagsDiv.innerHTML = '';
-        if (currentWaifuDetail.tags && currentWaifuDetail.tags.length > 0) {
-            currentWaifuDetail.tags.forEach(tag => {
-                const tagSpan = document.createElement('span');
-                tagSpan.className = 'tag-item';
-                tagSpan.textContent = `#${tag}`;
-                tagSpan.onclick = (e) => { e.stopPropagation(); closeModal('waifuDetailModal'); openCategoryViewPage('tag', tag); };
-                waifuDetailTagsDiv.appendChild(tagSpan);
-            });
-        }
 
         // Interações (Likes, Saves, Comments)
         updateWaifuDetailInteractions(waifuId);
@@ -8652,11 +8641,6 @@ function configurarBotoesAcaoInstagram(waifuId, dados) {
 
 
 // Função para o botão kebab (editar/excluir)
-function toggleKebabMenu(button) {
-    const menuContent = button.nextElementSibling;
-    if (menuContent) {
-        menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
-    }
     // Fecha o menu se clicar fora
     window.onclick = (event) => {
         if (!event.target.matches('.kebab-menu-button')) {

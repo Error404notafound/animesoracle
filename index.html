@@ -625,7 +625,7 @@
     width: 100%;
     height: calc(100% - 60px);
     background: var(--bg);
-    z-index: 15000; /* ALTERADO: Agora é maior que #azCatalog (9997). Isto fará com que a página cubra o catálogo A-Z. */
+    z-index: 9998; /* ALTERADO: Agora é maior que #azCatalog (9997). Isto fará com que a página cubra o catálogo A-Z. */
     flex-direction: column;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -633,21 +633,23 @@
 
 
 
+
         .modal-page.active {
             display: flex;
         }
         .modal-page-header { /* Header para as "páginas" */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            background: #000;
-            height: 60px;
-            z-index: 1001;
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    background: #000;
+    height: 60px;
+    z-index: 9999; /* ALTERADO: Um z-index alto, para que ele fique acima de qualquer conteúdo dentro da modal-page, e também acima do #azCatalog caso a modal-page não o cubra totalmente (o que não deve acontecer com a alteração em .modal-page A.). */
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+}
+
         .modal-page-header .title {
             color: var(--primary);
             font-size: 20px;

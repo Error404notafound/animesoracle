@@ -804,17 +804,18 @@
 
                 /* Menu do Usuário (Sidebar - Nova Estrutura) */
         #userMenu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 7000; /* Z-index mais alto para o menu principal */
-            display: none; /* Escondido por padrão */
-            justify-content: flex-start;
-            transition: background 0.3s ease-in-out;
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10001; /* ALTERADO: Agora é maior que o header principal (9999) e os popups modais (10000) */
+    display: none; /* Escondido por padrão */
+    justify-content: flex-start;
+    transition: background 0.3s ease-in-out;
+}
+
         #userMenu.open {
             display: flex;
         }

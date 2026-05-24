@@ -1157,13 +1157,14 @@
             display: flex;
         }
         #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
-            width: 100%;
-            position: sticky; /* Fixa o player no topo */
-            top: 0;
-            left: 0;
-            z-index: 5001; /* Acima de outros elementos da página, mas abaixo do header principal */
-            background-color: #000;
-        }
+    width: 100%;
+    position: sticky; /* Fixa o player no topo */
+    top: 35px; /* ALTERADO: Empurra o container do vídeo 35px para baixo DENTRO da videoPage. */
+    left: 0;
+    z-index: 9997; /* ALTERADO: Aumentei o z-index. Embora a videoPage (modal-page) tenha um z-index de 9998, elementos sticky internos precisam de um z-index próprio para garantir que não sejam sobrepostos por outros elementos fixos de menor z-index no contexto global (como o azCatalog 9997). Colocar 9997 aqui garante que ele fique no mesmo nível ou acima do azCatalog, mas dentro da videoPage.*/
+    background-color: #000;
+}
+
         #videoSkeleton {
             width: 100%;
             aspect-ratio: 16/9;
@@ -1204,8 +1205,8 @@
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
-    padding-top: 85px; /* ADICIONADO: Empurra o conteúdo do player para baixo, abaixo do #azCatalog. */
 }
+
 
 
         /* Breadcrumbs do player */

@@ -1728,8 +1728,9 @@
             display: flex;
         }
         .category-view-page .modal-page-content {
-            padding-top: 15px; /* Ajuste para espaçamento interno */
-        }
+    padding-top: 40px; /* ALTERADO/ADICIONADO: Mesma lógica do .modal-page-content */
+}
+
         /* Estilos para o grid de exibição nas páginas de categoria */
         .category-grid {
             display: grid;
@@ -1862,13 +1863,14 @@
             text-align: center;
         }
         .content-page .page-content {
-            padding: 20px 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-grow: 1;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    padding: 20px 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 40px; /* ADICIONADO: Empurra o conteúdo para baixo */
+}
 
         /* Estilos para a página de Configurações */
         #settingsPage .profile-pic-upload-area {

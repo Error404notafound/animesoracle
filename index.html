@@ -3573,6 +3573,21 @@ body.light-mode .waifu-card-actions {
 </div>
 
 <!-- Páginas do Menu do Usuário (Notificações, Salvos, Contribuições, Configurações) -->
+<!-- Página de Jogos -->
+<div id="gamesPage" class="modal-page">
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closeCurrentPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </button>
+        <div class="title" id="gamesPageTitle">Jogos</div>
+        <div></div>
+    </div>
+    <div class="modal-page-content">
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Esta é a página de Jogos. Conteúdo em desenvolvimento.</p>
+        <!-- Você pode adicionar seu conteúdo de jogos aqui futuramente -->
+    </div>
+</div>
+
 <!-- Página de Animes Salvos -->
 <div id="savedAnimesPage" class="content-page">
     <div class="page-header">
@@ -4863,6 +4878,10 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             console.error("Erro ao carregar notificações:", error);
             notificationsList.innerHTML = '<p>Erro ao carregar notificações.</p>';
         }
+    }
+ // NOVO: Função para abrir a página de jogos
+    function openGamesPage() {
+        openPage('gamesPage');
     }
 
     // Função para abrir a página de animes salvos

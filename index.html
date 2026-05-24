@@ -38,17 +38,19 @@
             --waifu-transparent-bg: rgba(0,0,0,0.5); /* Fundo transparente levemente escuro para footer de card */
             --tag-bg: rgba(98, 0, 234, 0.2); /* Roxo transparente para tags */
         }
-        body { 
-            margin: 0; 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            transition: background-color 0.3s, color 0.3s, filter 0.3s;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden; /* Evita scroll horizontal indesejado */
-        }
+        body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: background-color 0.3s, color 0.3s, filter 0.3s;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Evita scroll horizontal indesejado */
+    padding-top: 60px; /* Adiciona um padding no body para compensar o header fixo */
+}
+
 
         /* Modo Escuro/Claro */
         body.light-mode {
@@ -88,17 +90,21 @@
 
         /* Estilos do Header (Mantido globalmente para ser replicado na página do player) */
         header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 0 15px; 
-            background: #000; 
-            height: 60px; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            border-bottom: 1px solid #333; 
-        }
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 15px; 
+    background: #000; 
+    height: 60px; 
+    position: fixed; /* ALTERADO: de 'sticky' para 'fixed' */
+    top: 0; 
+    left: 0; /* ADICIONADO */
+    width: 100%; /* ADICIONADO */
+    z-index: 9999; /* AUMENTADO SIGNIFICATIVAMENTE para ficar acima de tudo */
+    border-bottom: 1px solid #333; 
+    box-sizing: border-box; /* ADICIONADO para incluir o padding na largura total */
+}
+
         .logo { 
             font-weight: bold; 
             color: var(--primary); 
@@ -128,16 +134,19 @@
 
         /* Barra de Pesquisa */
         .search-container {
-            position: sticky; /* Sticky para se manter visível abaixo do header */
-            top: 60px; /* Abaixo do header fixo */
-            width: 100%;
-            display: none; 
-            justify-content: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #333; 
-            background: var(--bg); 
-            z-index: 999; 
-        }
+    position: fixed; /* ALTERADO: de 'sticky' para 'fixed' */
+    top: 60px; /* JÁ ESTÁ CORRETO: Começa abaixo do header fixo */
+    left: 0; /* ADICIONADO */
+    width: 100%; /* JÁ ESTÁ CORRETO */
+    display: none; 
+    justify-content: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #333; 
+    background: var(--bg); 
+    z-index: 9998; /* ALTERADO: Abaixo do header principal (9999), mas acima das modal-pages */
+    box-sizing: border-box; /* ADICIONADO */
+}
+
         #searchBar { 
             width: 90%; 
             max-width: 600px;
@@ -172,24 +181,33 @@
 
                 /* Catálogo A-Z */
         #azCatalog {
-            display: flex;
-            flex-wrap: nowrap; /* Impede quebras de linha */
-            overflow-x: auto; /* Permite rolagem horizontal */
-            -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
-            justify-content: flex-start; /* Alinha o conteúdo à esquerda */
-            padding: 5px 15px; /* Reduz padding */
-            background: var(--bg);
-            border-bottom: 1px solid #333;
-            z-index: 998;
-            gap: 2px; /* Reduz espaçamento entre as letras */
-            font-size: 0.9em; /* Reduz tamanho da fonte */
-        }
+    display: flex;
+    flex-wrap: nowrap; /* Impede quebras de linha */
+    overflow-x: auto; /* Permite rolagem horizontal */
+    -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    padding: 5px 15px; /* Reduz padding */
+    background: var(--bg);
+    border-bottom: 1px solid #333;
+    z-index: 9997; /* ALTERADO: Abaixo da search-container (9998) */
+    gap: 2px; /* Reduz espaçamento entre as letras */
+    font-size: 0.9em; /* Reduz tamanho da fonte */
+    position: fixed; /* ALTERADO: de não especificado para 'fixed' */
+    top: 60px; /* ADICIONADO: Começa abaixo do header fixo */
+    left: 0; /* ADICIONADO */
+    width: 100%; /* ADICIONADO */
+    box-sizing: border-box; /* ADICIONADO */
+}
+/* Remova esta regra, ela se tornou redundante */
+/*
+#azCatalog.top-60 {
+    top: 60px;
+}
+*/
+
 
 
                         /* Ajuste do top para quando a searchbar estiver escondida */
-        #azCatalog.top-60 {
-            top: 60px;
-        }
         #azCatalog::-webkit-scrollbar {
             height: 5px; 
         }
@@ -598,18 +616,19 @@
         
         /* Estilos Comuns para Modais (pop-ups que agora se comportam como páginas) */
         .modal-page { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: var(--bg); /* Fundo da "página" */
-            z-index: 5000; 
-            flex-direction: column; /* Conteúdo em coluna */
-            overflow-y: auto; /* Permite rolagem do conteúdo */
-            -webkit-overflow-scrolling: touch;
-        }
+    display: none; 
+    position: fixed; 
+    top: 60px; /* ALTERADO: Começa abaixo do cabeçalho */
+    left: 0; 
+    width: 100%; 
+    height: calc(100% - 60px); /* ALTERADO: A altura é 100% menos a altura do cabeçalho */
+    background: var(--bg); /* Fundo da "página" */
+    z-index: 5000; /* Mantenha um z-index menor que os elementos fixos globais (header, search, azCatalog) */
+    flex-direction: column; /* Conteúdo em coluna */
+    overflow-y: auto; /* Permite rolagem do conteúdo */
+    -webkit-overflow-scrolling: touch;
+}
+
         .modal-page.active {
             display: flex;
         }
@@ -641,17 +660,18 @@
 
         /* Modal padrão que ainda será popup (para login, aviso adulto, share) */
         .modal {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.9); 
-            z-index: 6000; /* Z-index maior para popups */
-            justify-content: center; 
-            align-items: center; 
-        }
+    display: none; 
+    position: fixed; 
+    top: 0; /* Mantenha top 0 para cobrir a tela inteira, incluindo o header */
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.9); 
+    z-index: 10000; /* ALTERADO: Z-index mais alto que o header (9999) para cobrir tudo */
+    justify-content: center; 
+    align-items: center; 
+}
+
         .modal-card { 
             background: var(--card); 
             padding: 25px; 
@@ -3874,48 +3894,50 @@ body.light-mode .waifu-card-actions {
         // Funções para a barra de pesquisa
     let searchBarVisible = false;
     function toggleSearchBar() {
-        const searchContainer = document.getElementById('searchContainer');
-        const azCatalog = document.getElementById('azCatalog');
-        if (!searchContainer || !azCatalog) {
-            console.error("Erro: Elemento 'searchContainer' ou 'azCatalog' não encontrado no DOM.");
-            return;
-        }
-        if (searchBarVisible) {
-            searchContainer.style.display = 'none';
-            azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar) searchBar.value = ''; // Limpa a busca ao fechar
-            // Recarrega os animes se a barra de pesquisa for fechada
-            if (currentFilter === 'search') {
-                renderHomePageContent(); // Volta para o conteúdo da home
-            }
-        } else {
-            searchContainer.style.display = 'flex';
-            azCatalog.classList.remove('top-60'); // Move o catálogo para baixo da searchbar
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar) searchBar.focus(); // Foca na barra de pesquisa
-        }
-        searchBarVisible = !searchBarVisible;
+    const searchContainer = document.getElementById('searchContainer');
+    const azCatalog = document.getElementById('azCatalog');
+    if (!searchContainer || !azCatalog) {
+        console.error("Erro: Elemento 'searchContainer' ou 'azCatalog' não encontrado no DOM.");
+        return;
     }
+    if (searchBarVisible) {
+        searchContainer.style.display = 'none';
+        azCatalog.style.top = '60px'; // Restaura a posição do catálogo abaixo do header
+        const searchBar = document.getElementById('searchBar');
+        if (searchBar) searchBar.value = ''; // Limpa a busca ao fechar
+        // Recarrega os animes se a barra de pesquisa for fechada
+        if (currentFilter === 'search') {
+            renderHomePageContent(); // Volta para o conteúdo da home
+        }
+    } else {
+        searchContainer.style.display = 'flex';
+        azCatalog.style.top = '110px'; // DESLOCA o catálogo para baixo da searchbar (60px do header + 50px da searchbar = 110px)
+        const searchBar = document.getElementById('searchBar');
+        if (searchBar) searchBar.focus(); // Foca na barra de pesquisa
+    }
+    searchBarVisible = !searchBarVisible;
+}
+
 
     function closeSearchBar() {
-        const searchContainer = document.getElementById('searchContainer');
-        const searchBar = document.getElementById('searchBar');
-        const azCatalog = document.getElementById('azCatalog');
-        if (!searchContainer || !searchBar || !azCatalog) {
-            console.error("Erro: Elemento 'searchContainer', 'searchBar' ou 'azCatalog' não encontrado no DOM.");
-            return;
-        }
-        searchContainer.style.display = 'none';
-        azCatalog.classList.add('top-60'); // Volta o catálogo para baixo do header
-        searchBar.value = '';
-        searchBar.classList.remove('focused');
-        searchBarVisible = false;
-        // Se a barra de pesquisa for fechada, recarrega os animes para o filtro anterior
-        if (currentFilter === 'search') {
-            renderHomePageContent();
-        }
+    const searchContainer = document.getElementById('searchContainer');
+    const searchBar = document.getElementById('searchBar');
+    const azCatalog = document.getElementById('azCatalog');
+    if (!searchContainer || !searchBar || !azCatalog) {
+        console.error("Erro: Elemento 'searchContainer', 'searchBar' ou 'azCatalog' não encontrado no DOM.");
+        return;
     }
+    searchContainer.style.display = 'none';
+    azCatalog.style.top = '60px'; // Restaura a posição do catálogo abaixo do header
+    searchBar.value = '';
+    searchBar.classList.remove('focused');
+    searchBarVisible = false;
+    // Se a barra de pesquisa for fechada, recarrega os animes para o filtro anterior
+    if (currentFilter === 'search') {
+        renderHomePageContent();
+    }
+}
+
 
     // Função para filtrar animes (será chamada ao digitar na barra de pesquisa)
     async function filterAnimes() {

@@ -1198,13 +1198,15 @@
             color: var(--danger);
         }
         .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
-            flex-grow: 1;
-            padding: 15px; /* Espaçamento geral */
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    flex-grow: 1;
+    padding: 15px; /* Espaçamento geral */
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 40px; /* ADICIONADO: Empurra o conteúdo do player para baixo, abaixo do #azCatalog. */
+}
+
 
         /* Breadcrumbs do player */
         .player-breadcrumbs {

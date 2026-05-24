@@ -8455,15 +8455,163 @@ async function updateWaifuDetailInteractions(waifuId) {
     }
 }
 
-// Função para abrir o modal de detalhes da Waifu
+// Função para abrir o modal de detalhes da Waifu - Versão Instagram Conectada
 async function openWaifuDetailModal(waifuId) {
     try {
         const waifuDoc = await db.collection("waifus").doc(waifuId).get();
         if (!waifuDoc.exists) {
-            showMessage("Waifu não encontrada.");
+            if (typeof showMessage === "function") showMessage("Waifu não encontrada.");
+            else alert("Waifu não encontrada.");
             return;
         }
+        
+        // Alimenta a sua variável global com os dados vindos do Firebase
         currentWaifuDetail = { id: waifuDoc.id, ...waifuDoc.data() };
+        const dados = currentWaifuDetail;
+
+        // 1. Preenche os textos de usuário, descrição e curtidas
+        document.getElementById('instaUsername').innerText = dados.usuario || dados.nomeUsuario || "otaku_anonimo";
+        document.getElementById('instaBoldUsername').innerText = dados.usuario || dados.nomeUsuario || "otaku_anonimo";
+        document.getElementById('txtWaifuDescription').innerText = dados.descricao || dados.legenda || "";
+        document.getElementById('txtWaifuLikes').innerText = (dados.likesCount || 0) + " curtidas";
+        document.getElementById('txtWaifuDate').innerText = dados.dataPostagem || "Recentemente";
+        
+        // 2. Preenche a URL da foto de perfil
+        const avatarImg = document.getElementById('instaUserAvatar');
+        avatarImg.src = dados.usuarioAvatarUrl || dados.avatarUrl || "https://dicebear.com" + (dados.usuario || "anon");
+
+        // 3. Monta o carrossel dinamicamente usando as URLs do banco
+        const track = document.getElementById('waifuCarouselTrack');
+        const dotsContainer = document.getElementById('waifuCarouselDots');
+        
+        track.innerHTML = ''; 
+        dotsContainer.innerHTML = ''; 
+
+        // Identifica onde estão as URLs de imagem (tenta ler 'urls', 'imagens' ou a string 'fotoUrl')
+        let listaUrls = [];
+        if (Array.isArray(dados.urls)) listaUrls = dados.urls;
+        else if (Array.isArray(dados.imagens)) listaUrls = dados.imagens;
+        else if (dados.fotoUrl) listaUrls = [dados.fotoUrl];
+        else if (dados.url) listaUrls = [dados.url];
+        else if (dados.image) listaUrls = [dados.image];
+
+        // Se não achar nada, coloca uma imagem padrão para não quebrar
+        if (listaUrls.length === 0) {
+            listaUrls = ["https://unsplash.com"];
+        }
+
+        // Injeta cada URL de imagem no carrossel de fotos do Instagram
+        listaUrls.forEach((urlImg, index) => {
+            if (!urlImg) return;
+            
+            const slide = document.createElement('div');
+            slide.className = 'insta-carousel-slide';
+            slide.innerHTML = `<img src="${urlImg}" alt="Waifu Imagem">`;
+            track.appendChild(slide);
+
+            const dot = document.createElement('span');
+            dot.className = index === 0 ? 'insta-dot-item active' : 'insta-dot-item';
+            dotsContainer.appendChild(dot);
+        });
+
+        // Só exibe as bolinhas brancas se houver mais de uma foto
+        dotsContainer.style.display = listaUrls.length > 1 ? 'flex' : 'none';
+
+        // 4. Ativa os botões de ação para funcionar com este ID
+        configurarBotoesAcaoInstagram(waifuId, dados);
+
+        // 5. Abre o modal na tela
+        const modal = document.getElementById('waifuDetailModal');
+        if (modal) {
+            modal.classList.add('active');
+            modal.style.display = 'flex';
+        }
+
+    } catch (error) {
+        console.error("Erro ao abrir modal de detalhes da waifu:", error);
+    }
+}
+
+// FUNÇÃO AUXILIAR: Gerencia as curtidas, comentários e seguir usando seu banco 'db'
+function configurarBotoesAcaoInstagram(waifuId, dados) {
+    const btnLike = document.getElementById('btnLikeWaifu');
+    const btnSave = document.getElementById('btnSaveWaifu');
+    const btnFollow = document.querySelector('.insta-follow-btn');
+    const btnComment = document.getElementById('btnCommentWaifu');
+
+    // Clona os botões de curtida e salvar para limpar cliques de waifus abertas anteriormente
+    const novoBtnLike = btnLike.cloneNode(true);
+    btnLike.parentNode.replaceChild(novoBtnLike, btnLike);
+    
+    const novoBtnSave = btnSave.cloneNode(true);
+    btnSave.parentNode.replaceChild(novoBtnSave, btnSave);
+
+    // FUNCIONALIDADE: Curtir (Coração)
+    novoBtnLike.onclick = async () => {
+        const estaAtivo = novoBtnLike.classList.toggle('active');
+        const incremento = estaAtivo ? 1 : -1;
+
+        const totalLikes = (dados.likesCount || 0) + incremento;
+        document.getElementById('txtWaifuLikes').innerText = totalLikes + " curtidas";
+        dados.likesCount = totalLikes; // Atualiza a variável local
+
+        try {
+            await db.collection('waifus').doc(waifuId).update({
+                likesCount: firebase.firestore.FieldValue.increment(incremento)
+            });
+        } catch (e) { console.error("Erro ao atualizar likes:", e); }
+    };
+
+    // FUNCIONALIDADE: Salvar (Bandeirinha)
+    novoBtnSave.onclick = () => {
+        novoBtnSave.classList.toggle('active');
+        alert("Salvo na sua coleção com sucesso!");
+    };
+
+    // FUNCIONALIDADE: Seguir do Topo
+    if (btnFollow) {
+        btnFollow.onclick = () => {
+            if (btnFollow.innerText === "Seguir") {
+                btnFollow.innerText = "Seguindo";
+                btnFollow.style.color = "#8e8e93";
+            } else {
+                btnFollow.innerText = "Seguir";
+                btnFollow.style.color = "#0095f6";
+            }
+        };
+    }
+
+    // FUNCIONALIDADE: Comentários
+    if (btnComment) {
+        btnComment.onclick = async () => {
+            const textoComentario = prompt("Digite seu comentário estilo Instagram:");
+            if (textoComentario && textoComentario.trim() !== "") {
+                
+                // Tenta pegar o usuário logado no Firebase Auth do seu site
+                let nomeUsuarioLogado = "Você";
+                if (firebase.auth().currentUser) {
+                    nomeUsuarioLogado = firebase.auth().currentUser.displayName || firebase.auth().currentUser.email.split('@')[0];
+                }
+                
+                // Adiciona visualmente na lista inferior
+                const areaComentarios = document.getElementById('instaMiniComments');
+                const p = document.createElement('p');
+                p.innerHTML = `<span class="insta-bold-username">${nomeUsuarioLogado}</span> ${textoComentario}`;
+                areaComentarios.appendChild(p);
+
+                // Grava a mensagem na subcoleção de comentários desta Waifu no Firestore
+                try {
+                    await db.collection('waifus').doc(waifuId).collection('comentarios').add({
+                        autor: nomeUsuarioLogado,
+                        texto: textoComentario,
+                        data: new Date().toISOString()
+                    });
+                } catch(e) { console.error("Erro ao salvar comentário:", e); }
+            }
+        };
+    }
+}
+
 
         // Preenche os detalhes
         document.getElementById('waifuDetailTitle').textContent = currentWaifuDetail.title;

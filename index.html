@@ -1144,15 +1144,16 @@
     display: none; 
     flex-direction: column;
     position: fixed;
-    top: 140px; /* ALTERADO: Empurra a página toda para baixo do catálogo A-Z */
+    top: 60px; /* Mantém colado abaixo do Header */
     left: 0;
     width: 100%;
-    height: calc(100% - 140px); /* ALTERADO: Ajusta a altura proporcionalmente */
-    background: var(--bg);
-    z-index: 9996; /* Mantém abaixo do azCatalog (9997) */
+    height: calc(100% - 60px); 
+    background: #0d0d0d; /* Fundo sólido para cobrir tudo */
+    z-index: 9998; /* ALTERADO: Agora fica na frente do slider, mas ainda atrás do Header/Catálogo */
     overflow-y: auto; 
     -webkit-overflow-scrolling: touch;
 }
+
 
         #videoPage.active {
             display: flex;
@@ -1163,8 +1164,10 @@
     top: 0; 
     z-index: 10;
     background-color: #000;
-    margin-bottom: 10px; /* Mantém o espaço para os botões roxos aparecerem logo abaixo */
+    margin-top: 45px; /* ADICIONADO: Empurra o player para baixo do catálogo A-Z sem abrir buraco no fundo */
+    margin-bottom: 10px; /* Mantém o espaço para os botões roxos */
 }
+
 
 
 

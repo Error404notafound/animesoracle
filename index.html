@@ -2803,269 +2803,6 @@ body.light-mode .waifu-card-actions {
     font-size: 1.1em;
 }
 /* ----- Fim dos Novos Estilos para o Modal de Edição da Waifu ----- */
-/* Container Principal da Página */
-.salvos-page-container {
-    background-color: #000; /* Fundo idêntico ao print */
-    min-height: 100vh;
-    padding-bottom: 50px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Cabeçalho das Abas */
-.salvos-tabs-header {
-    display: flex;
-    gap: 10px;
-    padding: 16px;
-    background-color: #000;
-}
-
-.salvos-tab-btn {
-    background: #1c1c1e;
-    color: #fff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 20px; /* Botão estilo pílula */
-    font-size: 0.95rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.salvos-tab-btn.active {
-    background: #264783; /* Azul sutil de aba selecionada do Facebook */
-    color: #385898;
-    background-color: rgba(40, 100, 200, 0.15);
-    color: #458eff;
-}
-
-/* Barra de Filtro */
-.salvos-filter-bar {
-    padding: 0 16px 16px 16px;
-}
-
-.filter-trigger-btn {
-    background: #1c1c1e;
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
-/* Controladores de Exibição das Abas */
-.salvos-tab-content {
-    display: none;
-}
-.salvos-tab-content.active {
-    display: block;
-}
-
-/* === ESTILO DE LINHAS (ITENS E COLEÇÕES) === */
-.salvo-item-row, .colecao-item-row {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px solid #1c1c1e;
-    position: relative;
-    gap: 16px;
-}
-
-/* Miniaturas Modificadas */
-.salvo-thumb {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.colecao-thumb {
-    width: 68px;
-    height: 68px;
-    object-fit: cover;
-    border-radius: 16px; /* Cantos bem redondos para pastas */
-}
-
-/* Conteúdo de Texto */
-.salvo-content, .colecao-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.salvo-title, .colecao-title {
-    color: #fff;
-    margin: 0 0 4px 0;
-    font-size: 0.95rem;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.salvo-subtitle, .colecao-subtitle {
-    color: #8a8a8f;
-    margin: 0;
-    font-size: 0.8rem;
-}
-
-/* Botão Opções e Menu Dropdown */
-.salvo-options-btn {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-}
-
-.salvo-dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 16px;
-    top: 50px;
-    background: #1c1c1e;
-    border: 1px solid #2c2c2e;
-    border-radius: 8px;
-    z-index: 10;
-    min-width: 140px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-.salvo-dropdown-menu.show { display: block; }
-
-.dropdown-item {
-    width: 100%; background: none; border: none; padding: 12px 16px;
-    text-align: left; color: #fff; font-size: 0.9rem; cursor: pointer;
-}
-.dropdown-item:active { background: #2c2c2e; }
-.dropdown-item.btn-excluir { color: #ff453a; }
-
-/* === INTERFACE BOTTOM SHEET (O MENU QUE SOBE DO FUNDO) === */
-.bottom-sheet-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 99999;
-}
-.bottom-sheet-overlay.open { display: block; }
-
-.bottom-sheet-content {
-    position: absolute;
-    bottom: 0; left: 0; width: 100%;
-    background: #1c1c1e;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    padding: 16px 0;
-    box-sizing: border-box;
-    transform: translateY(100%);
-    transition: transform 0.3s ease-out;
-}
-.bottom-sheet-overlay.open .bottom-sheet-content {
-    transform: translateY(0);
-}
-
-.bottom-sheet-drag-handle {
-    width: 40px; height: 4px; background: #444;
-    border-radius: 2px; margin: 0 auto 16px auto;
-}
-
-.bottom-sheet-title {
-    color: #fff; font-size: 1.1rem; text-align: center; margin: 0 0 16px 0;
-}
-
-.filter-options-list { list-style: none; padding: 0; margin: 0; }
-
-.filter-option-item {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 20px; color: #fff; font-size: 1rem; cursor: pointer;
-}
-.filter-option-item:active { background: #2c2c2e; }
-/* --- ADICIONE ESTE BLOCO NO FINAL DO SEU CSS --- */
-.salvo-item-row {
-    display: flex;
-    align-items: center;
-    padding: 14px 16px;
-    background: transparent;
-    border-bottom: 1px solid #1c1c1e; /* Linha sutil separando cada linha */
-    position: relative;
-    gap: 16px;
-}
-
-.salvo-thumb {
-    width: 54px;
-    height: 54px;
-    object-fit: cover;
-    border-radius: 8px; /* Cantos arredondados modernos */
-    background-color: #1a1a1a;
-}
-
-.salvo-content {
-    flex: 1;
-    min-width: 0; /* Impede que títulos gigantes quebrem o layout */
-}
-
-.salvo-title {
-    color: #fff;
-    margin: 0 0 4px 0;
-    font-size: 0.95rem;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Bota o "..." se o nome for enorme */
-}
-
-.salvo-subtitle {
-    color: #8a8a8f;
-    margin: 0;
-    font-size: 0.8rem;
-}
-
-.salvo-options-btn {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.salvo-dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 16px;
-    top: 50px;
-    background: #1c1c1e;
-    border: 1px solid #2c2c2e;
-    border-radius: 8px;
-    z-index: 100;
-    min-width: 140px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-.salvo-dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-item {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 12px 16px;
-    text-align: left;
-    color: #fff;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-.dropdown-item:active {
-    background: #2c2c2e;
-}
-
-.dropdown-item.btn-excluir {
-    color: #ff453a; /* Vermelho padrão iOS/Android para deletar */
-}
 
 
     </style>
@@ -3911,85 +3648,32 @@ body.light-mode .waifu-card-actions {
     </div>
 </div>
 
-<!-- Página de Salvos Estilo Premium Facebook -->
-<div class="salvos-page-container">
-    
-    <!-- Cabeçalho com Abas Alternáveis -->
-    <div class="salvos-tabs-header">
-        <button class="salvos-tab-btn active" onclick="switchSalvosTab('itens')">Itens salvos</button>
-        <button class="salvos-tab-btn" onclick="switchSalvosTab('colecoes')">Coleções</button>
+<!-- Página de Animes Salvos -->
+<div id="savedAnimesPage" class="content-page">
+    <div class="page-header">
+        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title">Meus Salvos</div>
+        <div></div>
     </div>
+    <div class="page-content"> 
+        <div class="saved-content-toggle">
+            <button id="toggleSavedAnimesBtn" class="active" onclick="toggleSavedContent('animes')">Animes</button>
+            <button id="toggleSavedWaifusBtn" onclick="toggleSavedContent('waifus')">Waifus</button>
+        </div>
 
-    <!-- Filtro de Tipos (Apenas aparece na aba Itens Salvos) -->
-    <div id="filterSection" class="salvos-filter-bar">
-        <button class="filter-trigger-btn" onclick="openBottomFilter()">
-            Todos os tipos 
-            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5H7z" fill="#fff"/></svg>
-        </button>
-    </div>
+        <!-- Área para Animes Salvos -->
+        <div id="savedAnimesContent" class="category-grid">
+            <p class="no-content-message">Você não tem animes salvos.</p>
+        </div>
 
-    <!-- CONTEÚDO 1: ABA ITENS SALVOS -->
-    <div id="tabItensConteudo" class="salvos-tab-content active">
-        <!-- Exemplo de item salvo individual (Gere dinamicamente com seu JS) -->
-        <div class="salvo-item-row">
-            <img src="https://placeholder.com" alt="Capa Anime" class="salvo-thumb">
-            <div class="salvo-content">
-                <h4 class="salvo-title">Chainsaw Man Movie: Reze-hen</h4>
-                <p class="salvo-subtitle">Filme • AnimesOracle</p>
-            </div>
-            <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
-                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/></svg>
-            </button>
-            <div class="salvo-dropdown-menu">
-                <button class="dropdown-item">Visualizar</button>
-                <button class="dropdown-item btn-excluir">Excluir</button>
-            </div>
+        <!-- Área para Waifus Salvas -->
+        <div id="savedWaifusContent" class="waifu-grid" style="display: none;">
+            <p class="no-content-message">Você não tem waifus salvas.</p>
         </div>
     </div>
-
-    <!-- CONTEÚDO 2: ABA COLEÇÕES -->
-    <div id="tabColecoesConteudo" class="salvos-tab-content">
-        <!-- Exemplo de Pasta de Coleção (Gere dinamicamente com seu JS) -->
-        <div class="colecao-item-row">
-            <img src="https://placeholder.com" alt="Capa Coleção" class="colecao-thumb">
-            <div class="colecao-content">
-                <h4 class="colecao-title">Animes de Temporada</h4>
-                <p class="colecao-subtitle">12 animes • Somente eu</p>
-            </div>
-            <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
-                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/></svg>
-            </button>
-            <div class="salvo-dropdown-menu">
-                <button class="dropdown-item">Abrir Coleção</button>
-                <button class="dropdown-item btn-excluir">Excluir Pasta</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JANELA BOTTOM SHEET (Menu de filtros que sobe do fundo da tela) -->
-    <div id="bottomFilterSheet" class="bottom-sheet-overlay" onclick="closeBottomFilter()">
-        <div class="bottom-sheet-content" onclick="event.stopPropagation()">
-            <div class="bottom-sheet-drag-handle"></div>
-            <h3 class="bottom-sheet-title">Filtrar itens salvos</h3>
-            <ul class="filter-options-list">
-                <li class="filter-option-item active" onclick="selectFilter('Todos os tipos')">
-                    <span class="filter-icon">📁</span> Todos os tipos
-                </li>
-                <li class="filter-option-item" onclick="selectFilter('Séries')">
-                    <span class="filter-icon">📺</span> Séries
-                </li>
-                <li class="filter-option-item" onclick="selectFilter('Filmes')">
-                    <span class="filter-icon">🎬</span> Filmes
-                </li>
-                <li class="filter-option-item" onclick="selectFilter('Arquivados')">
-                    <span class="filter-icon">📦</span> Arquivados
-                </li>
-            </ul>
-        </div>
-    </div>
-
 </div>
 
+<!-- FIM DO NOVO CONTEÚDO PARA savedAnimesPage -->
 
 <!-- Página de Jogos -->
 <div id="gamesPage" class="content-page">
@@ -5489,134 +5173,91 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     }
 
     // Função para abrir a página de contribuições
-    // --- VERSÃO REESTRUTURADA COM LAYOUT PREMIUM FACEBOOK ---
-async function openContributionsPage() {
-    if (!auth.currentUser || !currentUserData) {
-        showMessage("Você precisa estar logado para ver suas contribuições.");
-        openModal('authModal');
-        return;
-    }
-    openPage('contributionsPage');
-    const contributionsList = document.getElementById('contributionsList');
-    if (!contributionsList) {
-        console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
-        return;
-    }
-    contributionsList.innerHTML = '<p>Carregando suas contribuições...</p>';
-
-    try {
-        const mySeriesSnapshot = await db.collection("series")
-                                        .where("postedBy", "==", auth.currentUser.uid)
-                                        .orderBy("dataCriacao", "desc")
-                                        .get();
-        
-        const myEpisodesSnapshot = await db.collectionGroup("episodios")
-                                        .where("postedBy", "==", auth.currentUser.uid)
-                                        .orderBy("dataPostagem", "desc")
-                                        .get();
-
-        contributionsList.innerHTML = '';
-        let hasContributions = false;
-
-        // 1. BLOCO DE SÉRIES POSTADAS
-        if (!mySeriesSnapshot.empty) {
-            const seriesHeader = document.createElement('h3');
-            seriesHeader.textContent = 'Séries Postadas:';
-            seriesHeader.style.color = 'var(--primary)';
-            seriesHeader.style.padding = '10px 16px 0 16px'; // Espaçamento elegante
-            contributionsList.appendChild(seriesHeader);
-            
-            mySeriesSnapshot.forEach(doc => {
-                const serie = { id: doc.id, ...doc.data() };
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'salvo-item-row'; // CLASSE ATUALIZADA
-                itemDiv.innerHTML = `
-                    <!-- Miniatura da Capa -->
-                    <img src="${serie.imagem || 'https://placeholder.com'}" alt="Capa" class="salvo-thumb">
-                    
-                    <!-- Bloco de Textos -->
-                    <div class="salvo-content">
-                        <h4 class="salvo-title">${serie.nome}</h4>
-                        <p class="salvo-subtitle">Série Enviada • Oracle</p>
-                    </div>
-                    
-                    <!-- Botão de Três Pontinhos -->
-                    <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/>
-                        </svg>
-                    </button>
-
-                    <!-- Menu Suspenso de Ações -->
-                    <div class="salvo-dropdown-menu">
-                        <button class="dropdown-item" onclick="viewContribution('${serie.id}', 'serie')">Visualizar</button>
-                        <button class="dropdown-item btn-excluir" onclick="deleteContribution('${serie.id}', 'serie', '${serie.nome}')">Excluir</button>
-                    </div>
-                `;
-                contributionsList.appendChild(itemDiv);
-                hasContributions = true;
-            });
+    async function openContributionsPage() {
+        if (!auth.currentUser || !currentUserData) {
+            showMessage("Você precisa estar logado para ver suas contribuições.");
+            openModal('authModal');
+            return;
         }
+        openPage('contributionsPage');
+        const contributionsList = document.getElementById('contributionsList');
+        if (!contributionsList) {
+            console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
+            return;
+        }
+        contributionsList.innerHTML = '<p>Carregando suas contribuições...</p>';
 
-        // 2. BLOCO DE EPISÓDIOS POSTADOS
-        if (!myEpisodesSnapshot.empty) {
-            const episodesHeader = document.createElement('h3');
-            episodesHeader.textContent = 'Episódios Postados:';
-            episodesHeader.style.color = 'var(--primary)';
-            episodesHeader.style.marginTop = '20px';
-            episodesHeader.style.padding = '0 16px'; // Espaçamento elegante
-            contributionsList.appendChild(episodesHeader);
+        try {
+            const mySeriesSnapshot = await db.collection("series")
+                                            .where("postedBy", "==", auth.currentUser.uid)
+                                            .orderBy("dataCriacao", "desc")
+                                            .get();
             
-            for (const doc of myEpisodesSnapshot.docs) {
-                const episode = { id: doc.id, ...doc.data() };
-                const serieId = doc.ref.parent.parent.id;
-                const serieDoc = await db.collection('series').doc(serieId).get();
-                const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
-                
-                // Puxa a capa da série mãe para o episódio não ficar sem foto
-                const serieThumb = serieDoc.exists && serieDoc.data().imagem ? serieDoc.data().imagem : 'https://placeholder.com';
-                
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'salvo-item-row'; // CLASSE ATUALIZADA
-                itemDiv.innerHTML = `
-                    <!-- Miniatura da Capa -->
-                    <img src="${serieThumb}" alt="Capa" class="salvo-thumb">
-                    
-                    <!-- Bloco de Textos -->
-                    <div class="salvo-content">
-                        <h4 class="salvo-title">${serieName}</h4>
-                        <p class="salvo-subtitle">Episódio: ${episode.nome}</p>
-                    </div>
-                    
-                    <!-- Botão de Três Pontinhos -->
-                    <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/>
-                        </svg>
-                    </button>
+            const myEpisodesSnapshot = await db.collectionGroup("episodios")
+                                            .where("postedBy", "==", auth.currentUser.uid)
+                                            .orderBy("dataPostagem", "desc")
+                                            .get();
 
-                    <!-- Menu Suspenso de Ações -->
-                    <div class="salvo-dropdown-menu">
-                        <button class="dropdown-item" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')">Visualizar</button>
-                        <button class="dropdown-item btn-excluir" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')">Excluir</button>
-                    </div>
-                `;
-                contributionsList.appendChild(itemDiv);
-                hasContributions = true;
+            contributionsList.innerHTML = '';
+            let hasContributions = false;
+
+            if (!mySeriesSnapshot.empty) {
+                const seriesHeader = document.createElement('h3');
+                seriesHeader.textContent = 'Séries Postadas:';
+                seriesHeader.style.color = 'var(--primary)';
+                contributionsList.appendChild(seriesHeader);
+                mySeriesSnapshot.forEach(doc => {
+                    const serie = { id: doc.id, ...doc.data() };
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'contribution-item';
+                    itemDiv.innerHTML = `
+                        <span>${serie.nome}</span>
+                        <div class="actions">
+                            <button onclick="viewContribution('${serie.id}', 'serie')">Ver</button>
+                            <button class="danger" onclick="deleteContribution('${serie.id}', 'serie', '${serie.nome}')">Excluir</button>
+                        </div>
+                    `;
+                    contributionsList.appendChild(itemDiv);
+                    hasContributions = true;
+                });
             }
-        }
 
-        if (!hasContributions) {
-            contributionsList.innerHTML = '<p style="padding: 16px;">Você não fez contribuições ainda.</p>';
-        }
+            if (!myEpisodesSnapshot.empty) {
+                const episodesHeader = document.createElement('h3');
+                episodesHeader.textContent = 'Episódios Postados:';
+                episodesHeader.style.color = 'var(--primary)';
+                episodesHeader.style.marginTop = '20px';
+                contributionsList.appendChild(episodesHeader);
+                for (const doc of myEpisodesSnapshot.docs) {
+                    const episode = { id: doc.id, ...doc.data() };
+                    const serieId = doc.ref.parent.parent.id;
+                    const serieDoc = await db.collection('series').doc(serieId).get();
+                    const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'contribution-item';
+                    itemDiv.innerHTML = `
+                        <span>${serieName} - ${episode.nome}</span>
+                        <div class="actions">
+                            <button onclick="viewContribution('${serieId}', 'episode', '${episode.id}')">Ver</button>
+                            <button class="danger" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')">Excluir</button>
+                        </div>
+                    `;
+                    contributionsList.appendChild(itemDiv);
+                    hasContributions = true;
+                }
+            }
 
-    } catch (error) {
-        console.error("Erro ao carregar contribuições:", error);
-        contributionsList.innerHTML = '<p style="padding: 16px;">Erro ao carregar contribuições.</p>';
-        showMessage("Erro ao carregar contribuições: " + error.message);
+            if (!hasContributions) {
+                contributionsList.innerHTML = '<p>Você não fez contribuições ainda.</p>';
+            }
+
+        } catch (error) {
+            console.error("Erro ao carregar contribuições:", error);
+            contributionsList.innerHTML = '<p>Erro ao carregar contribuições.</p>';
+            showMessage("Erro ao carregar contribuições: " + error.message);
+        }
     }
-}
-
 
         // Função para ver uma contribuição (serie ou episode)
     async function viewContribution(serieId, type, episodeId = null) {
@@ -9384,64 +9025,6 @@ document.getElementById('waifuSearchBtn').addEventListener('click', () => {
     loadWaifus();
 });
 document.getElementById('waifuRandomBtn').addEventListener('click', searchRandomWaifu);
-// 1. TROCA DE ABAS (Itens Salvos vs Coleções)
-function switchSalvosTab(tabName) {
-    // Altera os estados visuais dos botões das abas
-    document.querySelectorAll('.salvos-tab-btn').forEach((btn, index) => {
-        if((tabName === 'itens' && index === 0) || (tabName === 'colecoes' && index === 1)) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-
-    // Controla a exibição das seções
-    const filterSection = document.getElementById('filterSection');
-    if (tabName === 'itens') {
-        document.getElementById('tabItensConteudo').classList.add('active');
-        document.getElementById('tabColecoesConteudo').classList.remove('active');
-        filterSection.style.display = 'block'; // Mostra filtro apenas nos itens
-    } else {
-        document.getElementById('tabItensConteudo').classList.remove('active');
-        document.getElementById('tabColecoesConteudo').classList.add('active');
-        filterSection.style.display = 'none'; // Oculta filtro nas coleções
-    }
-}
-
-// 2. CONTROLE DO DROPDOWN (Três Pontinhos)
-function toggleMenuSalvo(button, event) {
-    event.stopPropagation();
-    document.querySelectorAll('.salvo-dropdown-menu').forEach(menu => {
-        if (menu !== button.nextElementSibling) menu.classList.remove('show');
-    });
-    button.nextElementSibling.classList.toggle('show');
-}
-
-// 3. GERENCIAMENTO DO BOTTOM SHEET (Filtros que sobem)
-function openBottomFilter() {
-    document.getElementById('bottomFilterSheet').classList.add('open');
-}
-
-function closeBottomFilter() {
-    document.getElementById('bottomFilterSheet').classList.remove('open');
-}
-
-function selectFilter(filterName) {
-    // Atualiza o texto do botão principal de filtro
-    const triggerBtn = document.querySelector('.filter-trigger-btn');
-    triggerBtn.innerHTML = `${filterName} <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5H7z" fill="#fff"/></svg>`;
-    
-    // Fecha a janela
-    closeBottomFilter();
-    
-    // [OPCIONAL] Coloque sua lógica aqui para rodar o filtro no seu array de dados
-    console.log("Filtrando lista por: " + filterName);
-}
-
-// Fecha menus se clicar fora
-document.addEventListener('click', function() {
-    document.querySelectorAll('.salvo-dropdown-menu').forEach(menu => menu.classList.remove('show'));
-});
 
 
 </script>

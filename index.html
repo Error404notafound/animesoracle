@@ -5504,34 +5504,34 @@ async function openContributionsPage() {
         // 1. Renderiza as Séries Postadas (Print 1)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
-                const serie = { id: doc.id, ...doc.data() };
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
-                
-                // CORRIGIDO: Seu banco usa .imagem para a capa da série!
-                const linkExternoCapa = serie.imagem || 'https://placeholder.com';
-                
-                rowDiv.innerHTML = `
-                    <div class="item-thumb vertical">
-                        <img src="${linkExternoCapa}" alt="Capa" onerror="this.src='https://placeholder.com';">
-                    </div>
-                    <div class="item-info-block">
-                        <h4 class="item-title-text">${serie.nome}</h4>
-                        <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
-                    </div>
-                    <div class="item-actions-menu">
-                        <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                        </button>
-                        <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serie.id}', 'serie', '${serie.id}', '${serie.nome}')" title="Excluir">
-                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                        </button>
-                    </div>
-                `;
-                contributionsList.appendChild(rowDiv);
-                hasContributions = true;
-            });
-        }
+    const serie = { id: doc.id, ...doc.data() };
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
+    
+    // CORREÇÃO: Garante que pega a string de URL limpa do campo .imagem do seu PDF
+    const linkExternoCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
+    
+    rowDiv.innerHTML = `
+        <div class="item-thumb vertical">
+            <img src="${linkExternoCapa}" alt="Capa" style="display: block; width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://placeholder.com';">
+        </div>
+        <div class="item-info-block">
+            <h4 class="item-title-text">${serie.nome}</h4>
+            <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : '21/05/2026'}</p>
+        </div>
+        <div class="item-actions-menu">
+            <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+            <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serie.id}', 'serie', '${serie.id}', '${serie.nome}')" title="Excluir">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+        </div>
+    `;
+    contributionsList.appendChild(rowDiv);
+    hasContributions = true;
+});
+
 
         // 2. Renderiza os Episódios Postados (Print 3)
         if (!myEpisodesSnapshot.empty) {

@@ -2982,6 +2982,90 @@ body.light-mode .waifu-card-actions {
     padding: 14px 20px; color: #fff; font-size: 1rem; cursor: pointer;
 }
 .filter-option-item:active { background: #2c2c2e; }
+/* --- ADICIONE ESTE BLOCO NO FINAL DO SEU CSS --- */
+.salvo-item-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: transparent;
+    border-bottom: 1px solid #1c1c1e; /* Linha sutil separando cada linha */
+    position: relative;
+    gap: 16px;
+}
+
+.salvo-thumb {
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 8px; /* Cantos arredondados modernos */
+    background-color: #1a1a1a;
+}
+
+.salvo-content {
+    flex: 1;
+    min-width: 0; /* Impede que títulos gigantes quebrem o layout */
+}
+
+.salvo-title {
+    color: #fff;
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Bota o "..." se o nome for enorme */
+}
+
+.salvo-subtitle {
+    color: #8a8a8f;
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.salvo-options-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.salvo-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 16px;
+    top: 50px;
+    background: #1c1c1e;
+    border: 1px solid #2c2c2e;
+    border-radius: 8px;
+    z-index: 100;
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.salvo-dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    text-align: left;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.dropdown-item:active {
+    background: #2c2c2e;
+}
+
+.dropdown-item.btn-excluir {
+    color: #ff453a; /* Vermelho padrão iOS/Android para deletar */
+}
 
 
     </style>
@@ -5405,91 +5489,134 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     }
 
     // Função para abrir a página de contribuições
-    async function openContributionsPage() {
-        if (!auth.currentUser || !currentUserData) {
-            showMessage("Você precisa estar logado para ver suas contribuições.");
-            openModal('authModal');
-            return;
-        }
-        openPage('contributionsPage');
-        const contributionsList = document.getElementById('contributionsList');
-        if (!contributionsList) {
-            console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
-            return;
-        }
-        contributionsList.innerHTML = '<p>Carregando suas contribuições...</p>';
-
-        try {
-            const mySeriesSnapshot = await db.collection("series")
-                                            .where("postedBy", "==", auth.currentUser.uid)
-                                            .orderBy("dataCriacao", "desc")
-                                            .get();
-            
-            const myEpisodesSnapshot = await db.collectionGroup("episodios")
-                                            .where("postedBy", "==", auth.currentUser.uid)
-                                            .orderBy("dataPostagem", "desc")
-                                            .get();
-
-            contributionsList.innerHTML = '';
-            let hasContributions = false;
-
-            if (!mySeriesSnapshot.empty) {
-                const seriesHeader = document.createElement('h3');
-                seriesHeader.textContent = 'Séries Postadas:';
-                seriesHeader.style.color = 'var(--primary)';
-                contributionsList.appendChild(seriesHeader);
-                mySeriesSnapshot.forEach(doc => {
-                    const serie = { id: doc.id, ...doc.data() };
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'contribution-item';
-                    itemDiv.innerHTML = `
-                        <span>${serie.nome}</span>
-                        <div class="actions">
-                            <button onclick="viewContribution('${serie.id}', 'serie')">Ver</button>
-                            <button class="danger" onclick="deleteContribution('${serie.id}', 'serie', '${serie.nome}')">Excluir</button>
-                        </div>
-                    `;
-                    contributionsList.appendChild(itemDiv);
-                    hasContributions = true;
-                });
-            }
-
-            if (!myEpisodesSnapshot.empty) {
-                const episodesHeader = document.createElement('h3');
-                episodesHeader.textContent = 'Episódios Postados:';
-                episodesHeader.style.color = 'var(--primary)';
-                episodesHeader.style.marginTop = '20px';
-                contributionsList.appendChild(episodesHeader);
-                for (const doc of myEpisodesSnapshot.docs) {
-                    const episode = { id: doc.id, ...doc.data() };
-                    const serieId = doc.ref.parent.parent.id;
-                    const serieDoc = await db.collection('series').doc(serieId).get();
-                    const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
-                    
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'contribution-item';
-                    itemDiv.innerHTML = `
-                        <span>${serieName} - ${episode.nome}</span>
-                        <div class="actions">
-                            <button onclick="viewContribution('${serieId}', 'episode', '${episode.id}')">Ver</button>
-                            <button class="danger" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')">Excluir</button>
-                        </div>
-                    `;
-                    contributionsList.appendChild(itemDiv);
-                    hasContributions = true;
-                }
-            }
-
-            if (!hasContributions) {
-                contributionsList.innerHTML = '<p>Você não fez contribuições ainda.</p>';
-            }
-
-        } catch (error) {
-            console.error("Erro ao carregar contribuições:", error);
-            contributionsList.innerHTML = '<p>Erro ao carregar contribuições.</p>';
-            showMessage("Erro ao carregar contribuições: " + error.message);
-        }
+    // --- VERSÃO REESTRUTURADA COM LAYOUT PREMIUM FACEBOOK ---
+async function openContributionsPage() {
+    if (!auth.currentUser || !currentUserData) {
+        showMessage("Você precisa estar logado para ver suas contribuições.");
+        openModal('authModal');
+        return;
     }
+    openPage('contributionsPage');
+    const contributionsList = document.getElementById('contributionsList');
+    if (!contributionsList) {
+        console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
+        return;
+    }
+    contributionsList.innerHTML = '<p>Carregando suas contribuições...</p>';
+
+    try {
+        const mySeriesSnapshot = await db.collection("series")
+                                        .where("postedBy", "==", auth.currentUser.uid)
+                                        .orderBy("dataCriacao", "desc")
+                                        .get();
+        
+        const myEpisodesSnapshot = await db.collectionGroup("episodios")
+                                        .where("postedBy", "==", auth.currentUser.uid)
+                                        .orderBy("dataPostagem", "desc")
+                                        .get();
+
+        contributionsList.innerHTML = '';
+        let hasContributions = false;
+
+        // 1. BLOCO DE SÉRIES POSTADAS
+        if (!mySeriesSnapshot.empty) {
+            const seriesHeader = document.createElement('h3');
+            seriesHeader.textContent = 'Séries Postadas:';
+            seriesHeader.style.color = 'var(--primary)';
+            seriesHeader.style.padding = '10px 16px 0 16px'; // Espaçamento elegante
+            contributionsList.appendChild(seriesHeader);
+            
+            mySeriesSnapshot.forEach(doc => {
+                const serie = { id: doc.id, ...doc.data() };
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'salvo-item-row'; // CLASSE ATUALIZADA
+                itemDiv.innerHTML = `
+                    <!-- Miniatura da Capa -->
+                    <img src="${serie.imagem || 'https://placeholder.com'}" alt="Capa" class="salvo-thumb">
+                    
+                    <!-- Bloco de Textos -->
+                    <div class="salvo-content">
+                        <h4 class="salvo-title">${serie.nome}</h4>
+                        <p class="salvo-subtitle">Série Enviada • Oracle</p>
+                    </div>
+                    
+                    <!-- Botão de Três Pontinhos -->
+                    <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/>
+                        </svg>
+                    </button>
+
+                    <!-- Menu Suspenso de Ações -->
+                    <div class="salvo-dropdown-menu">
+                        <button class="dropdown-item" onclick="viewContribution('${serie.id}', 'serie')">Visualizar</button>
+                        <button class="dropdown-item btn-excluir" onclick="deleteContribution('${serie.id}', 'serie', '${serie.nome}')">Excluir</button>
+                    </div>
+                `;
+                contributionsList.appendChild(itemDiv);
+                hasContributions = true;
+            });
+        }
+
+        // 2. BLOCO DE EPISÓDIOS POSTADOS
+        if (!myEpisodesSnapshot.empty) {
+            const episodesHeader = document.createElement('h3');
+            episodesHeader.textContent = 'Episódios Postados:';
+            episodesHeader.style.color = 'var(--primary)';
+            episodesHeader.style.marginTop = '20px';
+            episodesHeader.style.padding = '0 16px'; // Espaçamento elegante
+            contributionsList.appendChild(episodesHeader);
+            
+            for (const doc of myEpisodesSnapshot.docs) {
+                const episode = { id: doc.id, ...doc.data() };
+                const serieId = doc.ref.parent.parent.id;
+                const serieDoc = await db.collection('series').doc(serieId).get();
+                const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
+                
+                // Puxa a capa da série mãe para o episódio não ficar sem foto
+                const serieThumb = serieDoc.exists && serieDoc.data().imagem ? serieDoc.data().imagem : 'https://placeholder.com';
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'salvo-item-row'; // CLASSE ATUALIZADA
+                itemDiv.innerHTML = `
+                    <!-- Miniatura da Capa -->
+                    <img src="${serieThumb}" alt="Capa" class="salvo-thumb">
+                    
+                    <!-- Bloco de Textos -->
+                    <div class="salvo-content">
+                        <h4 class="salvo-title">${serieName}</h4>
+                        <p class="salvo-subtitle">Episódio: ${episode.nome}</p>
+                    </div>
+                    
+                    <!-- Botão de Três Pontinhos -->
+                    <button class="salvo-options-btn" onclick="toggleMenuSalvo(this, event)">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#8a8a8f"/>
+                        </svg>
+                    </button>
+
+                    <!-- Menu Suspenso de Ações -->
+                    <div class="salvo-dropdown-menu">
+                        <button class="dropdown-item" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')">Visualizar</button>
+                        <button class="dropdown-item btn-excluir" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')">Excluir</button>
+                    </div>
+                `;
+                contributionsList.appendChild(itemDiv);
+                hasContributions = true;
+            }
+        }
+
+        if (!hasContributions) {
+            contributionsList.innerHTML = '<p style="padding: 16px;">Você não fez contribuições ainda.</p>';
+        }
+
+    } catch (error) {
+        console.error("Erro ao carregar contribuições:", error);
+        contributionsList.innerHTML = '<p style="padding: 16px;">Erro ao carregar contribuições.</p>';
+        showMessage("Erro ao carregar contribuições: " + error.message);
+    }
+}
+
 
         // Função para ver uma contribuição (serie ou episode)
     async function viewContribution(serieId, type, episodeId = null) {

@@ -2803,6 +2803,300 @@ body.light-mode .waifu-card-actions {
     font-size: 1.1em;
 }
 /* ----- Fim dos Novos Estilos para o Modal de Edição da Waifu ----- */
+/* ==========================================================================
+   NOVOS ESTILOS PARA A SEÇÃO DE CONTRIBUIÇÕES (BASEADO NOS PRINTS)
+   ========================================================================== */
+
+/* Container Principal */
+.contributions-container {
+    padding: 10px 8px;
+    background: var(--bg);
+}
+
+/* Abas superiores (Print 1 e 3) */
+.contributions-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+body.light-mode .contributions-tabs {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.tab-btn {
+    background: var(--secondary-bg);
+    color: var(--text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.tab-btn.active {
+    background: rgba(98, 0, 234, 0.2);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+/* Gatilho do Filtro (Print 2) */
+.filter-trigger-wrapper {
+    padding: 0 8px;
+    margin-bottom: 15px;
+}
+.filter-select-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--secondary-bg);
+    color: var(--text);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    cursor: pointer;
+}
+.filter-select-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Lista de Itens em Linha */
+.contributions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.contribution-item-row {
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #222;
+    gap: 12px;
+}
+body.light-mode .contribution-item-row {
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Miniaturas das Capas (Formatos Vertical e Quadrado) */
+.item-thumb {
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--secondary-bg);
+}
+.item-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.item-thumb.vertical {
+    width: 60px;
+    height: 80px;
+}
+.item-thumb.square {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+}
+
+/* Informações de Texto */
+.item-info-block {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+.item-title-text {
+    margin: 0 0 4px 0;
+    font-size: 0.95em;
+    font-weight: bold;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.item-subtitle-text {
+    margin: 0;
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+.icons-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.privacy-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.inline-svg-icon {
+    width: 12px;
+    height: 12px;
+    fill: var(--text-secondary);
+}
+
+/* Botões de Ação Laterais */
+.item-actions-menu {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.action-icon-btn {
+    background: var(--secondary-bg);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+.action-icon-btn svg {
+    width: 18px;
+    height: 18px;
+}
+.action-icon-btn:hover {
+    transform: scale(1.1);
+}
+.view-btn svg { fill: var(--primary); }
+.view-btn:hover { background: rgba(98, 0, 234, 0.1); }
+.delete-btn svg { fill: var(--danger); }
+.delete-btn:hover { background: rgba(204, 0, 0, 0.1); }
+.options-menu-btn svg { fill: var(--text); }
+
+/* Controle de Abas Ativas */
+.tab-content-block {
+    display: none;
+}
+.tab-content-block.active {
+    display: block;
+}
+
+/* Estrutura Bottom Sheet (Filtro Inferior - Print 2) */
+.bottom-sheet-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10002;
+    display: none;
+    align-items: flex-end;
+}
+.bottom-sheet-modal.open {
+    display: flex;
+}
+.bottom-sheet-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+.bottom-sheet-card {
+    position: relative;
+    width: 100%;
+    background: var(--card);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    z-index: 1;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+.bottom-sheet-modal.open .bottom-sheet-card {
+    transform: translateY(0);
+}
+.bottom-sheet-drag-handle {
+    width: 40px;
+    height: 4px;
+    background: #444;
+    border-radius: 2px;
+    margin: 12px auto 8px auto;
+    flex-shrink: 0;
+}
+body.light-mode .bottom-sheet-drag-handle {
+    background: #ccc;
+}
+.bottom-sheet-content {
+    overflow-y: auto;
+    padding: 10px 0 24px 0;
+}
+.sheet-item-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    text-align: left;
+    gap: 14px;
+    transition: background 0.2s;
+}
+.sheet-item-btn:hover {
+    background: var(--secondary-bg);
+}
+.sheet-item-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--secondary-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    flex-shrink: 0;
+}
+.sheet-item-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+.sheet-item-text {
+    flex-grow: 1;
+    font-size: 0.95em;
+    font-weight: 500;
+    color: var(--text);
+}
+.sheet-item-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.sheet-item-btn.active .sheet-item-check {
+    background: var(--primary);
+    color: white;
+}
+.sheet-item-check svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    display: none;
+}
+.sheet-item-btn.active .sheet-item-check svg {
+    display: block;
+}
 
 
     </style>
@@ -5172,157 +5466,254 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
         }
     }
 
-    // Função para abrir a página de contribuições
-    async function openContributionsPage() {
-        if (!auth.currentUser || !currentUserData) {
-            showMessage("Você precisa estar logado para ver suas contribuições.");
-            openModal('authModal');
-            return;
+    // Variáveis globais de controle da interface de contribuição
+let currentContribTab = 'series';
+let currentContribFilter = 'all';
+
+// Função para abrir a página de contribuições completamente remodelada
+async function openContributionsPage() {
+    if (!auth.currentUser || !currentUserData) {
+        showMessage("Você precisa estar logado para ver suas contribuições.");
+        openModal('authModal');
+        return;
+    }
+    openPage('contributionsPage');
+    const contributionsList = document.getElementById('contributionsList');
+    if (!contributionsList) {
+        console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
+        return;
+    }
+    contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
+
+    try {
+        // Busca Séries e Episódios em paralelo para maior performance
+        const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
+            db.collection("series")
+              .where("postedBy", "==", auth.currentUser.uid)
+              .orderBy("dataCriacao", "desc")
+              .get(),
+            db.collectionGroup("episodios")
+              .where("postedBy", "==", auth.currentUser.uid)
+              .orderBy("dataPostagem", "desc")
+              .get()
+        ]);
+
+        contributionsList.innerHTML = '';
+        let hasContributions = false;
+
+        // 1. Renderiza as Séries Postadas (Formato Vertical - Print 1)
+        if (!mySeriesSnapshot.empty) {
+            mySeriesSnapshot.forEach(doc => {
+                const serie = { id: doc.id, ...doc.data() };
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
+                // Usando a imagemUrl do Firebase ou fallback caso não exista
+                const capaImg = serie.imagemUrl || 'https://placeholder.com';
+                
+                rowDiv.innerHTML = `
+                    <div class="item-thumb vertical">
+                        <img src="${capaImg}" alt="Capa">
+                    </div>
+                    <div class="item-info-block">
+                        <h4 class="item-title-text">${serie.nome}</h4>
+                        <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
+                    </div>
+                    <div class="item-actions-menu">
+                        <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                        <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serie.id}', 'serie', '${serie.id}', '${serie.nome}')" title="Excluir">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                `;
+                contributionsList.appendChild(rowDiv);
+                hasContributions = true;
+            });
         }
-        openPage('contributionsPage');
-        const contributionsList = document.getElementById('contributionsList');
-        if (!contributionsList) {
-            console.error("Erro: Elemento 'contributionsList' não encontrado no DOM.");
-            return;
+
+        // 2. Renderiza os Episódios Postados (Formato Quadrado 1:1 - Print 3)
+        if (!myEpisodesSnapshot.empty) {
+            for (const doc of myEpisodesSnapshot.docs) {
+                const episode = { id: doc.id, ...doc.data() };
+                const serieId = doc.ref.parent.parent.id;
+                
+                // Busca o nome do anime pai no banco
+                const serieDoc = await db.collection('series').doc(serieId).get();
+                const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
+                const capaImg = episode.imagemUrl || (serieDoc.exists ? serieDoc.data().imagemUrl : null) || 'https://placeholder.com';
+
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
+                
+                rowDiv.innerHTML = `
+                    <div class="item-thumb square">
+                        <img src="${capaImg}" alt="Thumbnail do Episódio">
+                    </div>
+                    <div class="item-info-block">
+                        <h4 class="item-title-text">${serieName} - ${episode.nome}</h4>
+                        <p class="item-subtitle-text icons-row">
+                            <span>Episódio</span>
+                            <span class="separator">•</span>
+                            <span class="privacy-tag">
+                                <svg viewBox="0 0 24 24" class="inline-svg-icon"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                Postado por você
+                            </span>
+                        </p>
+                    </div>
+                    <div class="item-actions-menu">
+                        <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                        <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                `;
+                contributionsList.appendChild(rowDiv);
+                hasContributions = true;
+            }
         }
-        contributionsList.innerHTML = '<p>Carregando suas contribuições...</p>';
 
-        try {
-            const mySeriesSnapshot = await db.collection("series")
-                                            .where("postedBy", "==", auth.currentUser.uid)
-                                            .orderBy("dataCriacao", "desc")
-                                            .get();
-            
-            const myEpisodesSnapshot = await db.collectionGroup("episodios")
-                                            .where("postedBy", "==", auth.currentUser.uid)
-                                            .orderBy("dataPostagem", "desc")
-                                            .get();
+        if (!hasContributions) {
+            contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
+        } else {
+            // Executa a filtragem inicial para ajustar os blocos visíveis à aba padrão ('series')
+            applyContribFilters();
+        }
 
-            contributionsList.innerHTML = '';
-            let hasContributions = false;
+    } catch (error) {
+        console.error("Erro ao carregar contribuições:", error);
+        contributionsList.innerHTML = '<p style="padding:15px;">Erro ao carregar contribuições.</p>';
+        showMessage("Erro ao carregar contribuições: " + error.message);
+    }
+}
 
-            if (!mySeriesSnapshot.empty) {
-                const seriesHeader = document.createElement('h3');
-                seriesHeader.textContent = 'Séries Postadas:';
-                seriesHeader.style.color = 'var(--primary)';
-                contributionsList.appendChild(seriesHeader);
-                mySeriesSnapshot.forEach(doc => {
-                    const serie = { id: doc.id, ...doc.data() };
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'contribution-item';
-                    itemDiv.innerHTML = `
-                        <span>${serie.nome}</span>
-                        <div class="actions">
-                            <button onclick="viewContribution('${serie.id}', 'serie')">Ver</button>
-                            <button class="danger" onclick="deleteContribution('${serie.id}', 'serie', '${serie.nome}')">Excluir</button>
-                        </div>
-                    `;
-                    contributionsList.appendChild(itemDiv);
-                    hasContributions = true;
-                });
-            }
+// Função para chavear as abas (Séries / Episódios)
+function switchContribTab(tabName) {
+    currentContribTab = tabName;
+    
+    document.getElementById('tabBtnSeries').classList.remove('active');
+    document.getElementById('tabBtnEpisodes').classList.remove('active');
+    
+    if(tabName === 'series') {
+        document.getElementById('tabBtnSeries').classList.add('active');
+    } else {
+        document.getElementById('tabBtnEpisodes').classList.add('active');
+    }
+    
+    applyContribFilters();
+}
 
-            if (!myEpisodesSnapshot.empty) {
-                const episodesHeader = document.createElement('h3');
-                episodesHeader.textContent = 'Episódios Postados:';
-                episodesHeader.style.color = 'var(--primary)';
-                episodesHeader.style.marginTop = '20px';
-                contributionsList.appendChild(episodesHeader);
-                for (const doc of myEpisodesSnapshot.docs) {
-                    const episode = { id: doc.id, ...doc.data() };
-                    const serieId = doc.ref.parent.parent.id;
-                    const serieDoc = await db.collection('series').doc(serieId).get();
-                    const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
-                    
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'contribution-item';
-                    itemDiv.innerHTML = `
-                        <span>${serieName} - ${episode.nome}</span>
-                        <div class="actions">
-                            <button onclick="viewContribution('${serieId}', 'episode', '${episode.id}')">Ver</button>
-                            <button class="danger" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')">Excluir</button>
-                        </div>
-                    `;
-                    contributionsList.appendChild(itemDiv);
-                    hasContributions = true;
-                }
-            }
+// Processamento unificado de Filtro + Aba em tempo real no DOM
+function applyContribFilters() {
+    const items = document.querySelectorAll('.contrib-item-type');
+    items.forEach(item => {
+        const matchesTab = (currentContribTab === 'series' && item.classList.contains('serie-item')) || 
+                           (currentContribTab === 'episodes' && item.classList.contains('episode-item'));
+        
+        const matchesFilter = (currentContribContribFilter === 'all') || item.classList.contains(currentContribFilter);
+        
+        if (matchesTab && matchesFilter) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
 
-            if (!hasContributions) {
-                contributionsList.innerHTML = '<p>Você não fez contribuições ainda.</p>';
-            }
+// Inicializador dos eventos de clique do Bottom Sheet de Filtros (Print 2)
+document.addEventListener("DOMContentLoaded", () => {
+    const filterBtn = document.getElementById("filterContribBtn");
+    const bottomSheet = document.getElementById("filterBottomSheet");
+    const closeOverlay = document.getElementById("closeFilterOverlay");
+    const sheetItems = document.querySelectorAll(".sheet-item-btn");
+    const currentLabel = document.getElementById("currentFilterLabel");
 
-        } catch (error) {
-            console.error("Erro ao carregar contribuições:", error);
-            contributionsList.innerHTML = '<p>Erro ao carregar contribuições.</p>';
-            showMessage("Erro ao carregar contribuições: " + error.message);
+    if (filterBtn && bottomSheet && closeOverlay) {
+        filterBtn.addEventListener("click", () => bottomSheet.classList.add("open"));
+        
+        const closeSheet = () => bottomSheet.classList.remove("open");
+        closeOverlay.addEventListener("click", closeSheet);
+
+        sheetItems.forEach(item => {
+            item.addEventListener("click", () => {
+                document.querySelector(".sheet-item-btn.active")?.classList.remove("active");
+                item.classList.add("active");
+                
+                currentContribFilter = item.dataset.filter;
+                currentLabel.textContent = item.querySelector(".sheet-item-text").textContent;
+                
+                applyContribFilters();
+                setTimeout(closeSheet, 120);
+            });
+        });
+    }
+});
+
+// Mantém os seus redirecionamentos nativos originais intactos
+async function viewContribution(serieId, type, episodeId = null) {
+    if (type === 'serie') {
+        openEpisodeListPage(serieId);
+    } else if (type === 'episode') {
+        const serieDoc = await db.collection("series").doc(serieId).get();
+        const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
+        if (serieDoc.exists && episodeDoc.exists) {
+            openVideoPlayer(
+                { id: serieDoc.id, ...serieDoc.data() },
+                { id: episodeDoc.id, ...episodeDoc.data() }
+            );
+        } else {
+            showMessage("Série ou episódio não encontrado.");
         }
     }
+    closeCurrentPage();
+}
 
-        // Função para ver uma contribuição (serie ou episode)
-    async function viewContribution(serieId, type, episodeId = null) {
+// Mantém as suas lógicas seguras e re-renderizações automáticas do Firebase intactas
+async function deleteContribution(serieId, type, itemId, itemName = null) {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para excluir contribuições.");
+        return;
+    }
+
+    const isConfirmed = confirm(`Tem certeza que deseja excluir ${type === 'serie' ? 'a série' : 'o episódio'} "${itemName || itemId}"?`);
+    if (!isConfirmed) return;
+
+    try {
         if (type === 'serie') {
-            openEpisodeListPage(serieId);
-        } else if (type === 'episode') {
             const serieDoc = await db.collection("series").doc(serieId).get();
-            const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
-            if (serieDoc.exists && episodeDoc.exists) {
-                openVideoPlayer(
-                    { id: serieDoc.id, ...serieDoc.data() },
-                    { id: episodeDoc.id, ...episodeDoc.data() }
-                );
+            if (serieDoc.exists && serieDoc.data().postedBy === auth.currentUser.uid) {
+                const episodesSnapshot = await db.collection("series").doc(serieId).collection("episodios").get();
+                const deleteEpisodePromises = [];
+                episodesSnapshot.forEach(epDoc => {
+                    deleteEpisodePromises.push(db.collection("series").doc(serieId).collection("episodios").doc(epDoc.id).delete());
+                });
+                await Promise.all(deleteEpisodePromises);
+                
+                await db.collection("series").doc(serieId).delete();
+                showMessage(`Série "${itemName}" excluída com sucesso!`);
+                openContributionsPage();
             } else {
-                showMessage("Série ou episódio não encontrado.");
+                showMessage("Você não tem permissão para excluir esta série.");
+            }
+        } else if (type === 'episode') {
+            const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(itemId).get();
+            if (episodeDoc.exists && episodeDoc.data().postedBy === auth.currentUser.uid) {
+                await db.collection("series").doc(serieId).collection("episodios").doc(itemId).delete();
+                showMessage(`Episódio "${itemName}" excluído com sucesso!`);
+                openContributionsPage();
+            } else {
+                showMessage("Você não tem permissão para excluir este episódio.");
             }
         }
-        closeCurrentPage(); // Fecha a página de contribuições
+    } catch (error) {
+        console.error("Erro ao excluir contribuição:", error);
+        showMessage("Erro ao excluir contribuição: " + error.message);
     }
+}
 
-        // Função para deletar uma contribuição (serie ou episode)
-    async function deleteContribution(serieId, type, itemId, itemName = null) {
-        if (!auth.currentUser) {
-            showMessage("Você precisa estar logado para excluir contribuições.");
-            return;
-        }
 
-        const isConfirmed = confirm(`Tem certeza que deseja excluir ${type === 'serie' ? 'a série' : 'o episódio'} "${itemName || itemId}"?`);
-        if (!isConfirmed) return;
-
-        try {
-            if (type === 'serie') {
-                // Verificar se é o postedBy
-                const serieDoc = await db.collection("series").doc(serieId).get();
-                if (serieDoc.exists && serieDoc.data().postedBy === auth.currentUser.uid) {
-                    // Antes de deletar a série, deletar todos os seus episódios (subcoleção)
-                    const episodesSnapshot = await db.collection("series").doc(serieId).collection("episodios").get();
-                    const deleteEpisodePromises = [];
-                    episodesSnapshot.forEach(epDoc => {
-                        deleteEpisodePromises.push(db.collection("series").doc(serieId).collection("episodios").doc(epDoc.id).delete());
-                    });
-                    await Promise.all(deleteEpisodePromises);
-                    
-                    await db.collection("series").doc(serieId).delete();
-                    showMessage(`Série "${itemName}" excluída com sucesso!`);
-                    openContributionsPage(); // Recarrega a lista de contribuições
-                } else {
-                    showMessage("Você não tem permissão para excluir esta série.");
-                }
-            } else if (type === 'episode') {
-                // Verificar se é o postedBy
-                const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(itemId).get();
-                if (episodeDoc.exists && episodeDoc.data().postedBy === auth.currentUser.uid) {
-                    await db.collection("series").doc(serieId).collection("episodios").doc(itemId).delete();
-                    showMessage(`Episódio "${itemName}" excluído com sucesso!`);
-                    openContributionsPage(); // Recarrega a lista de contribuições
-                } else {
-                    showMessage("Você não tem permissão para excluir este episódio.");
-                }
-            }
-        } catch (error) {
-            console.error("Erro ao excluir contribuição:", error);
-            showMessage("Erro ao excluir contribuição: " + error.message);
-        }
-    }
 
     // Função para abrir a página de configurações
     async function openSettingsPage() {

@@ -4901,23 +4901,45 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             showMessage("Erro ao atualizar modo adulto: " + error.message);
         }
     }
-// --- COLA ESTE BLOCO DENTRO DO SEU SCRIPT ---
+// --- VERSÃO GLOBAL: VOLTA PARA A HOME DE QUALQUER LUGAR ---
 document.getElementById('navHomeBtn').addEventListener('click', function() {
-    // 1. Fecha o menu lateral removendo a classe open e ocultando
+    // 1. Sempre fecha o menu lateral hambúrguer
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
         userMenu.classList.remove('open');
         userMenu.style.display = 'none'; 
     }
     
-    // 2. Esconde a tela do player de vídeo e volta para a home
+    // 2. Esconde a página de vídeo se estiver aberta
     const videoPage = document.getElementById('videoPage');
     if (videoPage) {
         videoPage.classList.remove('active');
         videoPage.style.display = 'none';
     }
+
+    // 3. Esconde QUALQUER outra página modal ou tela secundária aberta
+    // O seu site usa a classe ".modal-page" para as telas extras. Esse comando limpa todas de uma vez!
+    const modalPages = document.querySelectorAll('.modal-page, .page-container, [id$="Page"]');
+    modalPages.forEach(function(page) {
+        page.classList.remove('active', 'open'); // Remove as classes de ativação comuns
+        
+        // Garante que elas fiquem ocultas se o seu script original usar controle de display
+        if (page.id !== 'homePage' && page.id !== 'mainPage') { 
+            page.style.display = 'none'; 
+        }
+    });
+
+    // 4. Garante que a sua Página Principal (Home) fique visível
+    const homePage = document.getElementById('homePage') || document.querySelector('.main-content');
+    if (homePage) {
+        homePage.style.display = 'block'; // ou 'flex', dependendo do seu layout original
+    }
+    
+    // Se o seu site tiver um sistema de "Scroll" para o topo da Home, descomente a linha abaixo:
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-// --------------------------------------------
+// ---------------------------------------------------------
+
 
     // Função para abrir a página de notificações
     async function openNotificationsPage() {

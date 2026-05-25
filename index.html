@@ -5470,7 +5470,7 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
 let currentContribTab = 'series';
 let currentContribFilter = 'all';
 
-// Função para abrir a página de contribuições completamente remodelada
+// Função para carregar as contribuições buscando as chaves exatas do seu banco
 async function openContributionsPage() {
     if (!auth.currentUser || !currentUserData) {
         showMessage("Você precisa estar logado para ver suas contribuições.");
@@ -5486,7 +5486,7 @@ async function openContributionsPage() {
     contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
 
     try {
-        // Busca Séries e Episódios em paralelo para maior performance
+        // Busca Séries e Episódios em paralelo do Firebase
         const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
             db.collection("series")
               .where("postedBy", "==", auth.currentUser.uid)
@@ -5501,18 +5501,19 @@ async function openContributionsPage() {
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-        // 1. Renderiza as Séries Postadas (Formato Vertical - Print 1)
+        // 1. Renderiza as Séries Postadas (Print 1)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
-                // Usando a imagemUrl do Firebase ou fallback caso não exista
-                const capaImg = serie.imagemUrl || 'https://placeholder.com';
+                
+                // CORRIGIDO: Seu banco usa .imagem para a capa da série!
+                const linkExternoCapa = serie.imagem || 'https://placeholder.com';
                 
                 rowDiv.innerHTML = `
                     <div class="item-thumb vertical">
-                        <img src="${capaImg}" alt="Capa">
+                        <img src="${linkExternoCapa}" alt="Capa" onerror="this.src='https://placeholder.com';">
                     </div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serie.nome}</h4>
@@ -5532,23 +5533,25 @@ async function openContributionsPage() {
             });
         }
 
-        // 2. Renderiza os Episódios Postados (Formato Quadrado 1:1 - Print 3)
+        // 2. Renderiza os Episódios Postados (Print 3)
         if (!myEpisodesSnapshot.empty) {
             for (const doc of myEpisodesSnapshot.docs) {
                 const episode = { id: doc.id, ...doc.data() };
                 const serieId = doc.ref.parent.parent.id;
                 
-                // Busca o nome do anime pai no banco
+                // Busca o documento da série pai para herdar o link da imagem se o episódio não tiver um próprio
                 const serieDoc = await db.collection('series').doc(serieId).get();
                 const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
-                const capaImg = episode.imagemUrl || (serieDoc.exists ? serieDoc.data().imagemUrl : null) || 'https://placeholder.com';
+                
+                // CORRIGIDO: Seu banco usa .thumbnail para episódios e .imagem para a série!
+                const imagemEpisodio = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
                 
                 rowDiv.innerHTML = `
                     <div class="item-thumb square">
-                        <img src="${capaImg}" alt="Thumbnail do Episódio">
+                        <img src="${imagemEpisodio}" alt="Thumbnail" onerror="this.src='https://placeholder.com';">
                     </div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serieName} - ${episode.nome}</h4>
@@ -5563,10 +5566,10 @@ async function openContributionsPage() {
                     </div>
                     <div class="item-actions-menu">
                         <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5z"/></svg>
                         </button>
                         <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
-                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z"/></svg>
                         </button>
                     </div>
                 `;
@@ -5578,7 +5581,6 @@ async function openContributionsPage() {
         if (!hasContributions) {
             contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
         } else {
-            // Executa a filtragem inicial para ajustar os blocos visíveis à aba padrão ('series')
             applyContribFilters();
         }
 
@@ -5588,6 +5590,7 @@ async function openContributionsPage() {
         showMessage("Erro ao carregar contribuições: " + error.message);
     }
 }
+
 
 // Função para chavear as abas (Séries / Episódios)
 function switchContribTab(tabName) {

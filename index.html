@@ -4901,7 +4901,7 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             showMessage("Erro ao atualizar modo adulto: " + error.message);
         }
     }
-// --- VERSÃO RECONSTRUÍDA: LIMPA TODAS AS TELAS SEM TRAVAR O SITE ---
+// --- VERSÃO CALIBRADA: MAPEANDO O CONTÊINER DO CATÁLOGO CORRETAMENTE ---
 document.getElementById('navHomeBtn').addEventListener('click', function(event) {
     // Impede conflitos de cliques na árvore do site
     event.stopPropagation();
@@ -4909,11 +4909,8 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     // 1. FECHA O MENU HAMBÚRGUER LATERAL
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
-        // Remove todas as classes possíveis de abertura que o tema possa usar
         userMenu.classList.remove('active', 'open', 'show');
-        // Esconde o menu para garantir que suma da tela agora
         userMenu.style.display = 'none';
-        // Remove a propriedade após 300ms (tempo da animação) para o botão do menu voltar a funcionar depois!
         setTimeout(function() {
             userMenu.style.removeProperty('display');
         }, 300);
@@ -4924,31 +4921,31 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     if (videoPage) {
         videoPage.classList.remove('active', 'open', 'show');
         videoPage.style.display = 'none';
-        
-        // Remove o 'display: none' logo em seguida para permitir que o próximo episódio seja aberto pelo JS nativo!
         setTimeout(function() {
             videoPage.style.removeProperty('display');
         }, 50);
 
-        // Reseta o iframe do vídeo para não ficar tocando áudio no fundo
         const iframe = videoPage.querySelector('iframe');
         if (iframe) iframe.src = '';
     }
 
-    // 3. FECHA A TELA DO CATÁLOGO A-Z (E QUALQUER OUTRA MODAL)
-    // Buscamos todos os possíveis contêineres de páginas extras do seu site
-    const allPages = document.querySelectorAll('#azPage, .az-page, .modal-page, .page-container');
+    // 3. FECHA A TELA DO CATÁLOGO A-Z E OUTRAS PÁGINAS ATIVAS
+    // ADICIONADO: Seletores baseados nas estruturas que conversamos (#azCatalog e variantes)
+    const allPages = document.querySelectorAll('#azCatalog, #azPage, .az-page, .modal-page, .page-container, [id*="catalog"], [class*="catalog"]');
     allPages.forEach(function(page) {
+        // Remove as classes de ativação
         page.classList.remove('active', 'open', 'show');
+        
+        // Se for a caixa flutuante do catálogo, fazemos ela sumir da tela instantaneamente
         page.style.display = 'none';
         
-        // Remove o 'display: none' rapidamente para que a tela possa ser aberta de novo no catálogo
+        // Remove a trava de display em seguida para o catálogo funcionar nos próximos cliques
         setTimeout(function() {
             page.style.removeProperty('display');
         }, 50);
     });
 
-    // 4. GARANTE QUE A PÁGINA PRINCIPAL ESTEJA VISÍVEL E ACESSÍVEL
+    // 4. GARANTE QUE A PÁGINA PRINCIPAL ESTEJA VISÍVEL
     const homePage = document.getElementById('homePage') || document.querySelector('.main-content');
     if (homePage) {
         homePage.style.display = 'block';
@@ -4957,6 +4954,7 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     // Restaura o scroll global da página
     document.body.style.removeProperty('overflow');
 });
+
 
 
 

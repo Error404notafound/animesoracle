@@ -4901,9 +4901,8 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             showMessage("Erro ao atualizar modo adulto: " + error.message);
         }
     }
-// --- VERSÃO CALIBRADA: MAPEANDO O CONTÊINER DO CATÁLOGO CORRETAMENTE ---
+// --- VERSÃO MESTRE: VARRE E FECHA QUALQUER ELEMENTO ATIVO NO SITE ---
 document.getElementById('navHomeBtn').addEventListener('click', function(event) {
-    // Impede conflitos de cliques na árvore do site
     event.stopPropagation();
 
     // 1. FECHA O MENU HAMBÚRGUER LATERAL
@@ -4929,31 +4928,31 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
         if (iframe) iframe.src = '';
     }
 
-    // 3. FECHA A TELA DO CATÁLOGO A-Z E OUTRAS PÁGINAS ATIVAS
-    // ADICIONADO: Seletores baseados nas estruturas que conversamos (#azCatalog e variantes)
-    const allPages = document.querySelectorAll('#azCatalog, #azPage, .az-page, .modal-page, .page-container, [id*="catalog"], [class*="catalog"]');
-    allPages.forEach(function(page) {
-        // Remove as classes de ativação
-        page.classList.remove('active', 'open', 'show');
-        
-        // Se for a caixa flutuante do catálogo, fazemos ela sumir da tela instantaneamente
-        page.style.display = 'none';
-        
-        // Remove a trava de display em seguida para o catálogo funcionar nos próximos cliques
-        setTimeout(function() {
-            page.style.removeProperty('display');
-        }, 50);
+    // 3. CAÇA ÀS BRUTAS: FECHA QUALQUER PÁGINA, MODAL OU CONTAINER QUE ESTEJA ATIVO
+    // Esta linha procura por QUALQUER elemento que use as classes clássicas de abertura do seu tema
+    const activeElements = document.querySelectorAll('.active, .open, .show, .modal-page, .page-container');
+    activeElements.forEach(function(element) {
+        // Ignora a estrutura principal do site para não quebrar o layout da home
+        if (element.id !== 'homePage' && element.id !== 'mainPage' && !element.classList.contains('main-content')) {
+            element.classList.remove('active', 'open', 'show');
+            element.style.display = 'none';
+            
+            setTimeout(function() {
+                element.style.removeProperty('display');
+            }, 50);
+        }
     });
 
-    // 4. GARANTE QUE A PÁGINA PRINCIPAL ESTEJA VISÍVEL
+    // 4. GARANTE QUE A PÁGINA PRINCIPAL FIQUE VISÍVEL
     const homePage = document.getElementById('homePage') || document.querySelector('.main-content');
     if (homePage) {
         homePage.style.display = 'block';
     }
 
-    // Restaura o scroll global da página
+    // Restaura o scroll do site
     document.body.style.removeProperty('overflow');
 });
+
 
 
 

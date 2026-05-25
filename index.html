@@ -1158,12 +1158,13 @@
         }
         #videoPlayerContainer {
     width: 100%;
-    position: sticky; 
-    top: 0; 
-    z-index: 10;
+    position: sticky; /* Mantém o player fixado */
+    top: 0; /* Alinha com o início do fluxo corrigido pelo padding */
+    z-index: 10; 
     background-color: #000;
-    margin-bottom: 10px; /* ADICIONADO: Abre um espaço físico para os botões respirarem logo abaixo */
+    margin-bottom: 10px; /* Mantém o espaço para os botões respirarem */
 }
+
 
 
         #videoSkeleton {
@@ -1201,12 +1202,14 @@
         }
         .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
     flex-grow: 1;
-    padding: 15px; /* Espaçamento geral */
+    padding: 15px; /* Mantém o espaçamento geral */
+    padding-top: 45px; /* ADICIONADO: Empurra o player e os botões para baixo do catálogo A-Z */
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
 }
+
 
 
 

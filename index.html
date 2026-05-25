@@ -2883,30 +2883,33 @@ body.light-mode .contributions-tabs {
 body.light-mode .contribution-item-row {
     border: 1px solid rgba(0,0,0,0.05);
 }
-
-/* Miniaturas das Capas (Formatos Vertical e Quadrado) */
+/* Miniaturas das Capas usando a lógica de background do Hero Slider */
 .item-thumb {
-    border-radius: 6px;
-    overflow: hidden;
     flex-shrink: 0;
-    background: #333; /* Cor de fundo caso a imagem falhe */
-    position: relative;
+    background-color: var(--secondary-bg); /* Cor de fundo caso o link falhe */
+    background-size: cover; /* FORÇA a imagem externa a preencher tudo cortando as sobras */
+    background-position: center; /* Centraliza o corte da imagem */
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
 .item-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
         }
-
+/* Força a proporção vertical rígida (9:16) para séries */
 .item-thumb.vertical {
     width: 60px;
-    height: 80px;
-        }
+    height: 106px; /* Altura calculada na proporção exata de 9:16 para 60px de largura */
+    border-radius: 6px;
+}
+
+/* Força a proporção quadrada perfeita (1:1) para episódios */
 .item-thumb.square {
     width: 64px;
     height: 64px;
     border-radius: 12px;
-        }
+}
 
 /* Informações de Texto */
 .item-info-block {
@@ -5472,7 +5475,7 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
 let currentContribTab = 'series';
 let currentContribFilter = 'all';
 
-// Função para carregar as contribuições buscando as chaves exatas do seu banco
+// Função definitiva com injeção de imagem via Background (Idêntico ao Hero Slider)
 async function openContributionsPage() {
     if (!auth.currentUser || !currentUserData) {
         showMessage("Você precisa estar logado para ver suas contribuições.");
@@ -5488,7 +5491,6 @@ async function openContributionsPage() {
     contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
 
     try {
-        // Busca Séries e Episódios em paralelo do Firebase
         const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
             db.collection("series")
               .where("postedBy", "==", auth.currentUser.uid)
@@ -5503,60 +5505,55 @@ async function openContributionsPage() {
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-        // 1. Renderiza as Séries Postadas (Print 1)
+        // 1. Renderiza as Séries Postadas (Aba Séries - Proporção Vertical 9:16)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
-    const serie = { id: doc.id, ...doc.data() };
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
-    
-    // CORREÇÃO: Garante que pega a string de URL limpa do campo .imagem do seu PDF
-    const linkExternoCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
-    
-    rowDiv.innerHTML = `
-        <div class="item-thumb vertical">
-    <img src="${linkExternoCapa}" alt="Capa" onerror="this.onerror=null; this.src='https://placeholder.com';">
-</div>
-
-        <div class="item-info-block">
-            <h4 class="item-title-text">${serie.nome}</h4>
-            <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : '21/05/2026'}</p>
-        </div>
-        <div class="item-actions-menu">
-            <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
-                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-            </button>
-            <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serie.id}', 'serie', '${serie.id}', '${serie.nome}')" title="Excluir">
-                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-            </button>
-        </div>
-    `;
-    contributionsList.appendChild(rowDiv);
-    hasContributions = true;
-});
-
+                const serie = { id: doc.id, ...doc.data() };
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
+                
+                // Puxa a string da URL do campo correto do seu banco (.imagem)
+                const linkExternoCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
+                
+                rowDiv.innerHTML = `
+                    <!-- Forçamos o link externo no background-image igual ao slider -->
+                    <div class="item-thumb vertical" style="background-image: url('${linkExternoCapa}');"></div>
+                    <div class="item-info-block">
+                        <h4 class="item-title-text">${serie.nome}</h4>
+                        <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
+                    </div>
+                    <div class="item-actions-menu">
+                        <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                        <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serie.id}', 'serie', '${serie.id}', '${serie.nome}')" title="Excluir">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                `;
+                contributionsList.appendChild(rowDiv);
+                hasContributions = true;
+            });
         }
 
-        // 2. Renderiza os Episódios Postados (Print 3)
+        // 2. Renderiza os Episódios Postados (Aba Episódios - Proporção Quadrada 1:1)
         if (!myEpisodesSnapshot.empty) {
             for (const doc of myEpisodesSnapshot.docs) {
                 const episode = { id: doc.id, ...doc.data() };
                 const serieId = doc.ref.parent.parent.id;
                 
-                // Busca o documento da série pai para herdar o link da imagem se o episódio não tiver um próprio
                 const serieDoc = await db.collection('series').doc(serieId).get();
                 const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
                 
-                // CORRIGIDO: Seu banco usa .thumbnail para episódios e .imagem para a série!
-                const imagemEpisodio = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
+                // Puxa o .thumbnail do episódio ou herda o .imagem da série pai
+                const linkExternoEp = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
                 
                 rowDiv.innerHTML = `
-                    <div class="item-thumb square">
-                        <img src="${imagemEpisodio}" alt="Thumbnail" onerror="this.src='https://placeholder.com';">
-                    </div>
+                    <!-- Forçamos o link externo no background-image igual ao slider -->
+                    <div class="item-thumb square" style="background-image: url('${linkExternoEp}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serieName} - ${episode.nome}</h4>
                         <p class="item-subtitle-text icons-row">
@@ -5595,8 +5592,8 @@ async function openContributionsPage() {
     }
 }
 
-
-// Função para chavear as abas (Séries / Episódios)
+    
+    // Função para chavear as abas (Séries / Episódios)
 function switchContribTab(tabName) {
     currentContribTab = tabName;
     

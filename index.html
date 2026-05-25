@@ -4901,57 +4901,56 @@ console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIO
             showMessage("Erro ao atualizar modo adulto: " + error.message);
         }
     }
-// --- VERSÃO CORRIGIDA: VOLTA PARA A HOME SEM TRAVAR OS CLIQUES ---
+// --- VERSÃO DEFINITIVA: RESOLVE O RE-CLIQUE DOS EPISÓDIOS ---
 document.getElementById('navHomeBtn').addEventListener('click', function() {
     
-    // 1. Fecha o menu lateral usando a mesma lógica do seu botão de fechar original
+    // 1. Fecha o menu lateral hambúrguer imitando o clique de fechar original
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
         userMenu.classList.remove('open');
-        // RESTRUTURADO: Se o seu site usa display manual, usamos 'none'
-        // Mas se ele usa transição de opacidade, garantimos que ele suma de verdade
         userMenu.style.display = 'none'; 
     }
     
-    // 2. Remove qualquer fundo escuro/máscara (overlay) do menu que possa ter ficado preso na tela
-    const overlay = document.querySelector('.menu-overlay, .sidebar-overlay, .modal-backdrop');
-    if (overlay) {
-        overlay.classList.remove('active', 'show');
-        overlay.style.display = 'none';
+    // 2. Procura pelo botão de fechar original da página do vídeo do seu próprio site
+    // No seu código ele costuma se chamar '.video-page-close-btn', '.close-video' ou '#closeVideo'
+    const originalVideoCloseBtn = document.querySelector('.video-page-close-btn') || 
+                                  document.querySelector('[class*="close-btn"]') || 
+                                  document.getElementById('closeVideoPage');
+
+    if (originalVideoCloseBtn) {
+        // TRUQUE DE MESTRE: Se o botão original existir, o JavaScript clica nele automaticamente para nós!
+        // Isso faz o seu site rodar a função original perfeita de resetar o player para o próximo episódio
+        originalVideoCloseBtn.click();
+    } else {
+        // CASO NÃO ENCONTRE O BOTÃO ORIGINAL, USAMOS ESTE RESET LIMPO ABAIXO:
+        const videoPage = document.getElementById('videoPage');
+        if (videoPage) {
+            videoPage.classList.remove('active');
+            // IMPORTANTE: Em vez de usar display = 'none', removemos o estilo injetado 
+            // para que a função original do site volte a ter controle total sobre o display!
+            videoPage.style.removeProperty('display');
+            videoPage.style.removeProperty('pointer-events');
+            
+            // Reseta o iframe do vídeo antigo para ele não ficar rodando em segundo plano
+            const iframe = videoPage.querySelector('iframe');
+            if (iframe) iframe.src = '';
+        }
     }
 
-    // 3. Fecha a página de vídeo limpando as classes e o display
-    const videoPage = document.getElementById('videoPage');
-    if (videoPage) {
-        videoPage.classList.remove('active');
-        videoPage.style.display = 'none'; // Garante que a "parede de vidro" saia da frente
-        
-        // CORREÇÃO CRÍTICA: Desliga a rejeição de cliques que o container fixo pode causar
-        videoPage.style.pointerEvents = 'none'; 
-    }
-
-    // 4. Varre todas as modais abertas e garante que elas não fiquem na frente
+    // 3. Varre e fecha as outras páginas modais limpando sem travar as propriedades nativas
     const modalPages = document.querySelectorAll('.modal-page, .page-container');
     modalPages.forEach(function(page) {
         page.classList.remove('active', 'open');
-        if (page.id !== 'homePage' && page.id !== 'mainPage') {
-            page.style.display = 'none';
-            page.style.pointerEvents = 'none'; // Impede que bloqueie cliques por cima da home
-        }
+        page.style.removeProperty('display');
+        page.style.removeProperty('pointer-events');
     });
 
-    // 5. Garante que a página inicial esteja ativa, visível e ACESSÍVEL para cliques
-    const homePage = document.getElementById('homePage') || document.querySelector('.main-content');
-    if (homePage) {
-        homePage.style.display = 'block'; 
-        homePage.style.pointerEvents = 'auto'; // Força os cliques a voltarem a funcionar nos cards!
-    }
-
-    // 6. Restaura a rolagem do corpo do site caso o menu ou o player tivessem travado o scroll do celular
-    document.body.style.overflow = 'auto';
-    document.body.style.pointerEvents = 'auto';
+    // 4. Garante que o corpo do site e a página principal voltem ao estado normal e limpo
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('pointer-events');
 });
 // -----------------------------------------------------------------
+
 
 
 

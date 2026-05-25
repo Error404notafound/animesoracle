@@ -1141,29 +1141,31 @@
 
         /* Página do Player de Vídeo */
         #videoPage {
-            display: none; /* Escondido por padrão, ativado via JS */
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            z-index: 5000;
-            overflow-y: auto; /* A página inteira rola, mas o player fica fixo */
-            -webkit-overflow-scrolling: touch;
-        }
+    display: none; 
+    flex-direction: column;
+    position: fixed;
+    top: 140px; /* ALTERADO: Empurra a página toda para baixo do catálogo A-Z */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 140px); /* ALTERADO: Ajusta a altura proporcionalmente */
+    background: var(--bg);
+    z-index: 9996; /* Mantém abaixo do azCatalog (9997) */
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch;
+}
+
         #videoPage.active {
             display: flex;
         }
         #videoPlayerContainer {
     width: 100%;
-    position: sticky; /* Mantém o player fixado */
-    top: 0; /* Alinha com o início do fluxo corrigido pelo padding */
-    z-index: 10; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10;
     background-color: #000;
-    margin-bottom: 10px; /* Mantém o espaço para os botões respirarem */
+    margin-bottom: 10px; /* Mantém o espaço para os botões roxos aparecerem logo abaixo */
 }
+
 
 
 
@@ -1200,15 +1202,15 @@
         .video-page-close-btn:hover {
             color: var(--danger);
         }
-        .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
+        .player-content-wrapper {
     flex-grow: 1;
-    padding: 15px; /* Mantém o espaçamento geral */
-    padding-top: 45px; /* ADICIONADO: Empurra o player e os botões para baixo do catálogo A-Z */
+    padding: 15px; /* Mantém apenas o espaçamento padrão nas laterais e base */
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
 }
+
 
 
 

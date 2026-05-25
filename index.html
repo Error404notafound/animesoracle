@@ -5521,8 +5521,9 @@ async function openContributionsPage() {
     
     rowDiv.innerHTML = `
         <div class="item-thumb vertical">
-            <img src="${linkExternoCapa}" alt="Capa" style="display: block; width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://placeholder.com';">
-        </div>
+    <img src="${linkExternoCapa}" alt="Capa" onerror="this.onerror=null; this.src='https://placeholder.com';">
+</div>
+
         <div class="item-info-block">
             <h4 class="item-title-text">${serie.nome}</h4>
             <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : '21/05/2026'}</p>

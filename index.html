@@ -1156,14 +1156,15 @@
         #videoPage.active {
             display: flex;
         }
-        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
+        #videoPlayerContainer {
     width: 100%;
-    position: sticky; /* Fixa o player no topo */
-    top: 75px; /* ALTERADO: Empurra o container do vídeo 35px para baixo DENTRO da videoPage. */
-    left: 0;
-    z-index: 9997; /* ALTERADO: Aumentei o z-index. Embora a videoPage (modal-page) tenha um z-index de 9998, elementos sticky internos precisam de um z-index próprio para garantir que não sejam sobrepostos por outros elementos fixos de menor z-index no contexto global (como o azCatalog 9997). Colocar 9997 aqui garante que ele fique no mesmo nível ou acima do azCatalog, mas dentro da videoPage.*/
+    position: sticky; 
+    top: 0; 
+    z-index: 10;
     background-color: #000;
+    margin-bottom: 10px; /* ADICIONADO: Abre um espaço físico para os botões respirarem logo abaixo */
 }
+
 
         #videoSkeleton {
             width: 100%;
@@ -1278,10 +1279,14 @@
 
         /* Botões de Navegação do Player (Voltar, Menu, Próximo) */
         .player-nav-buttons {
-            display: flex;
-            width: 100%;
-            margin-bottom: 20px;
-        }
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative; /* ADICIONADO: Permite que o z-index funcione */
+    z-index: 9999; /* ADICIONADO: Força os botões a ficarem na frente do container de vídeo */
+    background: var(--secondary-bg); /* Garante o fundo padrão dos botões */
+}
+
         .player-nav-button {
             flex: 1; /* Ocupa 1/3 da largura */
             padding: 15px 0;

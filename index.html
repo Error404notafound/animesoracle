@@ -189,7 +189,7 @@
     padding: 5px 15px; /* Reduz padding */
     background: var(--bg);
     border-bottom: 1px solid #333;
-    z-index: 9999; /* ALTERADO: Abaixo da search-container (9998) */
+    z-index: 9997; /* ALTERADO: Abaixo da search-container (9998) */
     gap: 2px; /* Reduz espaçamento entre as letras */
     font-size: 0.9em; /* Reduz tamanho da fonte */
     position: fixed; /* ALTERADO: de não especificado para 'fixed' */
@@ -1141,37 +1141,29 @@
 
         /* Página do Player de Vídeo */
         #videoPage {
-    display: none; 
-    flex-direction: column;
-    position: fixed;
-    top: 60px; 
-    left: 0;
-    width: 100%;
-    height: calc(100% - 60px); 
-    background: #0d0d0d; 
-    z-index: 9990; /* ALTERADO: Fica abaixo do catálogo (9999), mas acima do slider de fundo */
-    overflow-y: auto; 
-    -webkit-overflow-scrolling: touch;
-}
-
-
-
+            display: none; /* Escondido por padrão, ativado via JS */
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 5000;
+            overflow-y: auto; /* A página inteira rola, mas o player fica fixo */
+            -webkit-overflow-scrolling: touch;
+        }
         #videoPage.active {
             display: flex;
-        #videoPlayerContainer {
+        }
+        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
     width: 100%;
-    position: sticky; 
-    top: 0; 
-    z-index: 50; /* ALTERADO: Alto o suficiente para barrar o texto interno da página */
+    position: sticky; /* Fixa o player no topo */
+    top: 75px; /* ALTERADO: Empurra o container do vídeo 35px para baixo DENTRO da videoPage. */
+    left: 0;
+    z-index: 9997; /* ALTERADO: Aumentei o z-index. Embora a videoPage (modal-page) tenha um z-index de 9998, elementos sticky internos precisam de um z-index próprio para garantir que não sejam sobrepostos por outros elementos fixos de menor z-index no contexto global (como o azCatalog 9997). Colocar 9997 aqui garante que ele fique no mesmo nível ou acima do azCatalog, mas dentro da videoPage.*/
     background-color: #000;
-    margin-top: 45px; /* Mantém o espaço para o catálogo A-Z respirar */
-    margin-bottom: 10px; 
 }
-
-
-
-
-
 
         #videoSkeleton {
             width: 100%;
@@ -1206,16 +1198,14 @@
         .video-page-close-btn:hover {
             color: var(--danger);
         }
-        .player-content-wrapper {
+        .player-content-wrapper { /* Para o conteúdo que rola abaixo do player fixo */
     flex-grow: 1;
-    padding: 15px; /* Mantém apenas o espaçamento padrão nas laterais e base */
+    padding: 15px; /* Espaçamento geral */
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
 }
-
-
 
 
 
@@ -1288,14 +1278,10 @@
 
         /* Botões de Navegação do Player (Voltar, Menu, Próximo) */
         .player-nav-buttons {
-    display: flex;
-    width: 100%;
-    margin-bottom: 20px;
-    position: relative; 
-    z-index: 10; /* ALTERADO: Menor que o vídeo (50), fazendo eles entrarem por trás ao rolar */
-}
-
-
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
         .player-nav-button {
             flex: 1; /* Ocupa 1/3 da largura */
             padding: 15px 0;
@@ -8968,4 +8954,4 @@ document.getElementById('waifuRandomBtn').addEventListener('click', searchRandom
 
 </script>
 </body>
-</html>
+    </html>

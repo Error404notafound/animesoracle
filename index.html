@@ -2365,7 +2365,7 @@ body.light-mode .waifu-card-actions {
 }
 /* --- ESTILOS DO CENTRO DE EVENTOS (INSPIRADO NO SEAART & WAIFUS) --- */
 #eventosPage .modal-page-content {
-    padding: 20px 8px;
+    padding: 20px 0px; /* Ajustado para preenchimento total nas laterais */
 }
 
 /* Menu de Abas Superior do SeaArt */
@@ -2375,16 +2375,12 @@ body.light-mode .waifu-card-actions {
     white-space: nowrap;
     background: #0a0a0a;
     padding: 10px 15px;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid #1a1a1a;
     gap: 15px;
     -webkit-overflow-scrolling: touch;
 }
 .eventos-tabs::-webkit-scrollbar {
-    height: 4px;
-}
-.eventos-tabs::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 10px;
+    display: none;
 }
 .eventos-tab-btn {
     background: none;
@@ -2407,58 +2403,154 @@ body.light-mode .waifu-card-actions {
     left: 0;
     width: 100%;
     height: 3px;
-    background-color: #ff334b; /* Tracinho vermelho clássico do SeaArt */
+    background-color: #ff334b; /* Linha vermelha do SeaArt */
     border-radius: 2px;
+}
+
+/* Cabeçalho de Texto Informativo */
+.evento-info-header {
+    padding: 10px 16px 5px 16px;
+}
+.evento-info-header h4 {
+    color: #ffffff;
+    font-size: 1.1em;
+    margin: 0 0 4px 0;
+}
+.evento-info-header p {
+    color: #666666;
+    font-size: 0.8em;
+    margin: 0;
+}
+
+/* Container do Carrossel de Datas */
+.evento-datas-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 12px 16px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+.evento-datas-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Estilo do Card Retangular de Data */
+.data-card-btn {
+    flex: 0 0 160px;
+    background: #121214;
+    border: 1px solid #222226;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+.data-card-btn.active {
+    background: #18181f;
+    border-color: #ff334b; /* Bordas destacadas quando ativo */
+}
+.data-card-sub {
+    font-size: 0.75em;
+    color: #55555d;
+    margin-bottom: 4px;
+}
+.data-card-title {
+    font-size: 0.85em;
+    color: #cccccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 /* Banner Principal do Evento */
 .eventos-banner {
-    background: linear-gradient(135deg, #1a0033 0%, #000000 100%);
-    border: 1px solid #333;
+    background: linear-gradient(135deg, #161129 0%, #0a0a0f 100%);
+    border: 1px solid #222;
     border-radius: 12px;
     padding: 20px;
-    margin: 15px 8px;
+    margin: 15px 16px;
     text-align: center;
     position: relative;
+    transition: opacity 0.3s;
 }
 .eventos-banner h3 {
     margin: 0 0 10px 0;
-    font-size: 1.3em;
+    font-size: 1.25em;
     color: #fff;
 }
 .eventos-banner p {
     margin: 0 0 15px 0;
-    font-size: 0.9em;
+    font-size: 0.88em;
     color: #aaa;
+    line-height: 1.4;
 }
 
 /* Botão Laranja Gradiente do SeaArt */
 .btn-enviar-evento {
     width: 100%;
-    max-width: 300px;
+    max-width: 320px;
     padding: 12px 20px;
     background: linear-gradient(90deg, #b0279a 0%, #ffa500 100%);
     color: white;
     border: none;
     border-radius: 25px;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.95em;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.2);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.15);
+    transition: background 0.2s, transform 0.2s;
 }
-.btn-enviar-evento:hover {
-    transform: scale(1.02);
+
+/* Menu de Sub-navegação (Envio / Área de Votação) */
+.evento-sub-navigation {
+    display: flex;
+    gap: 24px;
+    padding: 15px 16px;
+    border-bottom: 1px solid #141414;
+}
+.sub-nav-item {
+    color: #777777;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 6px;
+}
+.sub-nav-item.active {
+    color: #ffffff;
+}
+.sub-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #ff334b;
+    border-radius: 2px;
+}
+
+.secao-titulo-galeria {
+    color: #ffffff;
+    font-size: 0.95em;
+    padding: 15px 16px 5px 16px;
+    margin: 0;
 }
 
 /* Container do Grid herdado das Waifus */
 .eventos-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 Colunas idêntico ao Waifus */
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    padding: 0 8px;
+    padding: 0 16px;
     margin-top: 15px;
 }
+
 
 /* FIM DOS NOVOS ESTILOS */
 
@@ -3723,15 +3815,14 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="cancel-btn" onclick="closeModal('editWaifuPostModal')">Cancelar</button>
     </div>
 </div>
-<!-- PÁGINA PRINCIPAL: CENTRO DE EVENTOS -->
+<!-- PÁGINA PRINCIPAL: CENTRO DE EVENTOS (SEM TÍTULO NO TOPO) -->
 <div id="eventosPage" class="modal-page">
-    <!-- Cabeçalho da Página -->
-    <div class="modal-page-header">
+    <!-- Cabeçalho da Página (Apenas botão de voltar) -->
+    <div class="modal-page-header" style="border-bottom: none; background: #0a0a0a;">
         <button class="icon-btn" onclick="closePage('eventosPage')">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         </button>
-        <div class="title">Centro de Eventos</div>
-        <div style="width: 34px;"></div> <!-- Gambiarra para centralizar o título perfeitamente -->
+        <div style="flex-grow: 1;"></div> <!-- Removeu o título de texto daqui -->
     </div>
 
     <!-- Navegação de Abas do SeaArt -->
@@ -3742,29 +3833,61 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="eventos-tab-btn" onclick="alterarAbaEvento('criatividade')">Criatividade</button>
     </div>
 
-    <!-- Conteúdo da Página -->
+    <!-- Conteúdo Interno Rolável -->
     <div class="modal-page-content">
-        <!-- Banner Interativo com o Botão de URL Laranja -->
-        <div class="eventos-banner">
-            <h3 id="evento-titulo-dinamico">O tema de hoje é "Loucura da Cerveja"</h3>
-            <p id="evento-desc-dinamico">Crie uma cena exagerada baseada no tema atual e compartilhe com a comunidade.</p>
-            <button class="btn-enviar-evento" onclick="openModal('modalEnvioEvento')">
-                🚀 Enviar URL da Foto
+        
+        <!-- Texto Informativo Horário -->
+        <div class="evento-info-header">
+            <h4>Tema do dia</h4>
+            <p>O tema será atualizado diariamente às 00:00 (UTC).</p>
+        </div>
+
+        <!-- Carrossel Horizontal de Datas -->
+        <div class="evento-datas-carousel">
+            <button class="data-card-btn" onclick="mudarDataEvento('2026-05-23')">
+                <span class="data-card-sub">2026-05-23</span>
+                <span class="data-card-title">Herói de Metal...</span>
+            </button>
+            <button class="data-card-btn" onclick="mudarDataEvento('2026-05-24')">
+                <span class="data-card-sub">2026-05-24</span>
+                <span class="data-card-title">Tudo Pode Virar...</span>
+            </button>
+            <button class="data-card-btn active" onclick="mudarDataEvento('2026-05-26')">
+                <span class="data-card-sub">2026-05-26</span>
+                <span class="data-card-title">🔥 Loucura da Ce...</span>
+            </button>
+            <button class="data-card-btn" onclick="mudarDataEvento('2026-05-27')">
+                <span class="data-card-sub">2026-05-27</span>
+                <span class="data-card-title">O Boneco de Ne...</span>
             </button>
         </div>
 
+        <!-- Banner Dinâmico Modificável -->
+        <div class="eventos-banner">
+            <!-- Estrutura controlada dinamicamente pelo JavaScript abaixo -->
+        </div>
+
+        <!-- Sub-abas de Envio/Votação -->
+        <div class="evento-sub-navigation">
+            <span class="sub-nav-item active">Envio</span>
+            <span class="sub-nav-item">Área de Votação</span>
+            <span class="sub-nav-item">Comentário</span>
+        </div>
+
+        <h4 class="secao-titulo-galeria">Todas as publicações</h4>
+
         <!-- Grid de Exibição Dinâmico (Estilo Waifus) -->
         <div id="eventosGridConteudo" class="eventos-grid">
-            <!-- Os cards injetados pelo Firebase/JS vão aparecer aqui dentro -->
+            <!-- Cards injetados via JS -->
         </div>
     </div>
 </div>
 
-<!-- MODAL POPUP PARA ANEXAR LINK DA URL -->
+<!-- MODAL POPUP PARA ENVIAR LINK DA URL -->
 <div id="modalEnvioEvento" class="modal">
     <div class="modal-card">
         <h3 style="color: var(--primary); margin-bottom: 15px; text-align: center;">Anexar Imagem por URL</h3>
-        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">Insira abaixo o link direto da imagem (ex: links do Imgur, Pinterest, etc.)</p>
+        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">Insira abaixo o link direto da imagem (ex: Imgur, Pinterest, etc.)</p>
         
         <input type="text" id="inputUrlEvento" placeholder="https://exemplo.com" class="rounded-input">
         
@@ -3772,6 +3895,7 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="cancel-btn" onclick="closeModal('modalEnvioEvento')">Cancelar</button>
     </div>
 </div>
+
 
 <!-- Página para Visualização de Episódios da Série -->
 <div id="episodeListPage" class="modal-page">
@@ -4042,6 +4166,7 @@ body.light-mode .bottom-sheet-drag-handle {
     </svg>
     <span>Centro de Eventos</span>
 </a>
+
 
 
 
@@ -9656,97 +9781,158 @@ document.getElementById('waifuSearchBtn').addEventListener('click', () => {
 });
 document.getElementById('waifuRandomBtn').addEventListener('click', searchRandomWaifu);
 /* ==========================================================================
-   ⚙️ SISTEMA DINÂMICO DO CENTRO DE EVENTOS (ABAS, BANNER E TROCA DE GRIDS)
+   ⚙️ SISTEMA AVANÇADO DE DATAS (TEMAS ATUAIS E BLOQUEIO DE EVENTOS FUTUROS)
    ========================================================================== */
 
-// Banco de dados fake/local dos temas (Substitua depois pelos dados reais do Firebase se quiser)
-const dadosDosEventos = {
-    diario: {
-        titulo: 'O tema de hoje é "Loucura da Cerveja"',
-        descricao: 'Crie um personagem ou uma cena exagerada com cerveja, como um cervejeiro maluco ou uma taverna cheia de espuma.'
+// Banco de dados simulado dos temas divididos por data do carrossel
+const bancoDeTemasPorData = {
+    "2026-05-23": {
+        titulo: 'Herói de Metal Líquido',
+        descricao: 'Aba de arquivos passados. Confira as artes enviadas pela comunidade neste grande desafio cibernético.',
+        podeEnviar: false,
+        premio: 'Encerrado',
+        recompensa: 'Submissões Encerradas'
     },
-    realista: {
-        titulo: 'O tema de hoje é "Salão de Cabeleireiro no Verão"',
-        descricao: 'Crie uma cena em um salão de cabeleireiro no verão, como um corte moderno ou um novo penteado inesperado.'
+    "2026-05-24": {
+        titulo: 'Tudo Pode Virar uma Garota de Anime',
+        descricao: 'Transforme objetos inanimados do cotidiano em personagens icônicas com traços marcantes.',
+        podeEnviar: false,
+        premio: 'Encerrado',
+        recompensa: 'Submissões Encerradas'
     },
-    ip: {
-        titulo: 'O tema de hoje é "Guerra na Mesa"',
-        descricao: 'Crie uma batalha em miniatura acontecendo sobre uma mesa utilizando itens de papelaria, brinquedos ou lanches.'
+    "2026-05-26": { // DATA ATUAL DO SEU PRINT (ATIVO)
+        titulo: 'Loucura da Cerveja',
+        descricao: 'Crie um personagem ou uma cena exagerada com cerveja, como um cervejeiro maluco ou uma taverna cheia de espuma.',
+        podeEnviar: true,
+        premio: 'Prêmio de Excelência 445 ⚡',
+        recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ⚡ 50',
+        atual: true
     },
-    criatividade: {
-        titulo: '🏆 Concurso Geral de Criatividade',
-        descricao: 'Aba livre! Envie suas melhores criações conceituais e acumule votos da comunidade para ganhar poder computacional.'
+    "2026-05-27": { // DATA FUTURA DO SEU PRINT (BLOQUEADO)
+        titulo: 'O Boneco de Neve que Não Derrete',
+        descricao: 'Crie um boneco de neve que nunca derrete. Onde ele está e que história acontece ali?',
+        podeEnviar: false,
+        premio: 'Prêmio de Excelência ? ? ?',
+        recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ? ? ?',
+        futuro: true
     }
 };
 
-// Variável para rastrear qual aba está ativa no momento do envio
+// Variável para gerenciar o estado da aba principal e data selecionada
 let abaEventoAtiva = 'diario';
+let dataEventoSelecionada = '2026-05-26';
 
 /**
- * Função responsável por alternar as abas do SeaArt e atualizar o Banner dinamicamente
+ * Controla a mudança das abas principais superiores (Diário, Realista, etc.)
  */
 function alterarAbaEvento(abaSelecionada) {
-    // 1. Atualiza a variável global da aba ativa
     abaEventoAtiva = abaSelecionada;
 
-    // 2. Remove a classe 'active' de todos os botões de abas do Centro de Eventos
     const botoes = document.querySelectorAll('.eventos-tab-btn');
     botoes.forEach(btn => btn.classList.remove('active'));
 
-    // 3. Adiciona a classe 'active' apenas no botão que foi clicado
-    // Descobre qual botão foi clicado usando o atributo onclick dele
     const botaoClicado = Array.from(botoes).find(btn => btn.getAttribute('onclick').includes(abaSelecionada));
-    if (botaoClicado) {
-        botaoClicado.classList.add('active');
-    }
+    if (botaoClicado) botaoClicado.classList.add('active');
 
-    // 4. Altera o texto do Banner dinamicamente com base no objeto de dados lá de cima
-    const infoEvento = dadosDosEventos[abaSelecionada];
-    if (infoEvento) {
-        document.getElementById('evento-titulo-dinamico').innerText = infoEvento.titulo;
-        document.getElementById('evento-desc-dinamico').innerText = infoEvento.descricao;
+    // Se mudar de aba principal, reseta para mostrar dados base da aba
+    if (abaSelecionada !== 'diario') {
+        document.querySelector('.secao-titulo-galeria').innerText = `Todas as publicações de ${abaSelecionada}`;
+        document.getElementById('eventosGridConteudo').innerHTML = `<div style="grid-column: span 3; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">Nenhum evento ativo nesta aba.</div>`;
+    } else {
+        mudarDataEvento(dataEventoSelecionada);
     }
-
-    // 5. Atualiza o Grid de Fotos correspondente à aba
-    renderizarFotosDoEvento();
 }
 
 /**
- * Função simulada para renderizar os cards de foto estilo Waifus dentro do Grid
- * (Puxa os dados salvos localmente no localStorage)
+ * Controla os cliques no carrossel horizontal de datas e aplica as regras dos prints 1/2 e 2/2
  */
-function renderizarFotosDoEvento() {
+function mudarDataEvento(dataClicada) {
+    dataEventoSelecionada = dataClicada;
+    
+    // Altera classe ativa dos botões do carrossel
+    const cardsDatas = document.querySelectorAll('.data-card-btn');
+    cardsDatas.forEach(card => card.classList.remove('active'));
+    
+    const cardAtivo = Array.from(cardsDatas).find(card => card.getAttribute('onclick').includes(dataClicada));
+    if (cardAtivo) cardAtivo.classList.add('active');
+
+    const infoTema = bancoDeTemasPorData[dataClicada];
+    const banner = document.querySelector('.eventos-banner');
+    const containerTituloGaleria = document.querySelector('.secao-titulo-galeria');
+
+    if (infoTema && banner) {
+        containerTituloGaleria.innerText = `Todas as publicações sobre "${infoTema.titulo}"`;
+
+        if (infoTema.futuro) {
+            // COMPORTAMENTO COMPLETO DO SEGUNDO PRINT (BLOQUEADO FUTURO)
+            banner.style.opacity = "0.4"; 
+            banner.innerHTML = `
+                <div style="font-size:0.75em; color:#fff; background: rgba(255,255,255,0.1); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; float:right;">Regras de Evento</div>
+                <div style="clear:both;"></div>
+                <h3>O tema de hoje é "${infoTema.titulo}"</h3>
+                <p>${infoTema.descricao}</p>
+                <div style="font-size:0.85em; color:#888; margin-bottom:12px; font-weight:bold;">${infoTema.premio}</div>
+                <button class="btn-enviar-evento" style="background:#202025 !important; color:#555; cursor:not-allowed; box-shadow:none;" disabled>
+                    ${infoTema.recompensa}
+                </button>
+            `;
+        } else if (infoTema.podeEnviar) {
+            // COMPORTAMENTO COMPLETO DO PRIMEIRO PRINT (LIBERADO ATUAL)
+            banner.style.opacity = "1";
+            banner.innerHTML = `
+                <div style="font-size:0.75em; color:#fff; background: rgba(255,255,255,0.1); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; float:right;">Regras de Evento</div>
+                <div style="clear:both;"></div>
+                <h3>O tema de hoje é "${infoTema.titulo}"</h3>
+                <p>${infoTema.descricao}</p>
+                <div style="font-size:0.85em; color:#b0279a; margin-bottom:12px; font-weight:bold;">${infoTema.premio}</div>
+                <button class="btn-enviar-evento" onclick="openModal('modalEnvioEvento')">
+                    ${infoTema.recompensa}
+                </button>
+            `;
+        } else {
+            // COMPORTAMENTO PARA EVENTOS PASSADOS ENCERRADOS
+            banner.style.opacity = "0.6";
+            banner.innerHTML = `
+                <h3>O tema foi "${infoTema.titulo}"</h3>
+                <p>${infoTema.descricao}</p>
+                <button class="btn-enviar-evento" style="background:#1a1a1f; color:#666; cursor:not-allowed; box-shadow:none;" disabled>
+                    ${infoTema.recompensa}
+                </button>
+            `;
+        }
+    }
+
+    renderizarFotosPorData();
+}
+
+/**
+ * Carrega dinamicamente a galeria de imagens enviadas no formato de grade (Style Waifus)
+ */
+function renderizarFotosPorData() {
     const grid = document.getElementById('eventosGridConteudo');
     if (!grid) return;
 
-    // Limpa o grid atual para carregar os dados da nova aba
     grid.innerHTML = '';
-
-    // Recupera a lista de envios do localStorage (ou cria uma vazia se não existir)
     const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
-
-    // Filtra os envios para mostrar apenas os que pertencem à aba selecionada
-    const enviosFiltrados = todosEnvios.filter(envio => envio.aba === abaEventoAtiva);
+    const enviosFiltrados = todosEnvios.filter(envio => envio.dataRef === dataEventoSelecionada);
 
     if (enviosFiltrados.length === 0) {
-        grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: #666; padding: 40px 10px; font-size: 0.9em;">
-                            Nenhuma publicação enviada para este tema ainda. Seja o primeiro!
+        grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">
+                            Nenhuma publicação para esta data ainda.
                           </div>`;
         return;
     }
 
-    // Renderiza cada card utilizando o comportamento visual de layout da página Waifus
     enviosFiltrados.forEach(item => {
         const cardWrapper = document.createElement('div');
-        cardWrapper.className = 'waifu-card-wrapper'; // Reutilizando sua classe de animação do PDF
-        
+        cardWrapper.className = 'waifu-card-wrapper';
         cardWrapper.innerHTML = `
             <div class="waifu-card" style="aspect-ratio: 9/16;">
-                <img src="${item.url}" alt="Envio de usuário" style="width:100%; height:100%; object-fit:cover;">
+                <img src="${item.url}" alt="User content" style="width:100%; height:100%; object-fit:cover;">
             </div>
-            <div class="waifu-card-details-bottom" style="padding: 8px;">
+            <div class="waifu-card-details-bottom" style="padding: 6px; background:#0f0f12;">
                 <div class="waifu-card-author">
-                    <span style="font-size: 0.75em; color: #aaa;">Enviado por: Anônimo</span>
+                    <span style="font-size: 0.75em; color: #888;">Anon_Oracle</span>
                 </div>
             </div>
         `;
@@ -9755,41 +9941,37 @@ function renderizarFotosDoEvento() {
 }
 
 /**
- * Função disparada pelo botão do Modal para salvar a URL digitada pelo usuário
+ * Salva localmente a URL enviada e vincula diretamente à aba de data selecionada
  */
 function salvarEnvioEvento() {
     const inputUrl = document.getElementById('inputUrlEvento');
     const urlDigitada = inputUrl.value.trim();
 
-    // Validação básica se o campo está vazio ou não possui um formato HTTP básico
     if (!urlDigitada || !urlDigitada.startsWith('http')) {
-        alert('Por favor, insira uma URL de imagem válida (começando com http:// ou https://)');
+        alert('Por favor, insira uma URL de imagem válida.');
         return;
     }
 
-    // Cria o objeto do novo envio acoplado à aba atual
     const novoEnvio = {
         id: Date.now(),
         url: urlDigitada,
-        aba: abaEventoAtiva,
-        data: new Date().toISOString()
+        dataRef: dataEventoSelecionada,
+        dataEnvio: new Date().toISOString()
     };
 
-    // Salva no LocalStorage para persistir os dados mesmo recarregando a página
     const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
     todosEnvios.push(novoEnvio);
     localStorage.setItem('oracle_envios_eventos', JSON.stringify(todosEnvios));
 
-    // Limpa o campo do input, fecha o modal e recarrega o grid
     inputUrl.value = '';
     closeModal('modalEnvioEvento');
-    renderizarFotosDoEvento();
+    renderizarFotosPorData();
 }
 
-// Inicializador: Garante que ao abrir o site pela primeira vez, o grid da primeira aba seja carregado
+// Inicializador seguro executado ao iniciar o app
 document.addEventListener('DOMContentLoaded', () => {
-    // Adiciona uma chamada segura caso a função openPage padrão precise carregar dados extras
-    renderizarFotosDoEvento();
+    // Carrega o evento padrão do dia atual da lista
+    mudarDataEvento('2026-05-26');
 });
 
 

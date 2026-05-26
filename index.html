@@ -2803,9 +2803,8 @@ body.light-mode .waifu-card-actions {
     font-size: 1.1em;
 }
 /* ----- Fim dos Novos Estilos para o Modal de Edição da Waifu ----- */
-
 /* ==========================================================================
-   NOVOS ESTILOS PARA A SEÇÃO DE CONTRIBUIÇÕES (PADRONIZAÇÃO SIMÉTRICA 1:1)
+   NOVOS ESTILOS PARA A SEÇÃO DE CONTRIBUIÇÕES (BASEADO NOS PRINTS)
    ========================================================================== */
 
 /* Container Principal */
@@ -2814,7 +2813,7 @@ body.light-mode .waifu-card-actions {
     background: var(--bg);
 }
 
-/* Abas superiores */
+/* Abas superiores (Print 1 e 3) */
 .contributions-tabs {
     display: flex;
     gap: 12px;
@@ -2842,7 +2841,7 @@ body.light-mode .contributions-tabs {
     border: 1px solid var(--primary);
 }
 
-/* Gatilho do Filtro */
+/* Gatilho do Filtro (Print 2) */
 .filter-trigger-wrapper {
     padding: 0 8px;
     margin-bottom: 15px;
@@ -2884,22 +2883,32 @@ body.light-mode .contributions-tabs {
 body.light-mode .contribution-item-row {
     border: 1px solid rgba(0,0,0,0.05);
 }
-
-/* Força as Miniaturas em Quadrado Perfeito (1:1) Harmonizado */
+/* Miniaturas das Capas usando a lógica de background do Hero Slider */
 .item-thumb {
-    width: 64px !important;
-    height: 64px !important;
     flex-shrink: 0;
+    background-color: var(--secondary-bg); /* Cor de fundo caso o link falhe */
+    background-size: cover; /* FORÇA a imagem externa a preencher tudo cortando as sobras */
+    background-position: center; /* Centraliza o corte da imagem */
+    background-repeat: no-repeat;
     overflow: hidden;
-    background-color: var(--secondary-bg);
-    border-radius: 8px;
 }
 .item-thumb img {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    object-fit: cover !important; /* Corta as sobras e centraliza links externos */
-    object-position: center !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+        }
+/* Força a proporção vertical rígida (9:16) para séries */
+.item-thumb.vertical {
+    width: 60px;
+    height: 106px; /* Altura calculada na proporção exata de 9:16 para 60px de largura */
+    border-radius: 6px;
+}
+
+/* Força a proporção quadrada perfeita (1:1) para episódios */
+.item-thumb.square {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
 }
 
 /* Informações de Texto */
@@ -2980,7 +2989,7 @@ body.light-mode .contribution-item-row {
     display: block;
 }
 
-/* Estrutura Bottom Sheet Menu Filtros */
+/* Estrutura Bottom Sheet (Filtro Inferior - Print 2) */
 .bottom-sheet-modal {
     position: fixed;
     top: 0;
@@ -3093,6 +3102,7 @@ body.light-mode .bottom-sheet-drag-handle {
 .sheet-item-btn.active .sheet-item-check svg {
     display: block;
 }
+
 
     </style>
 </head>
@@ -3992,49 +4002,9 @@ body.light-mode .bottom-sheet-drag-handle {
         <div></div>
     </div>
     <div class="page-content">
-        <!-- NOVO CONTAINER DE CONTRIBUIÇÕES UNIFICADO 1:1 -->
-        <div class="contributions-container">
-            <!-- Cabeçalho de Abas Dinâmicas -->
-            <div class="contributions-tabs">
-                <button id="tabBtnSeries" class="tab-btn active" onclick="switchContribTab('series')">Séries Postadas</button>
-                <button id="tabBtnEpisodes" class="tab-btn" onclick="switchContribTab('episodes')">Episódios Postados</button>
-            </div>
-
-            <!-- Gatilho do Filtro Interativo -->
-            <div class="filter-trigger-wrapper">
-                <button id="filterContribBtn" class="filter-select-btn">
-                    <span id="currentFilterLabel">Todos os tipos</span>
-                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                </button>
-            </div>
-
-            <!-- Mantemos o seu ID original para o Firebase injetar os cards quadrados aqui dentro -->
-            <div class="contributions-list" id="contributionsList"></div>
-        </div>
-    </div>
-</div>
-
-<!-- BOTTOM SHEET DE FILTROS (Colocado logo abaixo da página de contribuições) -->
-<div id="filterBottomSheet" class="bottom-sheet-modal">
-    <div class="bottom-sheet-overlay" id="closeFilterOverlay"></div>
-    <div class="bottom-sheet-card">
-        <div class="bottom-sheet-drag-handle"></div>
-        <div class="bottom-sheet-content">
-            <button class="sheet-item-btn active" data-filter="all">
-                <div class="sheet-item-icon"><svg viewBox="0 0 24 24"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6l5-3z"/></svg></div>
-                <span class="sheet-item-text">Todos os tipos</span>
-                <div class="sheet-item-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-            </button>
-            <button class="sheet-item-btn" data-filter="serie-item">
-                <div class="sheet-item-icon"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 9H3V5h9v7zm9 7h-9v-7h9v7z"/></svg></div>
-                <span class="sheet-item-text">Apenas Séries</span>
-                <div class="sheet-item-check"></div>
-            </button>
-            <button class="sheet-item-btn" data-filter="episode-item">
-                <div class="sheet-item-icon"><svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg></div>
-                <span class="sheet-item-text">Apenas Episódios</span>
-                <div class="sheet-item-check"></div>
-            </button>
+        <div id="contributionsList">
+            <!-- Contribuições do usuário (séries e episódios postados) serão carregadas aqui -->
+            <p>Você não fez contribuições ainda.</p>
         </div>
     </div>
 </div>
@@ -5501,10 +5471,11 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
         }
     }
 
-    let currentContribTab = 'series';
+    // Variáveis globais de controle da interface de contribuição
+let currentContribTab = 'series';
 let currentContribFilter = 'all';
 
-// Função que busca dados do Firestore estruturada para imagens 1:1
+// Função definitiva com injeção de imagem via Background (Idêntico ao Hero Slider)
 async function openContributionsPage() {
     if (!auth.currentUser || !currentUserData) {
         showMessage("Você precisa estar logado para ver suas contribuições.");
@@ -5534,20 +5505,19 @@ async function openContributionsPage() {
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-        // Renderização de Séries (1:1 Quadrado Forçado)
+        // 1. Renderiza as Séries Postadas (Aba Séries - Proporção Vertical 9:16)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
                 
-                // Puxa o campo .imagem mapeado do seu PDF (Página 4)
-                const linkCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
+                // Puxa a string da URL do campo correto do seu banco (.imagem)
+                const linkExternoCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
                 
                 rowDiv.innerHTML = `
-                    <div class="item-thumb">
-                        <img src="${linkCapa}" alt="Capa" onerror="this.onerror=null; this.src='https://placeholder.com';">
-                    </div>
+                    <!-- Forçamos o link externo no background-image igual ao slider -->
+                    <div class="item-thumb vertical" style="background-image: url('${linkExternoCapa}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serie.nome}</h4>
                         <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
@@ -5566,7 +5536,7 @@ async function openContributionsPage() {
             });
         }
 
-        // Renderização de Episódios (1:1 Quadrado Forçado)
+        // 2. Renderiza os Episódios Postados (Aba Episódios - Proporção Quadrada 1:1)
         if (!myEpisodesSnapshot.empty) {
             for (const doc of myEpisodesSnapshot.docs) {
                 const episode = { id: doc.id, ...doc.data() };
@@ -5575,16 +5545,15 @@ async function openContributionsPage() {
                 const serieDoc = await db.collection('series').doc(serieId).get();
                 const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
                 
-                // Puxa o campo .thumbnail mapeado do seu PDF (Página 40)
-                const linkEp = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
+                // Puxa o .thumbnail do episódio ou herda o .imagem da série pai
+                const linkExternoEp = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
                 
                 rowDiv.innerHTML = `
-                    <div class="item-thumb">
-                        <img src="${linkEp}" alt="Thumbnail" onerror="this.onerror=null; this.src='https://placeholder.com';">
-                    </div>
+                    <!-- Forçamos o link externo no background-image igual ao slider -->
+                    <div class="item-thumb square" style="background-image: url('${linkExternoEp}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serieName} - ${episode.nome}</h4>
                         <p class="item-subtitle-text icons-row">
@@ -5597,7 +5566,7 @@ async function openContributionsPage() {
                         </p>
                     </div>
                     <div class="item-actions-menu">
-                        <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver">
+                        <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5z"/></svg>
                         </button>
                         <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
@@ -5619,108 +5588,9 @@ async function openContributionsPage() {
     } catch (error) {
         console.error("Erro ao carregar contribuições:", error);
         contributionsList.innerHTML = '<p style="padding:15px;">Erro ao carregar contribuições.</p>';
+        showMessage("Erro ao carregar contribuições: " + error.message);
     }
 }
-
-function switchContribTab(tabName) {
-    currentContribTab = tabName;
-    document.getElementById('tabBtnSeries').classList.remove('active');
-    document.getElementById('tabBtnEpisodes').classList.remove('active');
-    if(tabName === 'series') {
-        document.getElementById('tabBtnSeries').classList.add('active');
-    } else {
-        document.getElementById('tabBtnEpisodes').classList.add('active');
-    }
-    applyContribFilters();
-}
-
-function applyContribFilters() {
-    const items = document.querySelectorAll('.contrib-item-type');
-    items.forEach(item => {
-        const matchesTab = (currentContribTab === 'series' && item.classList.contains('serie-item')) || 
-                           (currentContribTab === 'episodes' && item.classList.contains('episode-item'));
-        const matchesFilter = (currentContribFilter === 'all') || item.classList.contains(currentContribFilter);
-        item.style.display = (matchesTab && matchesFilter) ? 'flex' : 'none';
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const filterBtn = document.getElementById("filterContribBtn");
-    const bottomSheet = document.getElementById("filterBottomSheet");
-    const closeOverlay = document.getElementById("closeFilterOverlay");
-    const sheetItems = document.querySelectorAll(".sheet-item-btn");
-    const currentLabel = document.getElementById("currentFilterLabel");
-
-    if (filterBtn && bottomSheet && closeOverlay) {
-        filterBtn.addEventListener("click", () => bottomSheet.classList.add("open"));
-        const closeSheet = () => bottomSheet.classList.remove("open");
-        closeOverlay.addEventListener("click", closeSheet);
-
-        sheetItems.forEach(item => {
-            item.addEventListener("click", () => {
-                document.querySelector(".sheet-item-btn.active")?.classList.remove("active");
-                item.classList.add("active");
-                currentContribFilter = item.dataset.filter;
-                currentLabel.textContent = item.querySelector(".sheet-item-text").textContent;
-                applyContribFilters();
-                setTimeout(closeSheet, 120);
-            });
-        });
-    }
-});
-
-async function deleteContribution(serieId, type, itemId, itemName = null) {
-    if (!auth.currentUser) {
-        showMessage("Você precisa estar logado para excluir contribuições.");
-        return;
-    }
-    const isConfirmed = confirm(`Tem certeza que deseja excluir ${type === 'serie' ? 'a série' : 'o episódio'} "${itemName || itemId}"?`);
-    if (!isConfirmed) return;
-
-    try {
-        if (type === 'serie') {
-            const serieDoc = await db.collection("series").doc(serieId).get();
-            if (serieDoc.exists && serieDoc.data().postedBy === auth.currentUser.uid) {
-                const episodesSnapshot = await db.collection("series").doc(serieId).collection("episodios").get();
-                const deleteEpisodePromises = [];
-                episodesSnapshot.forEach(epDoc => {
-                    deleteEpisodePromises.push(db.collection("series").doc(serieId).collection("episodios").doc(epDoc.id).delete());
-                });
-                await Promise.all(deleteEpisodePromises);
-                await db.collection("series").doc(serieId).delete();
-                showMessage(`Série "${itemName}" excluída com sucesso!`);
-                openContributionsPage();
-            } else { 
-                showMessage("Você não tem permissão para excluir esta série."); 
-            }
-        } else if (type === 'episode') {
-            const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(itemId).get();
-            if (episodeDoc.exists && episodeDoc.data().postedBy === auth.currentUser.uid) {
-                await db.collection("series").doc(serieId).collection("episodios").doc(itemId).delete();
-                showMessage(`Episódio "${itemName}" excluído com sucesso!`);
-                openContributionsPage();
-            } else { 
-                showMessage("Você não tem permissão para excluir este episódio."); 
-            }
-        }
-    } catch (error) {
-        console.error("Erro ao excluir contribuição:", error);
-        showMessage("Erro ao excluir contribuição: " + error.message);
-    }
-}
-
-
-async function deleteContribution(serieId, type, itemId, itemName = null) {
-    if (!auth.currentUser) {
-        showMessage("Você precisa estar logado para excluir contribuições.");
-        return;
-    }
-    const isConfirmed = confirm(`Tem certeza que deseja excluir ${type === 'serie' ? 'a série' : 'o episódio'} "${itemName || itemId}"?`);
-    if (!isConfirmed) return;
-
-    try {
-        if (type === 'serie') {
-
 
     
     // Função para chavear as abas (Séries / Episódios)
@@ -5791,8 +5661,66 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Mantém os seus redirecionamentos nativos originais intactos
+async function viewContribution(serieId, type, episodeId = null) {
+    if (type === 'serie') {
+        openEpisodeListPage(serieId);
+    } else if (type === 'episode') {
+        const serieDoc = await db.collection("series").doc(serieId).get();
+        const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
+        if (serieDoc.exists && episodeDoc.exists) {
+            openVideoPlayer(
+                { id: serieDoc.id, ...serieDoc.data() },
+                { id: episodeDoc.id, ...episodeDoc.data() }
+            );
+        } else {
+            showMessage("Série ou episódio não encontrado.");
+        }
+    }
+    closeCurrentPage();
+}
 
 // Mantém as suas lógicas seguras e re-renderizações automáticas do Firebase intactas
+async function deleteContribution(serieId, type, itemId, itemName = null) {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para excluir contribuições.");
+        return;
+    }
+
+    const isConfirmed = confirm(`Tem certeza que deseja excluir ${type === 'serie' ? 'a série' : 'o episódio'} "${itemName || itemId}"?`);
+    if (!isConfirmed) return;
+
+    try {
+        if (type === 'serie') {
+            const serieDoc = await db.collection("series").doc(serieId).get();
+            if (serieDoc.exists && serieDoc.data().postedBy === auth.currentUser.uid) {
+                const episodesSnapshot = await db.collection("series").doc(serieId).collection("episodios").get();
+                const deleteEpisodePromises = [];
+                episodesSnapshot.forEach(epDoc => {
+                    deleteEpisodePromises.push(db.collection("series").doc(serieId).collection("episodios").doc(epDoc.id).delete());
+                });
+                await Promise.all(deleteEpisodePromises);
+                
+                await db.collection("series").doc(serieId).delete();
+                showMessage(`Série "${itemName}" excluída com sucesso!`);
+                openContributionsPage();
+            } else {
+                showMessage("Você não tem permissão para excluir esta série.");
+            }
+        } else if (type === 'episode') {
+            const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(itemId).get();
+            if (episodeDoc.exists && episodeDoc.data().postedBy === auth.currentUser.uid) {
+                await db.collection("series").doc(serieId).collection("episodios").doc(itemId).delete();
+                showMessage(`Episódio "${itemName}" excluído com sucesso!`);
+                openContributionsPage();
+            } else {
+                showMessage("Você não tem permissão para excluir este episódio.");
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao excluir contribuição:", error);
+        showMessage("Erro ao excluir contribuição: " + error.message);
+    }
+}
 
 
 

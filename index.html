@@ -8356,6 +8356,7 @@ function removeTagFromSelection(buttonElement, modalType = 'create') {
 }
 
 // Função para postar a Waifu no Firestore
+// Função para postar a Waifu no Firestore
 async function postWaifu() {
     if (!auth.currentUser) {
         showMessage("Você precisa estar logado para postar waifus.");
@@ -8389,16 +8390,19 @@ async function postWaifu() {
         const newWaifuRef = await db.collection("waifus").add({
             serieId: serieId,
             serieName: serieName,
-            imageUrls: imageUrls, // Agora é um array
+            imageUrls: imageUrls,
             title: title,
             postedBy: auth.currentUser.uid,
             userName: auth.currentUser.displayName || auth.currentUser.email,
+            // --- ADIÇÃO AQUI: SALVA A PHOTOURL DO USUÁRIO ---
+            authorPhotoURL: auth.currentUser.photoURL || 'https://via.placeholder.com/30?text=AP', // Usa a foto de perfil do usuário ou um placeholder
+            // ------------------------------------------------
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             likes: 0,
             usersWhoLiked: [],
-            saves: 0, // Novo campo para contagem de saves
-            usersWhoSaved: [], // Novo campo para usuários que salvaram
-            tags: [...new Set([...currentSelectedTags, serieName.toLowerCase().replace(/\s/g, '')])], // Adiciona tags e nome da série como tag
+            saves: 0,
+            usersWhoSaved: [],
+            tags: [...new Set([...currentSelectedTags, serieName.toLowerCase().replace(/\s/g, '')])],
         });
 
         // Atualiza a contagem de uso das tags ou cria novas tags
@@ -8430,6 +8434,7 @@ async function postWaifu() {
         showMessage("Erro ao postar waifu: " + error.message);
     }
 }
+
 
 // Função para carregar as waifus (com scroll infinito)
 async function loadWaifus() {

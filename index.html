@@ -5532,7 +5532,7 @@ async function openContributionsPage() {
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-                // 1. Renderiza as Séries Postadas (COM CAPA QUADRADA 1:1)
+                        // 1. Renderiza as Séries Postadas (COM CAPA QUADRADA 1:1)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
@@ -5550,6 +5550,7 @@ async function openContributionsPage() {
                         <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
                     </div>
                     <div class="item-actions-menu">
+                        <!-- O botão de visualizar a série abre a lista de episódios da série -->
                         <button class="action-icon-btn view-btn" onclick="viewContribution('${serie.id}', 'serie')" title="Ver">
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                         </button>
@@ -5593,7 +5594,8 @@ async function openContributionsPage() {
                         </p>
                     </div>
                     <div class="item-actions-menu">
-                        <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
+                        <!-- O botão de visualizar o episódio agora abre diretamente o player de vídeo -->
+                        <button class="action-icon-btn view-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5z"/></svg>
                         </button>
                         <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
@@ -5609,7 +5611,7 @@ async function openContributionsPage() {
         if (!hasContributions) {
             contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
         } else {
-            // Aplica os filtros e a visibilidade da aba correta após carregar todos os itens
+                        // Aplica os filtros e a visibilidade da aba correta após carregar todos os itens
             applyContribFilters();
         }
 
@@ -5619,6 +5621,8 @@ async function openContributionsPage() {
         showMessage("Erro ao carregar contribuições: " + error.message);
     }
 }
+
+
 
 
 
@@ -5692,10 +5696,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Mantém os seus redirecionamentos nativos originais intactos
+// Função para lidar com a visualização de contribuições (séries ou episódios)
 async function viewContribution(serieId, type, episodeId = null) {
     if (type === 'serie') {
+        // Abre a página da lista de episódios para a série
         openEpisodeListPage(serieId);
     } else if (type === 'episode') {
+        // Busca os dados da série e do episódio e abre o player de vídeo
         const serieDoc = await db.collection("series").doc(serieId).get();
         const episodeDoc = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).get();
         if (serieDoc.exists && episodeDoc.exists) {
@@ -5707,8 +5714,11 @@ async function viewContribution(serieId, type, episodeId = null) {
             showMessage("Série ou episódio não encontrado.");
         }
     }
-    closeCurrentPage();
+    // REMOVIDO: closeCurrentPage() não deve ser chamado aqui.
+    // As funções openEpisodeListPage e openVideoPlayer já cuidam da navegação
+    // e de adicionar as páginas à pilha corretamente.
 }
+
 
 // Mantém as suas lógicas seguras e re-renderizações automáticas do Firebase intactas
 async function deleteContribution(serieId, type, itemId, itemName = null) {

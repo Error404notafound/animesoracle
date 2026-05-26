@@ -4034,13 +4034,18 @@ body.light-mode .bottom-sheet-drag-handle {
         <div></div>
     </div>
     <div class="page-content">
-        <div class="profile-pic-upload-area">
-            <div class="profile-pic-preview" onclick="document.getElementById('settingsFileInput').click()">
+                <div class="profile-pic-upload-area">
+            <div class="profile-pic-preview"> <!-- Removido o onclick direto para o file input -->
                 <img id="settingsProfileImage" src="https://via.placeholder.com/120?text=AP" alt="Foto de Perfil">
             </div>
-            <input type="file" id="settingsFileInput" accept="image/*" onchange="uploadProfilePicture(event)" />
-            <label for="settingsFileInput" class="custom-file-upload">Alterar Foto</label>
+            <div class="form-group">
+                <label for="profilePhotoUrlInput">URL da Foto de Perfil:</label>
+                <input type="url" id="profilePhotoUrlInput" placeholder="Ex: https://exemplo.com/minhafoto.jpg">
+            </div>
+            <button class="btn-post" onclick="updateProfilePictureFromUrl()" style="margin-top: 10px;">Salvar Foto de Perfil</button>
+            <!-- Removido o input type="file" e o label associado -->
         </div>
+
 
         <div class="form-group">
             <label for="settingsDisplayName">Nome de Usuário:</label>
@@ -5113,43 +5118,60 @@ function updateWaifusButtonVisibility() {
     }
 }
 
-    async function uploadProfilePicture(event) {
-        const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
-
-        if (!auth.currentUser) {
-            showMessage("Você precisa estar logado para alterar a foto de perfil.");
-            return;
-        }
-
-        const storageRef = storage.ref();
-        const profilePicRef = storageRef.child(`profile_pictures/${auth.currentUser.uid}/${file.name}`);
-
-        try {
-            const snapshot = await profilePicRef.put(file);
-            const downloadURL = await snapshot.ref.getDownloadURL();
-console.log("URL de download da imagem de perfil:", downloadURL); // <--- ADICIONE ESTA LINHA
-
-
-            // Atualiza no Firebase Auth
-            await auth.currentUser.updateProfile({ photoURL: downloadURL });
-            // Atualiza no Firestore
-            await db.collection("users").doc(auth.currentUser.uid).update({ photoURL: downloadURL });
-
-            // Atualiza na UI
-            const profileImage = document.getElementById('profileImage');
-            if (profileImage) profileImage.src = downloadURL;
-            const settingsProfileImage = document.getElementById('settingsProfileImage');
-            if (settingsProfileImage) settingsProfileImage.src = downloadURL;
-
-            showMessage("Foto de perfil atualizada com sucesso!");
-        } catch (error) {
-            console.error("Erro ao fazer upload da foto de perfil:", error);
-            showMessage("Erro ao fazer upload da foto: " + error.message);
-        }
+    // Função para atualizar a foto de perfil a partir de uma URL
+async function updateProfilePictureFromUrl() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para alterar a foto de perfil.");
+        return;
     }
+
+    const photoUrlInput = document.getElementById('profilePhotoUrlInput');
+    if (!photoUrlInput) {
+        console.error("Erro: Elemento 'profilePhotoUrlInput' não encontrado no DOM.");
+        return;
+    }
+
+    const newPhotoUrl = photoUrlInput.value.trim();
+
+    if (!newPhotoUrl) {
+        // Se o campo estiver vazio, podemos resetar a foto para o placeholder padrão
+        // ou pedir para o usuário preencher. Por agora, vamos exigir uma URL.
+        showMessage("Por favor, insira uma URL válida para a foto de perfil.");
+        return;
+    }
+
+    // Validação básica de URL
+    try {
+        new URL(newPhotoUrl); // Tenta criar um objeto URL para validar o formato
+    } catch (e) {
+        showMessage("A URL fornecida não é válida. Verifique o formato.");
+        return;
+    }
+
+    try {
+        // Atualiza a foto de perfil no Firebase Authentication
+        await auth.currentUser.updateProfile({ photoURL: newPhotoUrl });
+        // Atualiza a foto de perfil no Firestore (na coleção 'users')
+        await db.collection("users").doc(auth.currentUser.uid).update({ photoURL: newPhotoUrl });
+
+        // Atualiza o objeto currentUserData localmente
+        if (currentUserData) {
+            currentUserData.photoURL = newPhotoUrl;
+        }
+
+        // Atualiza a imagem exibida na UI (no menu do usuário e na página de configurações)
+        const profileImage = document.getElementById('profileImage');
+        if (profileImage) profileImage.src = newPhotoUrl;
+        const settingsProfileImage = document.getElementById('settingsProfileImage');
+        if (settingsProfileImage) settingsProfileImage.src = newPhotoUrl;
+
+        showMessage("Foto de perfil atualizada com sucesso!");
+    } catch (error) {
+        console.error("Erro ao atualizar foto de perfil via URL:", error);
+        showMessage("Erro ao atualizar foto de perfil: " + error.message);
+    }
+}
+
 
         // Função para alternar o tema (noite/dia)
     async function toggleModoNoite() {

@@ -5581,13 +5581,6 @@ async function openContributionsPage() {
         }
 
         // ... (código existente) ...
-
-        if (!hasContributions) {
-            contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
-        } else {
-            applyContribFilters();
-        }
-
     } catch (error) {
         console.error("Erro ao carregar contribuições:", error);
         contributionsList.innerHTML = '<p style="padding:15px;">Erro ao carregar contribuições.</p>';

@@ -5245,7 +5245,6 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     }
 
     // 3. CAÇA ÀS BRUTAS: FECHA QUALQUER PÁGINA, MODAL OU CONTAINER QUE ESTEJA ATIVO
-    // Esta linha procura por QUALQUER elemento que use as classes clássicas de abertura do seu tema
     const activeElements = document.querySelectorAll('.active, .open, .show, .modal-page, .page-container');
     activeElements.forEach(function(element) {
         // Ignora a estrutura principal do site para não quebrar o layout da home
@@ -5259,15 +5258,23 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
         }
     });
 
-    // 4. GARANTE QUE A PÁGINA PRINCIPAL FIQUE VISÍVEL
-    const homePage = document.getElementById('homePage') || document.querySelector('.main-content');
-    if (homePage) {
-        homePage.style.display = 'block';
+    // 4. GARANTE QUE A PÁGINA PRINCIPAL FIQUE VISÍVEL E RECARREGA O CONTEÚDO
+    const mainPage = document.querySelector('main'); 
+    if (mainPage) {
+        // Assegura que o elemento <main> esteja visível.
+        // O `renderHomePageContent()` já cuidará de chamar `openPage('main')` e preencher o conteúdo.
+        mainPage.style.display = 'block'; 
+        
+        // ***************************************************************
+        // AQUI ESTÁ A CORREÇÃO PRINCIPAL: CHAME A FUNÇÃO DE RENDERIZAÇÃO
+        renderHomePageContent();
+        // ***************************************************************
     }
 
     // Restaura o scroll do site
     document.body.style.removeProperty('overflow');
 });
+
 
 
 

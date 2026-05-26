@@ -6245,7 +6245,8 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const rating = serie.mediaAvaliacao > 0 ? `<div class="rating-badge">${serie.mediaAvaliacao.toFixed(1)} ⭐</div>` : '';
 
         card.innerHTML = `
-            <img src="${serie.capa}" alt="${serie.nome}">
+            <img src="${serie.capa || serie.imagem || serie.urlImagem || 'https://unsplash.com'}"
+>
             ${rating}
         `;
         wrapper.appendChild(card);

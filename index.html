@@ -5490,6 +5490,9 @@ async function openContributionsPage() {
     }
     contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
 
+    async function openContributionsPage() {
+    // ... (código existente) ...
+
     try {
         const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
             db.collection("series")
@@ -5509,14 +5512,13 @@ async function openContributionsPage() {
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
+                // CORREÇÃO AQUI: Usar 'serie.capa'
+                const linkExternoCapa = serie.capa && serie.capa.trim() !== "" ? serie.capa : 'https://placeholder.com/60x106?text=SemCapa';
+                
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
                 
-                // Puxa a string da URL do campo correto do seu banco (.imagem)
-                const linkExternoCapa = serie.imagem && serie.imagem.trim() !== "" ? serie.imagem : 'https://placeholder.com';
-                
                 rowDiv.innerHTML = `
-                    <!-- Forçamos o link externo no background-image igual ao slider -->
                     <div class="item-thumb vertical" style="background-image: url('${linkExternoCapa}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serie.nome}</h4>
@@ -5545,14 +5547,13 @@ async function openContributionsPage() {
                 const serieDoc = await db.collection('series').doc(serieId).get();
                 const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
                 
-                // Puxa o .thumbnail do episódio ou herda o .imagem da série pai
-                const linkExternoEp = episode.thumbnail || (serieDoc.exists ? serieDoc.data().imagem : null) || 'https://placeholder.com';
+                // CORREÇÃO AQUI: Usar 'episode.capa' e 'serieDoc.data().capa'
+                const linkExternoEp = episode.capa || (serieDoc.exists ? serieDoc.data().capa : null) || 'https://placeholder.com/64x64?text=SemCapa';
 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
                 
                 rowDiv.innerHTML = `
-                    <!-- Forçamos o link externo no background-image igual ao slider -->
                     <div class="item-thumb square" style="background-image: url('${linkExternoEp}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serieName} - ${episode.nome}</h4>
@@ -5578,6 +5579,8 @@ async function openContributionsPage() {
                 hasContributions = true;
             }
         }
+
+        // ... (código existente) ...
 
         if (!hasContributions) {
             contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';

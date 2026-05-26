@@ -5476,7 +5476,7 @@ let currentContribTab = 'series';
 let currentContribFilter = 'all';
 
 // Função definitiva com injeção de imagem via Background (Idêntico ao Hero Slider)
-async function openContributionsPage() {
+        async function openContributionsPage() {
     if (!auth.currentUser || !currentUserData) {
         showMessage("Você precisa estar logado para ver suas contribuições.");
         openModal('authModal');
@@ -5489,8 +5489,6 @@ async function openContributionsPage() {
         return;
     }
     contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
-
-    // ... (código existente) ...
 
     try {
         const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
@@ -5507,18 +5505,18 @@ async function openContributionsPage() {
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-        // 1. Renderiza as Séries Postadas (Aba Séries - Proporção Vertical 9:16)
+        // 1. Renderiza as Séries Postadas (Aba Séries - AGORA COM PROPORÇÃO QUADRADA 1:1)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
-                // CORREÇÃO AQUI: Usar 'serie.capa'
-                const linkExternoCapa = serie.capa && serie.capa.trim() !== "" ? serie.capa : 'https://placeholder.com/60x106?text=SemCapa';
+                // Usando 'serie.capa' e ajustando a classe para 'square'
+                const linkExternoCapa = serie.capa && serie.capa.trim() !== "" ? serie.capa : 'https://via.placeholder.com/64x64?text=SemCapa';
                 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
                 
                 rowDiv.innerHTML = `
-                    <div class="item-thumb vertical" style="background-image: url('${linkExternoCapa}');"></div>
+                    <div class="item-thumb square" style="background-image: url('${linkExternoCapa}');"></div>
                     <div class="item-info-block">
                         <h4 class="item-title-text">${serie.nome}</h4>
                         <p class="item-subtitle-text">Série • Criada em: ${serie.dataCriacao ? new Date(serie.dataCriacao.toDate()).toLocaleDateString('pt-BR') : 'Recente'}</p>
@@ -5537,7 +5535,7 @@ async function openContributionsPage() {
             });
         }
 
-        // 2. Renderiza os Episódios Postados (Aba Episódios - Proporção Quadrada 1:1)
+        // 2. Renderiza os Episódios Postados (Aba Episódios - JÁ ESTÁ COM PROPORÇÃO QUADRADA 1:1)
         if (!myEpisodesSnapshot.empty) {
             for (const doc of myEpisodesSnapshot.docs) {
                 const episode = { id: doc.id, ...doc.data() };
@@ -5546,8 +5544,8 @@ async function openContributionsPage() {
                 const serieDoc = await db.collection('series').doc(serieId).get();
                 const serieName = serieDoc.exists ? serieDoc.data().nome : 'Série Desconhecida';
                 
-                // CORREÇÃO AQUI: Usar 'episode.capa' e 'serieDoc.data().capa'
-                const linkExternoEp = episode.capa || (serieDoc.exists ? serieDoc.data().capa : null) || 'https://placeholder.com/64x64?text=SemCapa';
+                // Usando 'episode.capa' e 'serieDoc.data().capa'. A classe 'square' já está correta.
+                const linkExternoEp = episode.capa || (serieDoc.exists ? serieDoc.data().capa : null) || 'https://via.placeholder.com/64x64?text=SemCapa';
 
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
@@ -5567,7 +5565,7 @@ async function openContributionsPage() {
                     </div>
                     <div class="item-actions-menu">
                         <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/></svg>
                         </button>
                         <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
                             <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z"/></svg>
@@ -5579,8 +5577,7 @@ async function openContributionsPage() {
             }
         }
 
-        // ... (código existente) ...
-    if (!hasContributions) {
+        if (!hasContributions) {
             contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
         } else {
             applyContribFilters();
@@ -5592,6 +5589,7 @@ async function openContributionsPage() {
         showMessage("Erro ao carregar contribuições: " + error.message);
     }
 }
+
 
     
     // Função para chavear as abas (Séries / Episódios)

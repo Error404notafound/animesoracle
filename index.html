@@ -9655,6 +9655,142 @@ document.getElementById('waifuSearchBtn').addEventListener('click', () => {
     loadWaifus();
 });
 document.getElementById('waifuRandomBtn').addEventListener('click', searchRandomWaifu);
+/* ==========================================================================
+   ⚙️ SISTEMA DINÂMICO DO CENTRO DE EVENTOS (ABAS, BANNER E TROCA DE GRIDS)
+   ========================================================================== */
+
+// Banco de dados fake/local dos temas (Substitua depois pelos dados reais do Firebase se quiser)
+const dadosDosEventos = {
+    diario: {
+        titulo: 'O tema de hoje é "Loucura da Cerveja"',
+        descricao: 'Crie um personagem ou uma cena exagerada com cerveja, como um cervejeiro maluco ou uma taverna cheia de espuma.'
+    },
+    realista: {
+        titulo: 'O tema de hoje é "Salão de Cabeleireiro no Verão"',
+        descricao: 'Crie uma cena em um salão de cabeleireiro no verão, como um corte moderno ou um novo penteado inesperado.'
+    },
+    ip: {
+        titulo: 'O tema de hoje é "Guerra na Mesa"',
+        descricao: 'Crie uma batalha em miniatura acontecendo sobre uma mesa utilizando itens de papelaria, brinquedos ou lanches.'
+    },
+    criatividade: {
+        titulo: '🏆 Concurso Geral de Criatividade',
+        descricao: 'Aba livre! Envie suas melhores criações conceituais e acumule votos da comunidade para ganhar poder computacional.'
+    }
+};
+
+// Variável para rastrear qual aba está ativa no momento do envio
+let abaEventoAtiva = 'diario';
+
+/**
+ * Função responsável por alternar as abas do SeaArt e atualizar o Banner dinamicamente
+ */
+function alterarAbaEvento(abaSelecionada) {
+    // 1. Atualiza a variável global da aba ativa
+    abaEventoAtiva = abaSelecionada;
+
+    // 2. Remove a classe 'active' de todos os botões de abas do Centro de Eventos
+    const botoes = document.querySelectorAll('.eventos-tab-btn');
+    botoes.forEach(btn => btn.classList.remove('active'));
+
+    // 3. Adiciona a classe 'active' apenas no botão que foi clicado
+    // Descobre qual botão foi clicado usando o atributo onclick dele
+    const botaoClicado = Array.from(botoes).find(btn => btn.getAttribute('onclick').includes(abaSelecionada));
+    if (botaoClicado) {
+        botaoClicado.classList.add('active');
+    }
+
+    // 4. Altera o texto do Banner dinamicamente com base no objeto de dados lá de cima
+    const infoEvento = dadosDosEventos[abaSelecionada];
+    if (infoEvento) {
+        document.getElementById('evento-titulo-dinamico').innerText = infoEvento.titulo;
+        document.getElementById('evento-desc-dinamico').innerText = infoEvento.descricao;
+    }
+
+    // 5. Atualiza o Grid de Fotos correspondente à aba
+    renderizarFotosDoEvento();
+}
+
+/**
+ * Função simulada para renderizar os cards de foto estilo Waifus dentro do Grid
+ * (Puxa os dados salvos localmente no localStorage)
+ */
+function renderizarFotosDoEvento() {
+    const grid = document.getElementById('eventosGridConteudo');
+    if (!grid) return;
+
+    // Limpa o grid atual para carregar os dados da nova aba
+    grid.innerHTML = '';
+
+    // Recupera a lista de envios do localStorage (ou cria uma vazia se não existir)
+    const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
+
+    // Filtra os envios para mostrar apenas os que pertencem à aba selecionada
+    const enviosFiltrados = todosEnvios.filter(envio => envio.aba === abaEventoAtiva);
+
+    if (enviosFiltrados.length === 0) {
+        grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: #666; padding: 40px 10px; font-size: 0.9em;">
+                            Nenhuma publicação enviada para este tema ainda. Seja o primeiro!
+                          </div>`;
+        return;
+    }
+
+    // Renderiza cada card utilizando o comportamento visual de layout da página Waifus
+    enviosFiltrados.forEach(item => {
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = 'waifu-card-wrapper'; // Reutilizando sua classe de animação do PDF
+        
+        cardWrapper.innerHTML = `
+            <div class="waifu-card" style="aspect-ratio: 9/16;">
+                <img src="${item.url}" alt="Envio de usuário" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div class="waifu-card-details-bottom" style="padding: 8px;">
+                <div class="waifu-card-author">
+                    <span style="font-size: 0.75em; color: #aaa;">Enviado por: Anônimo</span>
+                </div>
+            </div>
+        `;
+        grid.appendChild(cardWrapper);
+    });
+}
+
+/**
+ * Função disparada pelo botão do Modal para salvar a URL digitada pelo usuário
+ */
+function salvarEnvioEvento() {
+    const inputUrl = document.getElementById('inputUrlEvento');
+    const urlDigitada = inputUrl.value.trim();
+
+    // Validação básica se o campo está vazio ou não possui um formato HTTP básico
+    if (!urlDigitada || !urlDigitada.startsWith('http')) {
+        alert('Por favor, insira uma URL de imagem válida (começando com http:// ou https://)');
+        return;
+    }
+
+    // Cria o objeto do novo envio acoplado à aba atual
+    const novoEnvio = {
+        id: Date.now(),
+        url: urlDigitada,
+        aba: abaEventoAtiva,
+        data: new Date().toISOString()
+    };
+
+    // Salva no LocalStorage para persistir os dados mesmo recarregando a página
+    const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
+    todosEnvios.push(novoEnvio);
+    localStorage.setItem('oracle_envios_eventos', JSON.stringify(todosEnvios));
+
+    // Limpa o campo do input, fecha o modal e recarrega o grid
+    inputUrl.value = '';
+    closeModal('modalEnvioEvento');
+    renderizarFotosDoEvento();
+}
+
+// Inicializador: Garante que ao abrir o site pela primeira vez, o grid da primeira aba seja carregado
+document.addEventListener('DOMContentLoaded', () => {
+    // Adiciona uma chamada segura caso a função openPage padrão precise carregar dados extras
+    renderizarFotosDoEvento();
+});
 
 
 </script>

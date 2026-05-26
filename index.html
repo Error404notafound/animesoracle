@@ -2363,6 +2363,102 @@ body.light-mode .waifu-card-actions {
     color: var(--text-secondary);
     padding: 20px;
 }
+/* --- ESTILOS DO CENTRO DE EVENTOS (INSPIRADO NO SEAART & WAIFUS) --- */
+#eventosPage .modal-page-content {
+    padding: 20px 8px;
+}
+
+/* Menu de Abas Superior do SeaArt */
+.eventos-tabs {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #0a0a0a;
+    padding: 10px 15px;
+    border-bottom: 1px solid #222;
+    gap: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+.eventos-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+.eventos-tabs::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+.eventos-tab-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 4px;
+    position: relative;
+    transition: color 0.2s;
+}
+.eventos-tab-btn.active {
+    color: #fff;
+}
+.eventos-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #ff334b; /* Tracinho vermelho clássico do SeaArt */
+    border-radius: 2px;
+}
+
+/* Banner Principal do Evento */
+.eventos-banner {
+    background: linear-gradient(135deg, #1a0033 0%, #000000 100%);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 8px;
+    text-align: center;
+    position: relative;
+}
+.eventos-banner h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3em;
+    color: #fff;
+}
+.eventos-banner p {
+    margin: 0 0 15px 0;
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+/* Botão Laranja Gradiente do SeaArt */
+.btn-enviar-evento {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 20px;
+    background: linear-gradient(90deg, #b0279a 0%, #ffa500 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.2);
+    transition: transform 0.2s;
+}
+.btn-enviar-evento:hover {
+    transform: scale(1.02);
+}
+
+/* Container do Grid herdado das Waifus */
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Colunas idêntico ao Waifus */
+    gap: 8px;
+    padding: 0 8px;
+    margin-top: 15px;
+}
 
 /* FIM DOS NOVOS ESTILOS */
 
@@ -3627,6 +3723,56 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="cancel-btn" onclick="closeModal('editWaifuPostModal')">Cancelar</button>
     </div>
 </div>
+<!-- PÁGINA PRINCIPAL: CENTRO DE EVENTOS -->
+<div id="eventosPage" class="modal-page">
+    <!-- Cabeçalho da Página -->
+    <div class="modal-page-header">
+        <button class="icon-btn" onclick="closePage('eventosPage')">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <div class="title">Centro de Eventos</div>
+        <div style="width: 34px;"></div> <!-- Gambiarra para centralizar o título perfeitamente -->
+    </div>
+
+    <!-- Navegação de Abas do SeaArt -->
+    <div class="eventos-tabs">
+        <button class="eventos-tab-btn active" onclick="alterarAbaEvento('diario')">Desafio diário</button>
+        <button class="eventos-tab-btn" onclick="alterarAbaEvento('realista')">Desafio realista</button>
+        <button class="eventos-tab-btn" onclick="alterarAbaEvento('ip')">Desafio IP</button>
+        <button class="eventos-tab-btn" onclick="alterarAbaEvento('criatividade')">Criatividade</button>
+    </div>
+
+    <!-- Conteúdo da Página -->
+    <div class="modal-page-content">
+        <!-- Banner Interativo com o Botão de URL Laranja -->
+        <div class="eventos-banner">
+            <h3 id="evento-titulo-dinamico">O tema de hoje é "Loucura da Cerveja"</h3>
+            <p id="evento-desc-dinamico">Crie uma cena exagerada baseada no tema atual e compartilhe com a comunidade.</p>
+            <button class="btn-enviar-evento" onclick="openModal('modalEnvioEvento')">
+                🚀 Enviar URL da Foto
+            </button>
+        </div>
+
+        <!-- Grid de Exibição Dinâmico (Estilo Waifus) -->
+        <div id="eventosGridConteudo" class="eventos-grid">
+            <!-- Os cards injetados pelo Firebase/JS vão aparecer aqui dentro -->
+        </div>
+    </div>
+</div>
+
+<!-- MODAL POPUP PARA ANEXAR LINK DA URL -->
+<div id="modalEnvioEvento" class="modal">
+    <div class="modal-card">
+        <h3 style="color: var(--primary); margin-bottom: 15px; text-align: center;">Anexar Imagem por URL</h3>
+        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">Insira abaixo o link direto da imagem (ex: links do Imgur, Pinterest, etc.)</p>
+        
+        <input type="text" id="inputUrlEvento" placeholder="https://exemplo.com" class="rounded-input">
+        
+        <button class="btn-post rounded-btn" onclick="salvarEnvioEvento()">Publicar no Evento</button>
+        <button class="cancel-btn" onclick="closeModal('modalEnvioEvento')">Cancelar</button>
+    </div>
+</div>
+
 <!-- Página para Visualização de Episódios da Série -->
 <div id="episodeListPage" class="modal-page">
     <div class="modal-page-header">
@@ -3888,6 +4034,14 @@ body.light-mode .bottom-sheet-drag-handle {
 </a>
 
 
+<!-- NOVO BOTÃO: CENTRO DE EVENTOS -->
+<a class="userMenu-nav-item" onclick="openPage('eventosPage')">
+    <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: currentColor; margin-right: 15px;">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4zm2 0c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2z"/>
+        <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/>
+    </svg>
+    <span>Centro de Eventos</span>
+</a>
 
 
 

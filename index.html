@@ -4002,12 +4002,29 @@ body.light-mode .bottom-sheet-drag-handle {
         <div></div>
     </div>
     <div class="page-content">
-        <div id="contributionsList">
+        <!-- NOVOS BOTÕES DE ABAS AQUI -->
+        <div class="contributions-tabs">
+            <button id="tabBtnSeries" class="tab-btn active" onclick="switchContribTab('series')">Séries Postadas</button>
+            <button id="tabBtnEpisodes" class="tab-btn" onclick="switchContribTab('episodes')">Episódios Postados</button>
+        </div>
+
+        <!-- O restante do seu conteúdo da página de contribuições vem abaixo -->
+        <!-- Gatilho do Filtro (Print 2) -->
+        <div class="filter-trigger-wrapper">
+            <button id="filterContribBtn" class="filter-select-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                <span id="currentFilterLabel">Todos</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5H7z"/></svg>
+            </button>
+        </div>
+
+        <div id="contributionsList" class="contributions-list">
             <!-- Contribuições do usuário (séries e episódios postados) serão carregadas aqui -->
             <p>Você não fez contribuições ainda.</p>
         </div>
     </div>
 </div>
+
 
 <!-- Página de Configurações -->
 <div id="settingsPage" class="content-page">
@@ -5472,11 +5489,12 @@ document.getElementById('navHomeBtn').addEventListener('click', function(event) 
     }
 
     // Variáveis globais de controle da interface de contribuição
-let currentContribTab = 'series';
+let currentContribTab = 'series'; // Já está inicializada como 'series'
 let currentContribFilter = 'all';
 
-// Função definitiva com injeção de imagem via Background (Idêntico ao Hero Slider)
-        async function openContributionsPage() {
+// ... (seus estilos e outras funções existentes) ...
+
+async function openContributionsPage() {
     if (!auth.currentUser || !currentUserData) {
         showMessage("Você precisa estar logado para ver suas contribuições.");
         openModal('authModal');
@@ -5489,6 +5507,15 @@ let currentContribFilter = 'all';
         return;
     }
     contributionsList.innerHTML = '<p style="padding:15px;">Carregando suas contribuições...</p>';
+
+    // Garante que a aba de Séries esteja ativa por padrão ao abrir a página
+    const tabBtnSeries = document.getElementById('tabBtnSeries');
+    const tabBtnEpisodes = document.getElementById('tabBtnEpisodes');
+    if (tabBtnSeries && tabBtnEpisodes) {
+        tabBtnSeries.classList.add('active'); // Ativa o botão de séries
+        tabBtnEpisodes.classList.remove('active'); // Desativa o botão de episódios
+        currentContribTab = 'series'; // Define a aba atual como séries
+    }
 
     try {
         const [mySeriesSnapshot, myEpisodesSnapshot] = await Promise.all([
@@ -5505,7 +5532,7 @@ let currentContribFilter = 'all';
         contributionsList.innerHTML = '';
         let hasContributions = false;
 
-        // 1. Renderiza as Séries Postadas (Aba Séries - AGORA COM PROPORÇÃO QUADRADA 1:1)
+                // 1. Renderiza as Séries Postadas (COM CAPA QUADRADA 1:1)
         if (!mySeriesSnapshot.empty) {
             mySeriesSnapshot.forEach(doc => {
                 const serie = { id: doc.id, ...doc.data() };
@@ -5513,7 +5540,8 @@ let currentContribFilter = 'all';
                 const linkExternoCapa = serie.capa && serie.capa.trim() !== "" ? serie.capa : 'https://via.placeholder.com/64x64?text=SemCapa';
                 
                 const rowDiv = document.createElement('div');
-                rowDiv.className = 'contribution-item-row contrib-item-type serie-item';
+                // Adiciona a classe 'serie-item' para ser filtrada pela função applyContribFilters
+                rowDiv.className = 'contribution-item-row contrib-item-type serie-item'; 
                 
                 rowDiv.innerHTML = `
                     <div class="item-thumb square" style="background-image: url('${linkExternoCapa}');"></div>
@@ -5548,7 +5576,8 @@ let currentContribFilter = 'all';
                 const linkExternoEp = episode.capa || (serieDoc.exists ? serieDoc.data().capa : null) || 'https://via.placeholder.com/64x64?text=SemCapa';
 
                 const rowDiv = document.createElement('div');
-                rowDiv.className = 'contribution-item-row contrib-item-type episode-item';
+                // Adiciona a classe 'episode-item' para ser filtrada pela função applyContribFilters
+                rowDiv.className = 'contribution-item-row contrib-item-type episode-item'; 
                 
                 rowDiv.innerHTML = `
                     <div class="item-thumb square" style="background-image: url('${linkExternoEp}');"></div>
@@ -5565,7 +5594,7 @@ let currentContribFilter = 'all';
                     </div>
                     <div class="item-actions-menu">
                         <button class="action-icon-btn options-menu-btn" onclick="viewContribution('${serieId}', 'episode', '${episode.id}')" title="Ver no Player">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5z"/></svg>
                         </button>
                         <button class="action-icon-btn delete-btn" onclick="deleteContribution('${serieId}', 'episode', '${episode.id}', '${episode.nome}')" title="Excluir">
                             <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z"/></svg>
@@ -5580,6 +5609,7 @@ let currentContribFilter = 'all';
         if (!hasContributions) {
             contributionsList.innerHTML = '<p style="padding:15px;">Você não fez contribuições ainda.</p>';
         } else {
+            // Aplica os filtros e a visibilidade da aba correta após carregar todos os itens
             applyContribFilters();
         }
 
@@ -5589,6 +5619,8 @@ let currentContribFilter = 'all';
         showMessage("Erro ao carregar contribuições: " + error.message);
     }
 }
+
+
 
 
     

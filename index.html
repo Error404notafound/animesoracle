@@ -2365,8 +2365,11 @@ body.light-mode .waifu-card-actions {
 }
 /* --- ESTILOS DO CENTRO DE EVENTOS (INSPIRADO NO SEAART & WAIFUS) --- */
 #eventosPage .modal-page-content {
-    padding: 20px 0px; /* Ajustado para preenchimento total nas laterais */
+    padding: 20px 0px; 
+    /* ADICIONE OU ALTERE A LINHA ABAIXO */
+    padding-top: 65px; /* Abre espaço exato para a barra de abas que fixamos acima */
 }
+
 
 /* Menu de Abas Superior do SeaArt */
 .eventos-tabs {
@@ -2378,7 +2381,16 @@ body.light-mode .waifu-card-actions {
     border-bottom: 1px solid #1a1a1a;
     gap: 15px;
     -webkit-overflow-scrolling: touch;
+
+    /* ADICIONE AS LINHAS ABAIXO PARA FIXAR ABAIXO DO HEADER */
+    position: fixed;
+    top: 60px; /* Altura exata onde termina o cabeçalho preto */
+    left: 0;
+    width: 100%;
+    z-index: 9998; /* Fica abaixo do header (9999), mas acima do conteúdo */
+    box-sizing: border-box;
 }
+
 .eventos-tabs::-webkit-scrollbar {
     display: none;
 }

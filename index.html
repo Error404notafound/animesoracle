@@ -3563,6 +3563,122 @@ body.light-mode .bottom-sheet-drag-handle {
 .animate-slide-up {
     animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+/* --- DESIGN GAVETA SUPERIOR SEAART --- */
+#userInfoDisplay {
+    background: #0f0f0f;
+    padding: 16px;
+    border-bottom: 1px solid #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.user-header-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    width: 100%;
+}
+.profile-pic-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--primary);
+    background-color: #222;
+}
+.profile-pic-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.user-text-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+.user-name-placeholder {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #ffffff;
+}
+.status-badge-mini {
+    background-color: var(--primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: bold;
+}
+.vip-reward-card {
+    background: linear-gradient(135deg, #252525 0%, #121212 100%);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.vip-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.vip-title {
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+.vip-action-btn {
+    background: linear-gradient(90deg, #ffe082 0%, #ffb300 100%);
+    color: #3e2723;
+    border: none;
+    padding: 5px 14px;
+    font-size: 0.75em;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.vip-subtitle {
+    margin: 0;
+    font-size: 0.75em;
+    color: #8c8c8c;
+    text-align: left;
+}
+.resource-bar-container {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+.resource-item {
+    flex: 1;
+    background: #161616;
+    border: 1px solid #282828;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.icon-resource {
+    width: 18px;
+    height: 18px;
+}
+.icon-coin { color: #a855f7; } /* Cor Roxa */
+.icon-energy { color: #eab308; } /* Cor Amarela do Raio */
+.add-resource-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+}
+.add-resource-btn:hover { color: #fff; }
 
 
     </style>
@@ -4454,12 +4570,49 @@ body.light-mode .bottom-sheet-drag-handle {
 <!-- Menu do Usuário (Sidebar - Nova Estrutura) -->
 <div id="userMenu" class="modal">
     <div id="userMenu-content">
-        <button class="userMenu-close-btn" onclick="toggleUserMenu()">&times;</button>
+        
+        <!-- INÍCIO DO NOVO TOPO ESTILO SEAART -->
         <div id="userInfoDisplay">
-            <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
-            <!-- Ex: Foto, Nome, Email, Status -->
+            <!-- Cabeçalho dinâmico e seguro do Usuário (Sem dados fixos) -->
+            <div class="user-header-summary">
+                <div class="profile-pic-preview">
+                    <img id="menuProfilePic" src="https://placeholder.com" alt="Foto de Perfil">
+                </div>
+                <div class="user-text-meta">
+                    <span id="menuUserName" class="user-name-placeholder">Carregando...</span>
+                    <span id="menuUserBadge" class="status-badge-mini">Novo</span>
+                </div>
+                <!-- Botão de fechar integrado perfeitamente ao topo -->
+                <button class="userMenu-close-btn" onclick="toggleUserMenu()">×</button>
+            </div>
+
+            <!-- Banner VIP do SeaArt -->
+            <div class="vip-reward-card">
+                <div class="vip-card-header">
+                    <span class="vip-title">AnimesOracle · VIP</span>
+                    <button class="vip-action-btn">Ativar</button>
+                </div>
+                <p class="vip-subtitle">Oferta exclusiva para membros</p>
+            </div>
+
+            <!-- Contador de Recursos (Moedas e Raios) -->
+            <div class="resource-bar-container">
+                <div class="resource-item">
+                    <svg class="icon-resource icon-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v12M15 9H10.5a2.5 2.5 0 000 5H14a2.5 2.5 0 010 5H9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span id="userCoinsCount">0.0</span>
+                    <button class="add-resource-btn">+</button>
+                </div>
+                <div class="resource-item">
+                    <svg class="icon-resource icon-energy" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span id="userEnergyCount">100</span>
+                    <button class="add-resource-btn">+</button>
+                </div>
+            </div>
         </div>
+        <!-- FIM DO NOVO TOPO ESTILO SEAART -->
+
         <div class="userMenu-nav">
+
     <!-- COLA ESTE BLOCO ABAIXO DA LINHA ACIMA -->
     <a class="userMenu-nav-item" id="navHomeBtn">
         <svg viewBox="0 0 24 24">

@@ -4491,21 +4491,19 @@ body.light-mode .bottom-sheet-drag-handle {
 
 <!-- NOVO BOTÃO: CENTRO DE EVENTOS -->
 <a class="userMenu-nav-item" onclick="openPage('eventosPage')">
-    <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; margin-right: 15px;">
-        <!-- Horizonte de Eventos (O círculo central vazado) -->
-        <circle cx="12" cy="12" r="3.5" />
+    <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; margin-right: 15px;">
+        <!-- Arco de Cima do Círculo -->
+        <path d="M 5 12 A 7 7 0 0 1 19 12" />
         
-        <!-- Arco Gravitacional Superior -->
-        <path d="M 6.5 10 C 7.5 7.5, 16.5 7.5, 17.5 10" />
+        <!-- Arco de Baixo do Círculo -->
+        <path d="M 5 12 A 7 7 0 0 0 19 12" />
         
-        <!-- Arco Gravitacional Inferior -->
-        <path d="M 6.5 14 C 7.5 16.5, 16.5 16.5, 17.5 14" />
-        
-        <!-- Linha Diagonal Principal (O Disco de Acreção Inclinado) -->
-        <line x1="2" y1="14.5" x2="22" y2="9.5" />
+        <!-- A Linha Reta Horizontal Perfeita Cortando o Meio -->
+        <line x1="2" y1="12" x2="22" y2="12" />
     </svg>
     <span>Centro de Eventos</span>
 </a>
+
 
 
 

@@ -855,8 +855,29 @@
             top: 10px;
             z-index: 5001;
         }
+        #userInfoDisplay {
+            text-align: center;
+            padding: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
         #userInfoDisplay .profile-pic-upload-area {
             margin-bottom: 10px;
+        }
+        #userInfoDisplay .profile-pic-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            background-color: var(--secondary-bg);
+        }
+        #userInfoDisplay .profile-pic-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         #userInfoDisplay input[type="file"] {
             display: none;
@@ -880,6 +901,11 @@
             font-size: 1.1em;
             margin-top: 10px;
             color: var(--text);
+        }
+        #userInfoDisplay .user-email {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
         }
         .userMenu-nav {
             flex-grow: 1; /* Ocupa espaço restante */
@@ -3537,255 +3563,6 @@ body.light-mode .bottom-sheet-drag-handle {
 .animate-slide-up {
     animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
-/* --- DESIGN GAVETA SUPERIOR SEAART --- */
-#userInfoDisplay {
-    background: #0f0f0f;
-    padding: 16px;
-    border-bottom: 1px solid #1a1a1a;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-.user-header-summary {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    width: 100%;
-}
-.profile-pic-preview {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid var(--primary);
-    background-color: #222;
-}
-.profile-pic-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.user-text-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-}
-.user-name-placeholder {
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #ffffff;
-}
-.status-badge-mini {
-    background-color: var(--primary);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75em;
-    font-weight: bold;
-}
-.vip-reward-card {
-    background: linear-gradient(135deg, #252525 0%, #121212 100%);
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 12px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.vip-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-.vip-title {
-    font-weight: bold;
-    font-size: 0.9em;
-    color: #fff;
-    letter-spacing: 0.3px;
-}
-.vip-action-btn {
-    background: linear-gradient(90deg, #ffe082 0%, #ffb300 100%);
-    color: #3e2723;
-    border: none;
-    padding: 5px 14px;
-    font-size: 0.75em;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-}
-.vip-subtitle {
-    margin: 0;
-    font-size: 0.75em;
-    color: #8c8c8c;
-    text-align: left;
-}
-.resource-bar-container {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-}
-.resource-item {
-    flex: 1;
-    background: #161616;
-    border: 1px solid #282828;
-    border-radius: 8px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.9em;
-    font-weight: bold;
-}
-.icon-resource {
-    width: 18px;
-    height: 18px;
-}
-.icon-coin { color: #a855f7; } /* Cor Roxa */
-.icon-energy { color: #eab308; } /* Cor Amarela do Raio */
-.add-resource-btn {
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 0 2px;
-    line-height: 1;
-}
-.add-resource-btn:hover { color: #fff; }
-/* --- ESTILO SUPERIOR GAVETA (INSPIRADO NO SEAART) --- */
-#userInfoDisplay {
-    background: #0b0b0b;
-    padding: 18px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-bottom: 1px solid #1a1a1a;
-}
-.user-header-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-.user-profile-info-block {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-.profile-pic-preview-seaart {
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #6200ea;
-    background-color: #222;
-}
-.profile-pic-preview-seaart img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.user-text-meta-seaart {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-}
-.user-name-placeholder-seaart {
-    font-weight: bold;
-    font-size: 1.05em;
-    color: #ffffff;
-}
-.user-email-hidden {
-    font-size: 0.8em;
-    color: #666;
-}
-.status-badge-mini-seaart {
-    background-color: rgba(98, 0, 234, 0.2);
-    color: #9c27b0;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 0.75em;
-    font-weight: bold;
-    border: 1px solid rgba(98, 0, 234, 0.4);
-}
-.userMenu-close-btn-seaart {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 28px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-}
-
-/* Card VIP Estilo SeaArt */
-.vip-reward-card-seaart {
-    background: linear-gradient(135deg, #1f1f1f 0%, #0d0d0d 100%);
-    border: 1px solid #262626;
-    border-radius: 12px;
-    padding: 12px;
-    text-align: left;
-}
-.vip-card-header-seaart {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-.vip-title-seaart {
-    font-weight: bold;
-    font-size: 0.9em;
-    color: #f1f1f1;
-    letter-spacing: 0.3px;
-}
-.vip-action-btn-seaart {
-    background: linear-gradient(90deg, #ffe082 0%, #ffb300 100%);
-    color: #3e2723;
-    border: none;
-    padding: 4px 12px;
-    font-size: 0.75em;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-}
-.vip-subtitle-seaart {
-    margin: 0;
-    font-size: 0.75em;
-    color: #666666;
-}
-
-/* Moedas e Raios (Energia) */
-.resource-bar-container-seaart {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-}
-.resource-item-seaart {
-    flex: 1;
-    background: #141414;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.85em;
-    font-weight: bold;
-    color: #fff;
-}
-.icon-resource-seaart {
-    font-size: 1.1em;
-}
-.add-resource-btn-seaart {
-    background: none;
-    border: none;
-    color: #555;
-    font-size: 1.1em;
-    cursor: pointer;
-}
-.add-resource-btn-seaart:hover { color: #fff; }
 
 
     </style>
@@ -4677,49 +4454,12 @@ body.light-mode .bottom-sheet-drag-handle {
 <!-- Menu do Usuário (Sidebar - Nova Estrutura) -->
 <div id="userMenu" class="modal">
     <div id="userMenu-content">
-        
-        <!-- INÍCIO DO NOVO TOPO ESTILO SEAART -->
+        <button class="userMenu-close-btn" onclick="toggleUserMenu()">&times;</button>
         <div id="userInfoDisplay">
-            <!-- Cabeçalho dinâmico e seguro do Usuário (Sem dados fixos) -->
-            <div class="user-header-summary">
-                <div class="profile-pic-preview">
-                    <img id="menuProfilePic" src="https://placeholder.com" alt="Foto de Perfil">
-                </div>
-                <div class="user-text-meta">
-                    <span id="menuUserName" class="user-name-placeholder">Carregando...</span>
-                    <span id="menuUserBadge" class="status-badge-mini">Novo</span>
-                </div>
-                <!-- Botão de fechar integrado perfeitamente ao topo -->
-                <button class="userMenu-close-btn" onclick="toggleUserMenu()">×</button>
-            </div>
-
-            <!-- Banner VIP do SeaArt -->
-            <div class="vip-reward-card">
-                <div class="vip-card-header">
-                    <span class="vip-title">AnimesOracle · VIP</span>
-                    <button class="vip-action-btn">Ativar</button>
-                </div>
-                <p class="vip-subtitle">Oferta exclusiva para membros</p>
-            </div>
-
-            <!-- Contador de Recursos (Moedas e Raios) -->
-            <div class="resource-bar-container">
-                <div class="resource-item">
-                    <svg class="icon-resource icon-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v12M15 9H10.5a2.5 2.5 0 000 5H14a2.5 2.5 0 010 5H9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                    <span id="userCoinsCount">0.0</span>
-                    <button class="add-resource-btn">+</button>
-                </div>
-                <div class="resource-item">
-                    <svg class="icon-resource icon-energy" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                    <span id="userEnergyCount">100</span>
-                    <button class="add-resource-btn">+</button>
-                </div>
-            </div>
+            <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
+            <!-- Ex: Foto, Nome, Email, Status -->
         </div>
-        <!-- FIM DO NOVO TOPO ESTILO SEAART -->
-
         <div class="userMenu-nav">
-
     <!-- COLA ESTE BLOCO ABAIXO DA LINHA ACIMA -->
     <a class="userMenu-nav-item" id="navHomeBtn">
         <svg viewBox="0 0 24 24">
@@ -8620,87 +8360,42 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
     }
 
     // Monitorar o estado de autenticação para atualizar a UI
-    firebase.auth().onAuthStateChanged((user) => {
-    const infoDisplay = document.getElementById('userInfoDisplay');
-    if (!infoDisplay) return;
-
-    if (user) {
-        // Renderiza o esqueleto limpo com classes novas do SeaArt
-        infoDisplay.innerHTML = `
-            <div class="user-header-summary">
-                <div class="user-profile-info-block">
-                    <div class="profile-pic-preview-seaart">
-                        <img id="menuProfilePic" src="https://placeholder.com" alt="Foto">
-                    </div>
-                    <div class="user-text-meta-seaart">
-                        <span id="menuUserName" class="user-name-placeholder-seaart">Carregando...</span>
-                        <div style="display:flex; gap:6px; align-items:center; margin-top:2px;">
-                            <span class="status-badge-mini-seaart">Novo</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="userMenu-close-btn-seaart" onclick="toggleUserMenu()">×</button>
-            </div>
-
-            <div class="vip-reward-card-seaart">
-                <div class="vip-card-header-seaart">
-                    <span class="vip-title-seaart">AnimesOracle · VIP</span>
-                    <button class="vip-action-btn-seaart">Ativar</button>
-                </div>
-                <p class="vip-subtitle-seaart">Oferta exclusiva para membros</p>
-            </div>
-
-            <div class="resource-bar-container-seaart">
-                <div class="resource-item-seaart">
-                    <span>🔮 <span id="userCoinsCount" style="margin-left:4px;">0.0</span></span>
-                    <button class="add-resource-btn-seaart">+</button>
-                </div>
-                <div class="resource-item-seaart">
-                    <span>⚡ <span id="userEnergyCount" style="margin-left:4px;">100</span></span>
-                    <button class="add-resource-btn-seaart">+</button>
-                </div>
-            </div>
-        `;
-
-        // Alimenta os dados buscando de forma segura do login e banco de dados
-        document.getElementById('menuUserName').textContent = user.displayName || "Usuário Oracle";
-
-        // Escuta o Firestore em tempo real para obter a foto por URL e recursos
-        firebase.firestore().collection('usuarios').doc(user.uid).onSnapshot((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                const picImg = document.getElementById('menuProfilePic');
-                const coinsSpan = document.getElementById('userCoinsCount');
-                const energySpan = document.getElementById('userEnergyCount');
-
-                // Carrega foto via Link URL do Banco
-                if (picImg) {
-                    picImg.src = (data.fotoUrl && data.fotoUrl.trim() !== "") ? data.fotoUrl : "https://placeholder.com";
-                }
-                // Recursos
-                if (coinsSpan) coinsSpan.textContent = (data.moedas || 0.0).toFixed(1);
-                if (energySpan) energySpan.textContent = data.energia || 100;
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            console.log("Usuário logado:", user.email);
+            // Carrega os dados do usuário e aplica as preferências (tema, modo adulto)
+            carregarDadosUsuario(user.uid).then(() => {
+                // Após carregar dados do usuário, renderiza o conteúdo da home
+                renderHomePageContent(); 
+            });
+        } else {
+            console.log("Usuário deslogado.");
+            currentUserData = null; // Limpa os dados do usuário
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.remove('open'); // Esconde o menu
+                userMenu.style.display = 'none';
+            } else {
+                console.error("Erro: Elemento 'userMenu' não encontrado no DOM.");
             }
-        });
+            // Garante que o tema escuro seja sempre o padrão para não logados
+            aplicarTema('dark'); 
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.checked = false; // Desliga o toggle de tema para não logado
+            
+            // Limpa info do usuário no menu
+            const userInfoDisplay = document.getElementById('userInfoDisplay');
+            if (userInfoDisplay) userInfoDisplay.innerHTML = ''; 
+            
+            // Renderiza o conteúdo da home para usuários não logados
+            renderHomePageContent();
 
-    } else {
-        // Se deslogado, renderiza o estado básico de Visitante
-        infoDisplay.innerHTML = `
-            <div class="user-header-summary">
-                <div class="user-profile-info-block">
-                    <div class="profile-pic-preview-seaart">
-                        <img src="https://placeholder.com" alt="Visitante">
-                    </div>
-                    <div class="user-text-meta-seaart">
-                        <span class="user-name-placeholder-seaart">Visitante</span>
-                    </div>
-                </div>
-                <button class="userMenu-close-btn-seaart" onclick="toggleUserMenu()">×</button>
-            </div>
-        `;
-    }
-});
+            toggleCommentSection(false); // Esconde os campos de comentário
 
+            // NOVO: Esconde o botão Waifus se o usuário deslogar
+            updateWaifusButtonVisibility();
+        }
+    });
 
                 // Função para iniciar o Hero Slider
         async function loadHeroSlider() {

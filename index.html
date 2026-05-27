@@ -855,29 +855,8 @@
             top: 10px;
             z-index: 5001;
         }
-        #userInfoDisplay {
-            text-align: center;
-            padding: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-        }
         #userInfoDisplay .profile-pic-upload-area {
             margin-bottom: 10px;
-        }
-        #userInfoDisplay .profile-pic-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 10px auto;
-            overflow: hidden;
-            border: 2px solid var(--primary);
-            cursor: pointer;
-            background-color: var(--secondary-bg);
-        }
-        #userInfoDisplay .profile-pic-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         #userInfoDisplay input[type="file"] {
             display: none;
@@ -901,11 +880,6 @@
             font-size: 1.1em;
             margin-top: 10px;
             color: var(--text);
-        }
-        #userInfoDisplay .user-email {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
         }
         .userMenu-nav {
             flex-grow: 1; /* Ocupa espaço restante */
@@ -3679,6 +3653,139 @@ body.light-mode .bottom-sheet-drag-handle {
     line-height: 1;
 }
 .add-resource-btn:hover { color: #fff; }
+/* --- ESTILO SUPERIOR GAVETA (INSPIRADO NO SEAART) --- */
+#userInfoDisplay {
+    background: #0b0b0b;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 1px solid #1a1a1a;
+}
+.user-header-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.user-profile-info-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.profile-pic-preview-seaart {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #6200ea;
+    background-color: #222;
+}
+.profile-pic-preview-seaart img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.user-text-meta-seaart {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+.user-name-placeholder-seaart {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #ffffff;
+}
+.user-email-hidden {
+    font-size: 0.8em;
+    color: #666;
+}
+.status-badge-mini-seaart {
+    background-color: rgba(98, 0, 234, 0.2);
+    color: #9c27b0;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: bold;
+    border: 1px solid rgba(98, 0, 234, 0.4);
+}
+.userMenu-close-btn-seaart {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+/* Card VIP Estilo SeaArt */
+.vip-reward-card-seaart {
+    background: linear-gradient(135deg, #1f1f1f 0%, #0d0d0d 100%);
+    border: 1px solid #262626;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: left;
+}
+.vip-card-header-seaart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.vip-title-seaart {
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #f1f1f1;
+    letter-spacing: 0.3px;
+}
+.vip-action-btn-seaart {
+    background: linear-gradient(90deg, #ffe082 0%, #ffb300 100%);
+    color: #3e2723;
+    border: none;
+    padding: 4px 12px;
+    font-size: 0.75em;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.vip-subtitle-seaart {
+    margin: 0;
+    font-size: 0.75em;
+    color: #666666;
+}
+
+/* Moedas e Raios (Energia) */
+.resource-bar-container-seaart {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+.resource-item-seaart {
+    flex: 1;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+}
+.icon-resource-seaart {
+    font-size: 1.1em;
+}
+.add-resource-btn-seaart {
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+.add-resource-btn-seaart:hover { color: #fff; }
 
 
     </style>
@@ -8513,42 +8620,87 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
     }
 
     // Monitorar o estado de autenticação para atualizar a UI
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            console.log("Usuário logado:", user.email);
-            // Carrega os dados do usuário e aplica as preferências (tema, modo adulto)
-            carregarDadosUsuario(user.uid).then(() => {
-                // Após carregar dados do usuário, renderiza o conteúdo da home
-                renderHomePageContent(); 
-            });
-        } else {
-            console.log("Usuário deslogado.");
-            currentUserData = null; // Limpa os dados do usuário
-            const userMenu = document.getElementById('userMenu');
-            if (userMenu) {
-                userMenu.classList.remove('open'); // Esconde o menu
-                userMenu.style.display = 'none';
-            } else {
-                console.error("Erro: Elemento 'userMenu' não encontrado no DOM.");
+    firebase.auth().onAuthStateChanged((user) => {
+    const infoDisplay = document.getElementById('userInfoDisplay');
+    if (!infoDisplay) return;
+
+    if (user) {
+        // Renderiza o esqueleto limpo com classes novas do SeaArt
+        infoDisplay.innerHTML = `
+            <div class="user-header-summary">
+                <div class="user-profile-info-block">
+                    <div class="profile-pic-preview-seaart">
+                        <img id="menuProfilePic" src="https://placeholder.com" alt="Foto">
+                    </div>
+                    <div class="user-text-meta-seaart">
+                        <span id="menuUserName" class="user-name-placeholder-seaart">Carregando...</span>
+                        <div style="display:flex; gap:6px; align-items:center; margin-top:2px;">
+                            <span class="status-badge-mini-seaart">Novo</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="userMenu-close-btn-seaart" onclick="toggleUserMenu()">×</button>
+            </div>
+
+            <div class="vip-reward-card-seaart">
+                <div class="vip-card-header-seaart">
+                    <span class="vip-title-seaart">AnimesOracle · VIP</span>
+                    <button class="vip-action-btn-seaart">Ativar</button>
+                </div>
+                <p class="vip-subtitle-seaart">Oferta exclusiva para membros</p>
+            </div>
+
+            <div class="resource-bar-container-seaart">
+                <div class="resource-item-seaart">
+                    <span>🔮 <span id="userCoinsCount" style="margin-left:4px;">0.0</span></span>
+                    <button class="add-resource-btn-seaart">+</button>
+                </div>
+                <div class="resource-item-seaart">
+                    <span>⚡ <span id="userEnergyCount" style="margin-left:4px;">100</span></span>
+                    <button class="add-resource-btn-seaart">+</button>
+                </div>
+            </div>
+        `;
+
+        // Alimenta os dados buscando de forma segura do login e banco de dados
+        document.getElementById('menuUserName').textContent = user.displayName || "Usuário Oracle";
+
+        // Escuta o Firestore em tempo real para obter a foto por URL e recursos
+        firebase.firestore().collection('usuarios').doc(user.uid).onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                const picImg = document.getElementById('menuProfilePic');
+                const coinsSpan = document.getElementById('userCoinsCount');
+                const energySpan = document.getElementById('userEnergyCount');
+
+                // Carrega foto via Link URL do Banco
+                if (picImg) {
+                    picImg.src = (data.fotoUrl && data.fotoUrl.trim() !== "") ? data.fotoUrl : "https://placeholder.com";
+                }
+                // Recursos
+                if (coinsSpan) coinsSpan.textContent = (data.moedas || 0.0).toFixed(1);
+                if (energySpan) energySpan.textContent = data.energia || 100;
             }
-            // Garante que o tema escuro seja sempre o padrão para não logados
-            aplicarTema('dark'); 
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.checked = false; // Desliga o toggle de tema para não logado
-            
-            // Limpa info do usuário no menu
-            const userInfoDisplay = document.getElementById('userInfoDisplay');
-            if (userInfoDisplay) userInfoDisplay.innerHTML = ''; 
-            
-            // Renderiza o conteúdo da home para usuários não logados
-            renderHomePageContent();
+        });
 
-            toggleCommentSection(false); // Esconde os campos de comentário
+    } else {
+        // Se deslogado, renderiza o estado básico de Visitante
+        infoDisplay.innerHTML = `
+            <div class="user-header-summary">
+                <div class="user-profile-info-block">
+                    <div class="profile-pic-preview-seaart">
+                        <img src="https://placeholder.com" alt="Visitante">
+                    </div>
+                    <div class="user-text-meta-seaart">
+                        <span class="user-name-placeholder-seaart">Visitante</span>
+                    </div>
+                </div>
+                <button class="userMenu-close-btn-seaart" onclick="toggleUserMenu()">×</button>
+            </div>
+        `;
+    }
+});
 
-            // NOVO: Esconde o botão Waifus se o usuário deslogar
-            updateWaifusButtonVisibility();
-        }
-    });
 
                 // Função para iniciar o Hero Slider
         async function loadHeroSlider() {

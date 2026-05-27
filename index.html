@@ -4491,21 +4491,24 @@ body.light-mode .bottom-sheet-drag-handle {
 
 <!-- NOVO BOTÃO: CENTRO DE EVENTOS -->
 <a class="userMenu-nav-item" onclick="openPage('eventosPage')">
-    <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: currentColor; margin-right: 15px;">
-        <!-- Horizonte de Eventos / Núcleo do Buraco Negro -->
-        <circle cx="12" cy="12" r="4.5"/>
+    <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-right: 15px;">
+        <!-- Horizonte de Eventos (Núcleo Central Aberto) -->
+        <circle cx="12" cy="12" r="3.5" />
         
-        <!-- Braço Orbital Superior Esquerdo -->
-        <path d="M12 2C6.48 2 2 6.48 2 12c0 2.21.72 4.25 1.94 5.92C5.1 15.65 7.82 14 11 13.6V9c0-1.1.9-2 2-2s2 .9 2 2v1.1c1.23.4 2.31 1.15 3.12 2.13C19.34 11.23 20 9.7 20 8c0-3.31-2.69-6-6-6h-2z" opacity="0.85"/>
+        <!-- Braço Orbital Externo 1 -->
+        <path d="M12 2C6.48 2 2 6.48 2 12c0 2 .6 3.8 1.6 5.4" />
         
-        <!-- Braço Orbital Inferior Direito (Efeito de Rotação) -->
-        <path d="M12 22c5.52 0 10-4.48 10-10c0-2.21-.72-4.25-1.94-5.92C18.9 8.35 16.18 10 13 10.4V15c0 1.1-.9 2-2 2s-2-.9-2-2v-1.1c-1.23-.4-2.31-1.15-3.12-2.13C4.66 12.77 4 14.3 4 16c0 3.31 2.69 6 6 6h2z" opacity="0.85"/>
+        <!-- Braço Orbital Externo 2 -->
+        <path d="M12 22c5.52 0 10-4.48 10-10c0-2-.6-3.8-1.6-5.4" />
         
-        <!-- Linhas de Distorção Gravitacional Fina -->
-        <path d="M6 12c0-3.31 2.69-6 6-6M18 12c0 3.31-2.69 6-6 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- Espirais Internas de Sucção -->
+        <path d="M7 12c0-2.76 2.24-5 5-5c1.2 0 2.3.4 3.1 1.1" />
+        <path d="M17 12c0 2.76-2.24 5-5 5c-1.2 0-2.3-.4-3.1-1.1" />
     </svg>
     <span>Centro de Eventos</span>
 </a>
+
+
 
 
 

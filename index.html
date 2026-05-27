@@ -4492,21 +4492,20 @@ body.light-mode .bottom-sheet-drag-handle {
 <!-- NOVO BOTÃO: CENTRO DE EVENTOS -->
 <a class="userMenu-nav-item" onclick="openPage('eventosPage')">
     <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-right: 15px;">
-        <!-- Horizonte de Eventos (Núcleo Central Aberto) -->
-        <circle cx="12" cy="12" r="3.5" />
+        <!-- Círculo Central (Sombra do Buraco Negro) -->
+        <circle cx="12" cy="12" r="4" />
         
-        <!-- Braço Orbital Externo 1 -->
-        <path d="M12 2C6.48 2 2 6.48 2 12c0 2 .6 3.8 1.6 5.4" />
+        <!-- Disco de Acreção Diagonal Principal (Passa por trás e pela frente) -->
+        <path d="M 2.5 16.5 C 5 13.5, 9 11, 14 10 C 18.5 9, 20.5 9.5, 21.5 10.5" />
+        <path d="M 2.5 16.5 C 3.5 17.5, 5.5 18, 10 17 C 15 16, 19 13.5, 21.5 10.5" />
         
-        <!-- Braço Orbital Externo 2 -->
-        <path d="M12 22c5.52 0 10-4.48 10-10c0-2-.6-3.8-1.6-5.4" />
-        
-        <!-- Espirais Internas de Sucção -->
-        <path d="M7 12c0-2.76 2.24-5 5-5c1.2 0 2.3.4 3.1 1.1" />
-        <path d="M17 12c0 2.76-2.24 5-5 5c-1.2 0-2.3-.4-3.1-1.1" />
+        <!-- Anéis de Dobra Gravitacional (Superior e Inferior) -->
+        <path d="M 6.5 9 C 8 7, 10 6, 12.5 6 C 16 6, 18.5 8, 19.5 10.5" />
+        <path d="M 4.5 13.5 C 5.5 16, 8 18, 11.5 18 C 14 18, 16 17, 17.5 15" />
     </svg>
     <span>Centro de Eventos</span>
 </a>
+
 
 
 

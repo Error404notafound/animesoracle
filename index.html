@@ -4492,18 +4492,21 @@ body.light-mode .bottom-sheet-drag-handle {
 <!-- NOVO BOTÃO: CENTRO DE EVENTOS -->
 <a class="userMenu-nav-item" onclick="openPage('eventosPage')">
     <svg viewBox="0 0 24 24" xmlns="http://w3.org" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-right: 15px;">
-        <!-- Círculo Central Perfeito (A Sombra) -->
-        <circle cx="12" cy="12" r="5" />
+        <!-- Núcleo Central Perfeito (Sombra) -->
+        <circle cx="12" cy="12" r="3.5" />
         
-        <!-- O Anel Externo Principal (Formato Esférico do Flaticon) -->
-        <circle cx="12" cy="12" r="9" />
+        <!-- Disco de Acreção Diagonal com Pontas Afiadas -->
+        <path d="M 2 15 C 6 13.5, 11 11.5, 19 8.5 M 19 8.5 C 15 10.5, 9 12.5, 22 9.5" />
         
-        <!-- A Linha de Acreção Diagonal Que Corta o Centro -->
-        <path d="M 2 12 C 6 8, 18 8, 22 12" />
-        <path d="M 2 12 C 6 16, 18 16, 22 12" />
+        <!-- Anel Gravitacional Superior (Abraça por cima da linha) -->
+        <path d="M 8.5 9 C 7.2 11, 7.5 13.5, 10 15 C 12 16.2, 14.5 15.5, 15.5 14" />
+        
+        <!-- Anel Gravitacional Inferior (Abraça por trás) -->
+        <path d="M 15.5 11 C 17 9, 16.5 6.5, 14 5 C 11.5 3.5, 8.5 4.5, 7.5 7" />
     </svg>
     <span>Centro de Eventos</span>
 </a>
+
 
 
 

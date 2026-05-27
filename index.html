@@ -3426,6 +3426,131 @@ body.light-mode .bottom-sheet-drag-handle {
     line-height: 1.5;
     white-space: pre-line;
 }
+/* Botão Azul de Filtro Redondo */
+.icon-btn-filtro-azul {
+    background: #1e88e5;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(30, 136, 229, 0.4);
+    padding: 0;
+}
+.icon-btn-filtro-azul svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Container de Fundo Obscurecido para Bottom Sheet */
+.modal-bottom-sheet {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+/* Card Inferior Estilo Gaveta Up */
+.bottom-sheet-card {
+    background: #18181f;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 16px 20px 30px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tracinho de arrastar sutil no topo do menu */
+.bottom-sheet-drag-handle {
+    width: 40px;
+    height: 4px;
+    background: #33333d;
+    border-radius: 2px;
+    margin: 0 auto 20px auto;
+}
+
+/* Seções Internas do Filtro */
+.filter-group-section {
+    margin-bottom: 22px;
+}
+.filter-group-section h5 {
+    color: #888892;
+    font-size: 0.9em;
+    margin: 0 0 12px 0;
+    font-weight: 500;
+}
+.filter-pills-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Pílulas de Seleção Arredondadas */
+.filter-pill {
+    background: #25252c;
+    border: 1px solid transparent;
+    color: #9999a3;
+    border-radius: 16px;
+    padding: 8px 16px;
+    font-size: 0.85em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-pill.active {
+    background: #2d2d38;
+    color: #ffffff;
+    border-color: #444450;
+}
+
+/* Alinhamento dos Botões de Confirmação */
+.bottom-sheet-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+.btn-filter-reset {
+    flex: 1;
+    background: #25252c;
+    color: #eeeeee;
+    border: none;
+    border-radius: 20px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 0.95em;
+    cursor: pointer;
+}
+.btn-filter-confirm {
+    flex: 1.5;
+    background: linear-gradient(90deg, #9c27b0 0%, #ff5722 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 0.95em;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Animação suave subindo da base da tela */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.animate-slide-up {
+    animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
 
 
     </style>
@@ -4005,26 +4130,68 @@ body.light-mode .bottom-sheet-drag-handle {
         </div>
 
         <!-- SEÇÃO 1: ABA DE ENVIO -->
-        <div id="container-aba-envio" class="sub-aba-content-block">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
-                <h4 class="secao-titulo-galeria" id="titulo-galeria-envio">Todas as publicações sobre "Loucura da Cerveja"</h4>
-                <span style="color: #666; font-size: 1.1em; cursor: pointer;">🔀</span>
-            </div>
-            <div id="eventosGridEnvio" class="eventos-grid-dois-por-dois">
-                <!-- Cards de Envio injetados por JS -->
+<div id="container-aba-envio" class="sub-aba-content-block">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
+        <h4 class="secao-titulo-galeria" id="titulo-galeria-envio">Todas as publicações sobre "Loucura da Cerveja"</h4>
+        <!-- SUBISTITUÍDO: Agora é o Botão do Filtro Azul Oficial -->
+        <button class="icon-btn-filtro-azul" onclick="openModal('bottomSheetFiltro')">
+            <svg viewBox="0 0 24 24" xmlns="http://w3.org">
+                <path d="M4 6h16M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+    <div id="eventosGridEnvio" class="eventos-grid-dois-por-dois">
+        <!-- Cards de Envio injetados por JS -->
+    </div>
+</div>
+
+<!-- SEÇÃO 2: ABA DE VOTAÇÃO -->
+<div id="container-aba-votacao" class="sub-aba-content-block" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
+        <h4 class="secao-titulo-galeria" id="titulo-galeria-votacao">Área de votação de "Loucura da Cerveja"</h4>
+        <!-- SUBISTITUÍDO: Agora é o Botão do Filtro Azul Oficial -->
+        <button class="icon-btn-filtro-azul" onclick="openModal('bottomSheetFiltro')">
+            <svg viewBox="0 0 24 24" xmlns="http://w3.org">
+                <path d="M4 6h16M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+    <div id="eventosGridVotacao" class="eventos-grid-dois-por-dois">
+        <!-- Cards de Votação com botão "Voto" injetados por JS -->
+    </div>
+</div>
+<!-- BOTTOM SHEET: POPUP DE FILTROS DO SEAART -->
+<div id="bottomSheetFiltro" class="modal-bottom-sheet" onclick="fecharBottomSheetSeClicarFora(event)">
+    <div class="bottom-sheet-card animate-slide-up">
+        <div class="bottom-sheet-drag-handle"></div>
+        
+        <!-- Grupo 1: Filtro de Ordenação -->
+        <div class="filter-group-section">
+            <h5>Filtro</h5>
+            <div class="filter-pills-row">
+                <button id="pill-sort-popular" class="filter-pill active" onclick="selecionarPill('sort', 'popular')">🔥 Popular</button>
+                <button id="pill-sort-aleatorio" class="filter-pill" onclick="selecionarPill('sort', 'aleatorio')">Aleatório</button>
+                <button id="pill-sort-novo" class="filter-pill" onclick="selecionarPill('sort', 'novo')">Novo</button>
             </div>
         </div>
 
-        <!-- SEÇÃO 2: ABA DE VOTAÇÃO -->
-        <div id="container-aba-votacao" class="sub-aba-content-block" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
-                <h4 class="secao-titulo-galeria" id="titulo-galeria-votacao">Área de votação de "Loucura da Cerveja"</h4>
-                <span style="color: #666; font-size: 1.1em; cursor: pointer;">🔀</span>
-            </div>
-            <div id="eventosGridVotacao" class="eventos-grid-dois-por-dois">
-                <!-- Cards de Votação com botão "Voto" injetados por JS -->
+        <!-- Grupo 2: Tipo de Exibição -->
+        <div class="filter-group-section">
+            <h5>Tipo</h5>
+            <div class="filter-pills-row">
+                <button id="pill-type-tudo" class="filter-pill active" onclick="selecionarPill('type', 'tudo')">Tudo</button>
+                <button id="pill-type-obras" class="filter-pill" onclick="selecionarPill('type', 'obras')">Obras</button>
             </div>
         </div>
+
+        <!-- Botões de Ação Inferiores -->
+        <div class="bottom-sheet-actions">
+            <button class="btn-filter-reset" onclick="redefinirFiltrosLocais()">Redefinir</button>
+            <button class="btn-filter-confirm" onclick="aplicarFiltrosEFechar()">Confirmar</button>
+        </div>
+    </div>
+</div>
+
 
         <!-- SEÇÃO 3: ABA DE COMENTÁRIOS -->
         <div id="container-aba-comentario" class="sub-aba-content-block" style="display: none; padding: 15px 16px;">
@@ -10157,6 +10324,132 @@ function postarComentarioLocal() {
 
     input.value = '';
     renderizarComentariosDoTema();
+}
+/* ==========================================================================
+   ⚙️ CONTROLE DO POPUP BOTTOM SHEET DE FILTROS (POPULAR, ALEATÓRIO, NOVO)
+   ========================================================================== */
+
+// Estado interno das seleções do usuário
+let filtroOrdenacaoAtivo = 'popular';
+let filtroTipoAtivo = 'tudo';
+
+/**
+ * Sobrescreve as funções de abrir modal nativas para aceitar flex/display correto do Bottom Sheet
+ */
+function openModal(idModal) {
+    const el = document.getElementById(idModal);
+    if (!el) return;
+    
+    if (idModal === 'bottomSheetFiltro') {
+        el.style.display = 'flex';
+    } else {
+        el.style.display = 'block';
+    }
+}
+
+function closeModal(idModal) {
+    const el = document.getElementById(idModal);
+    if (el) el.style.display = 'none';
+}
+
+function fecharBottomSheetSeClicarFora(event) {
+    if (event.target.id === 'bottomSheetFiltro') {
+        closeModal('bottomSheetFiltro');
+    }
+}
+
+/**
+ * Altera visualmente as pílulas ativas dentro do menu
+ */
+function selecionarPill(grupo, valor) {
+    if (grupo === 'sort') {
+        filtroOrdenacaoAtivo = valor;
+        document.querySelectorAll("[id^='pill-sort-']").forEach(el => el.classList.remove('active'));
+        document.getElementById(`pill-sort-${valor}`).classList.add('active');
+    } else if (grupo === 'type') {
+        filtroTipoAtivo = valor;
+        document.querySelectorAll("[id^='pill-type-']").forEach(el => el.classList.remove('active'));
+        document.getElementById(`pill-type-${valor}`).classList.add('active');
+    }
+}
+
+/**
+ * Reseta o estado para os padrões de fábrica do app
+ */
+function redefinirFiltrosLocais() {
+    selecionarPill('sort', 'popular');
+    selecionarPill('type', 'tudo');
+}
+
+/**
+ * Executa o reordenamento real dos dados do grid e fecha a janela deslizante
+ */
+function aplicarFiltrosEFechar() {
+    closeModal('bottomSheetFiltro');
+    
+    let todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
+    let filtrados = todosEnvios.filter(envio => envio.dataRef === dataEventoSelecionada);
+
+    // Lógica de ordenação baseada na escolha
+    if (filtroOrdenacaoAtivo === 'novo') {
+        // Ordena por ID decrescente (Mais recentes criados primeiro)
+        filtrados.sort((a, b) => b.id - a.id);
+    } else if (filtroOrdenacaoAtivo === 'aleatorio') {
+        // Mistura a lista aleatoriamente
+        filtrados.sort(() => Math.random() - 0.5);
+    } else {
+        // 'popular': Ordena pela maior quantidade de votos computados
+        filtrados.sort((a, b) => (b.votos || 0) - (a.votos || 0));
+    }
+
+    // Recarrega os dados ordenados na tela
+    reajustarExibicaoDoGridFiltrado(filtrados);
+}
+
+/**
+ * Injeta a lista reordenada diretamente nas estruturas visuais das colunas
+ */
+function reajustarExibicaoDoGridFiltrado(listaOrdenada) {
+    const gridEnvio = document.getElementById('eventosGridEnvio');
+    const gridVotacao = document.getElementById('eventosGridVotacao');
+    if (!gridEnvio || !gridVotacao) return;
+
+    gridEnvio.innerHTML = '';
+    gridVotacao.innerHTML = '';
+
+    if (listaOrdenada.length === 0) {
+        const msgVazio = `<div style="grid-column: span 2; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">Nenhum registro encontrado.</div>`;
+        gridEnvio.innerHTML = msgVazio;
+        gridVotacao.innerHTML = msgVazio;
+        return;
+    }
+
+    listaOrdenada.forEach(item => {
+        const cardEnvio = document.createElement('div');
+        cardEnvio.className = 'seaart-card';
+        cardEnvio.innerHTML = `
+            <div class="seaart-card-img-box"><img src="${item.url}"></div>
+            <div class="seaart-card-info">
+                <div class="seaart-card-title">${item.titulo || 'Arte Sem Título'}</div>
+                <div class="seaart-card-metrics"><span>👍 ${item.votos || 0}</span><span>♡ ${item.favoritos || 0}</span></div>
+            </div>
+        `;
+        gridEnvio.appendChild(cardEnvio);
+
+        const cardVotacao = document.createElement('div');
+        cardVotacao.className = 'seaart-card';
+        cardVotacao.innerHTML = `
+            <div class="seaart-card-img-box"><img src="${item.url}"></div>
+            <div class="seaart-card-info">
+                <div class="seaart-card-metrics" style="justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color:#eee; font-size:1.1em;">🎨</span>
+                    <div><span>👍 ${item.votos || 0}</span><span>♡ ${item.favoritos || 0}</span></div>
+                </div>
+                <button class="btn-voto-roxo" onclick="computarVotoLocal(${item.id})">Voto</button>
+            </div>
+        `;
+        gridVotacao.appendChild(cardVotacao);
+    });
 }
 
 // Inicializa o evento ativo ao abrir a página

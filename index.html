@@ -10490,6 +10490,49 @@ document.addEventListener('DOMContentLoaded', () => {
     mudarDataEvento('2026-05-26');
 });
 
+// Aguarda o HTML carregar completamente
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // Captura todos os botões de abas da seção de eventos
+    const abasEventos = document.querySelectorAll(".eventos-tab-btn");
+
+    abasEventos.forEach(botao => {
+        botao.addEventListener("click", function() {
+            // 1. Remove a classe 'active' do botão que estava selecionado antes
+            document.querySelector(".eventos-tab-btn.active")?.classList.remove("active");
+            
+            // 2. Adiciona a classe 'active' no botão que você acabou de clicar
+            this.classList.add("active");
+
+            // 3. Pega o nome do desafio clicado (ex: "Desafio realista")
+            const tipoDesafio = this.textContent.trim();
+            console.log("Mudando para o desafio:", tipoDesafio);
+
+            // 4. Executa a função para atualizar a tela com os dados do novo desafio
+            mudarConteudoDoDesafio(tipoDesafio);
+        });
+    });
+});
+
+// Função que altera os textos e dados do tema conforme o botão clicado
+function mudarConteudoDoDesafio(tipo) {
+    const tituloTema = document.querySelector(".evento-info-header h4"); // Seletor do título do tema principal
+    const descTema = document.querySelector(".evento-info-header p"); // Seletor da descrição do tema
+    
+    if (tipo === "Desafio diário") {
+        // Altere aqui para os dados padrão do seu desafio diário
+        if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Loucura da Cerveja"';
+    } 
+    else if (tipo === "Desafio realista") {
+        // Altere aqui com as informações que você quer exibir no Desafio Realista
+        if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Retrato de Época Realista"';
+        // Exemplo de como alterar outros blocos se necessário
+    } 
+    else if (tipo === "Desafio IP") {
+        // Altere aqui com as informações que você quer exibir no Desafio IP
+        if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Criação de Fanart / IP Famosa"';
+    }
+}
 
 
 

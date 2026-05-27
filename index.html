@@ -3290,6 +3290,142 @@ body.light-mode .bottom-sheet-drag-handle {
 .sheet-item-btn.active .sheet-item-check svg {
     display: block;
 }
+/* Novo Grid de 2 Colunas Verticais Estilo SeaArt */
+.eventos-grid-dois-por-dois {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px;
+    margin-top: 10px;
+}
+
+/* Card Individual da Galeria */
+.seaart-card {
+    background: #0d0d11;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.seaart-card-img-box {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #15151a;
+    position: relative;
+}
+.seaart-card-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.seaart-card-info {
+    padding: 8px;
+}
+.seaart-card-title {
+    font-size: 0.82em;
+    color: #eeeeee;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.seaart-card-metrics {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    font-size: 0.72em;
+    color: #666670;
+}
+
+/* Botão Roxo de Votação */
+.btn-voto-roxo {
+    width: 100%;
+    background: #9c27b0;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.85em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background 0.2s;
+}
+.btn-voto-roxo:hover {
+    background: #b23cc7;
+}
+
+/* Estilos da Aba de Comentários */
+.comentario-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.avatar-comentario-placeholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e91e63; /* Rosa do print */
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.comentario-input-row input {
+    flex-grow: 1;
+    background: #16161c;
+    border: 1px solid #25252c;
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: #ffffff;
+    font-size: 0.88em;
+    outline: none;
+}
+.contador-comentarios {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Lista de posts de comentários */
+.comentario-item-box {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    background: #0d0d11;
+    padding: 12px;
+    border-radius: 8px;
+}
+.avatar-studio-oficial {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #2196f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7em;
+}
+.comentario-item-content {
+    flex-grow: 1;
+}
+.comentario-item-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #2196f3;
+    margin-bottom: 4px;
+}
+.comentario-item-text {
+    font-size: 0.85em;
+    color: #bbbbbb;
+    line-height: 1.5;
+    white-space: pre-line;
+}
 
 
     </style>
@@ -3815,17 +3951,11 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="cancel-btn" onclick="closeModal('editWaifuPostModal')">Cancelar</button>
     </div>
 </div>
-<!-- PÁGINA PRINCIPAL: CENTRO DE EVENTOS (SEM TÍTULO NO TOPO) -->
+<!-- PÁGINA PRINCIPAL: CENTRO DE EVENTOS (ABAS COMPLETAS) -->
 <div id="eventosPage" class="modal-page">
-    <!-- Cabeçalho da Página (Apenas botão de voltar) -->
-    <div class="modal-page-header" style="border-bottom: none; background: #0a0a0a;">
-        <button class="icon-btn" onclick="closePage('eventosPage')">
-            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
-        <div style="flex-grow: 1;"></div> <!-- Removeu o título de texto daqui -->
-    </div>
+    <!-- Cabeçalho removido para usar o topo principal do site -->
 
-    <!-- Navegação de Abas do SeaArt -->
+    <!-- Navegação de Abas Superiores do SeaArt -->
     <div class="eventos-tabs">
         <button class="eventos-tab-btn active" onclick="alterarAbaEvento('diario')">Desafio diário</button>
         <button class="eventos-tab-btn" onclick="alterarAbaEvento('realista')">Desafio realista</button>
@@ -3864,22 +3994,54 @@ body.light-mode .bottom-sheet-drag-handle {
 
         <!-- Banner Dinâmico Modificável -->
         <div class="eventos-banner">
-            <!-- Estrutura controlada dinamicamente pelo JavaScript abaixo -->
+            <!-- Controlado pelo JS -->
         </div>
 
-        <!-- Sub-abas de Envio/Votação -->
+        <!-- Sub-navegação do Menu do Meio (Envio, Votação, Comentário) -->
         <div class="evento-sub-navigation">
-            <span class="sub-nav-item active">Envio</span>
-            <span class="sub-nav-item">Área de Votação</span>
-            <span class="sub-nav-item">Comentário</span>
+            <span id="subTab-envio" class="sub-nav-item active" onclick="alternarSubAba('envio')">Envio</span>
+            <span id="subTab-votacao" class="sub-nav-item" onclick="alternarSubAba('votacao')">Área de Votação</span>
+            <span id="subTab-comentario" class="sub-nav-item" onclick="alternarSubAba('comentario')">Comentário</span>
         </div>
 
-        <h4 class="secao-titulo-galeria">Todas as publicações</h4>
-
-        <!-- Grid de Exibição Dinâmico (Estilo Waifus) -->
-        <div id="eventosGridConteudo" class="eventos-grid">
-            <!-- Cards injetados via JS -->
+        <!-- SEÇÃO 1: ABA DE ENVIO -->
+        <div id="container-aba-envio" class="sub-aba-content-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
+                <h4 class="secao-titulo-galeria" id="titulo-galeria-envio">Todas as publicações sobre "Loucura da Cerveja"</h4>
+                <span style="color: #666; font-size: 1.1em; cursor: pointer;">🔀</span>
+            </div>
+            <div id="eventosGridEnvio" class="eventos-grid-dois-por-dois">
+                <!-- Cards de Envio injetados por JS -->
+            </div>
         </div>
+
+        <!-- SEÇÃO 2: ABA DE VOTAÇÃO -->
+        <div id="container-aba-votacao" class="sub-aba-content-block" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 16px;">
+                <h4 class="secao-titulo-galeria" id="titulo-galeria-votacao">Área de votação de "Loucura da Cerveja"</h4>
+                <span style="color: #666; font-size: 1.1em; cursor: pointer;">🔀</span>
+            </div>
+            <div id="eventosGridVotacao" class="eventos-grid-dois-por-dois">
+                <!-- Cards de Votação com botão "Voto" injetados por JS -->
+            </div>
+        </div>
+
+        <!-- SEÇÃO 3: ABA DE COMENTÁRIOS -->
+        <div id="container-aba-comentario" class="sub-aba-content-block" style="display: none; padding: 15px 16px;">
+            <!-- Input de Comentário Moderno -->
+            <div class="comentario-input-row">
+                <div class="avatar-comentario-placeholder">E</div>
+                <input type="text" id="campo-novo-comentario" placeholder="Digite seu comentário" onkeydown="if(event.key === 'Enter') postarComentarioLocal()">
+            </div>
+            
+            <div class="contador-comentarios" id="texto-contador-comentarios">0 comentário(s)</div>
+
+            <!-- Lista de Comentários Fixados / Usuários -->
+            <div id="lista-comentarios-container">
+                <!-- Injetados dinamicamente via JS -->
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -3887,14 +4049,16 @@ body.light-mode .bottom-sheet-drag-handle {
 <div id="modalEnvioEvento" class="modal">
     <div class="modal-card">
         <h3 style="color: var(--primary); margin-bottom: 15px; text-align: center;">Anexar Imagem por URL</h3>
-        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">Insira abaixo o link direto da imagem (ex: Imgur, Pinterest, etc.)</p>
+        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px;">Insira abaixo o link direto da imagem e dê um título à sua obra.</p>
         
+        <input type="text" id="inputTituloObra" placeholder="Título da sua arte (Ex: Cheers to the good time...)" class="rounded-input" style="margin-bottom: 10px;">
         <input type="text" id="inputUrlEvento" placeholder="https://exemplo.com" class="rounded-input">
         
         <button class="btn-post rounded-btn" onclick="salvarEnvioEvento()">Publicar no Evento</button>
         <button class="cancel-btn" onclick="closeModal('modalEnvioEvento')">Cancelar</button>
     </div>
 </div>
+
 
 
 <!-- Página para Visualização de Episódios da Série -->
@@ -9781,198 +9945,227 @@ document.getElementById('waifuSearchBtn').addEventListener('click', () => {
 });
 document.getElementById('waifuRandomBtn').addEventListener('click', searchRandomWaifu);
 /* ==========================================================================
-   ⚙️ SISTEMA AVANÇADO DE DATAS (TEMAS ATUAIS E BLOQUEIO DE EVENTOS FUTUROS)
+   ⚙️ SISTEMA AVANÇADO DE ABAS INTERNAS (ENVIO, VOTAÇÃO E COMENTÁRIOS)
    ========================================================================== */
 
-// Banco de dados simulado dos temas divididos por data do carrossel
 const bancoDeTemasPorData = {
-    "2026-05-23": {
-        titulo: 'Herói de Metal Líquido',
-        descricao: 'Aba de arquivos passados. Confira as artes enviadas pela comunidade neste grande desafio cibernético.',
-        podeEnviar: false,
-        premio: 'Encerrado',
-        recompensa: 'Submissões Encerradas'
+    "2026-05-23": { titulo: 'Herói de Metal Líquido', descricao: 'Aba de arquivos passados.', podeEnviar: false, premio: 'Encerrado', recompensa: 'Submissões Encerradas' },
+    "2026-05-24": { titulo: 'Tudo Pode Virar uma Garota de Anime', descricao: 'Transforme objetos cotidianos em waifus.', podeEnviar: false, premio: 'Encerrado', recompensa: 'Submissões Encerradas' },
+    "2026-05-26": { 
+        titulo: 'Loucura da Cerveja', 
+        descricao: 'Crie um personagem ou uma cena exagerada com cerveja, como um cervejeiro maluco ou uma taverna cheia de espuma.', 
+        podeEnviar: true, 
+        premio: 'Prêmio de Excelência 445 ⚡', 
+        recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ⚡ 50' 
     },
-    "2026-05-24": {
-        titulo: 'Tudo Pode Virar uma Garota de Anime',
-        descricao: 'Transforme objetos inanimados do cotidiano em personagens icônicas com traços marcantes.',
-        podeEnviar: false,
-        premio: 'Encerrado',
-        recompensa: 'Submissões Encerradas'
-    },
-    "2026-05-26": { // DATA ATUAL DO SEU PRINT (ATIVO)
-        titulo: 'Loucura da Cerveja',
-        descricao: 'Crie um personagem ou uma cena exagerada com cerveja, como um cervejeiro maluco ou uma taverna cheia de espuma.',
-        podeEnviar: true,
-        premio: 'Prêmio de Excelência 445 ⚡',
-        recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ⚡ 50',
-        atual: true
-    },
-    "2026-05-27": { // DATA FUTURA DO SEU PRINT (BLOQUEADO)
-        titulo: 'O Boneco de Neve que Não Derrete',
-        descricao: 'Crie um boneco de neve que nunca derrete. Onde ele está e que história acontece ali?',
-        podeEnviar: false,
-        premio: 'Prêmio de Excelência ? ? ?',
-        recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ? ? ?',
-        futuro: true
-    }
+    "2026-05-27": { titulo: 'O Boneco de Neve que Não Derrete', descricao: 'Crie um boneco de neve que nunca derrete.', podeEnviar: false, premio: 'Prêmio de Excelência ? ? ?', recompensa: 'Criação e submissão de trabalhos temáticos Recompensas por participação ? ? ?', futuro: true }
 };
 
-// Variável para gerenciar o estado da aba principal e data selecionada
-let abaEventoAtiva = 'diario';
 let dataEventoSelecionada = '2026-05-26';
+let subAbaAtiva = 'envio';
 
 /**
- * Controla a mudança das abas principais superiores (Diário, Realista, etc.)
+ * Altera entre as Abas do meio (Envio, Área de Votação, Comentário)
  */
-function alterarAbaEvento(abaSelecionada) {
-    abaEventoAtiva = abaSelecionada;
+function alternarSubAba(abaDestino) {
+    subAbaAtiva = abaDestino;
 
-    const botoes = document.querySelectorAll('.eventos-tab-btn');
-    botoes.forEach(btn => btn.classList.remove('active'));
+    // Remove classe ativa de todos os gatilhos do menu do meio
+    document.querySelectorAll('.sub-nav-item').forEach(el => el.classList.remove('active'));
+    // Oculta todos os blocos de conteúdo das sub-abas
+    document.querySelectorAll('.sub-aba-content-block').forEach(el => el.style.display = 'none');
 
-    const botaoClicado = Array.from(botoes).find(btn => btn.getAttribute('onclick').includes(abaSelecionada));
-    if (botaoClicado) botaoClicado.classList.add('active');
+    // Ativa o botão e mostra o bloco certo
+    document.getElementById(`subTab-${abaDestino}`).classList.add('active');
+    document.getElementById(`container-aba-${abaDestino}`).style.display = 'block';
 
-    // Se mudar de aba principal, reseta para mostrar dados base da aba
-    if (abaSelecionada !== 'diario') {
-        document.querySelector('.secao-titulo-galeria').innerText = `Todas as publicações de ${abaSelecionada}`;
-        document.getElementById('eventosGridConteudo').innerHTML = `<div style="grid-column: span 3; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">Nenhum evento ativo nesta aba.</div>`;
-    } else {
-        mudarDataEvento(dataEventoSelecionada);
+    if (abaDestino === 'envio' || abaDestino === 'votacao') {
+        renderizarGridsEventos();
+    } else if (abaDestino === 'comentario') {
+        renderizarComentariosDoTema();
     }
 }
 
-/**
- * Controla os cliques no carrossel horizontal de datas e aplica as regras dos prints 1/2 e 2/2
- */
 function mudarDataEvento(dataClicada) {
     dataEventoSelecionada = dataClicada;
     
-    // Altera classe ativa dos botões do carrossel
-    const cardsDatas = document.querySelectorAll('.data-card-btn');
-    cardsDatas.forEach(card => card.classList.remove('active'));
-    
-    const cardAtivo = Array.from(cardsDatas).find(card => card.getAttribute('onclick').includes(dataClicada));
+    document.querySelectorAll('.data-card-btn').forEach(card => card.classList.remove('active'));
+    const cardAtivo = Array.from(document.querySelectorAll('.data-card-btn')).find(card => card.getAttribute('onclick').includes(dataClicada));
     if (cardAtivo) cardAtivo.classList.add('active');
 
     const infoTema = bancoDeTemasPorData[dataClicada];
     const banner = document.querySelector('.eventos-banner');
-    const containerTituloGaleria = document.querySelector('.secao-titulo-galeria');
-
+    
     if (infoTema && banner) {
-        containerTituloGaleria.innerText = `Todas as publicações sobre "${infoTema.titulo}"`;
+        document.getElementById('titulo-galeria-envio').innerText = `Todas as publicações sobre "${infoTema.titulo}"`;
+        document.getElementById('titulo-galeria-votacao').innerText = `Área de votação de "${infoTema.titulo}"`;
 
         if (infoTema.futuro) {
-            // COMPORTAMENTO COMPLETO DO SEGUNDO PRINT (BLOQUEADO FUTURO)
             banner.style.opacity = "0.4"; 
-            banner.innerHTML = `
-                <div style="font-size:0.75em; color:#fff; background: rgba(255,255,255,0.1); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; float:right;">Regras de Evento</div>
-                <div style="clear:both;"></div>
-                <h3>O tema de hoje é "${infoTema.titulo}"</h3>
-                <p>${infoTema.descricao}</p>
-                <div style="font-size:0.85em; color:#888; margin-bottom:12px; font-weight:bold;">${infoTema.premio}</div>
-                <button class="btn-enviar-evento" style="background:#202025 !important; color:#555; cursor:not-allowed; box-shadow:none;" disabled>
-                    ${infoTema.recompensa}
-                </button>
-            `;
+            banner.innerHTML = `<h3>O tema de hoje é "${infoTema.titulo}"</h3><p>${infoTema.descricao}</p><button class="btn-enviar-evento" style="background:#202025 !important; color:#555; cursor:not-allowed;" disabled>${infoTema.recompensa}</button>`;
         } else if (infoTema.podeEnviar) {
-            // COMPORTAMENTO COMPLETO DO PRIMEIRO PRINT (LIBERADO ATUAL)
             banner.style.opacity = "1";
-            banner.innerHTML = `
-                <div style="font-size:0.75em; color:#fff; background: rgba(255,255,255,0.1); padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; float:right;">Regras de Evento</div>
-                <div style="clear:both;"></div>
-                <h3>O tema de hoje é "${infoTema.titulo}"</h3>
-                <p>${infoTema.descricao}</p>
-                <div style="font-size:0.85em; color:#b0279a; margin-bottom:12px; font-weight:bold;">${infoTema.premio}</div>
-                <button class="btn-enviar-evento" onclick="openModal('modalEnvioEvento')">
-                    ${infoTema.recompensa}
-                </button>
-            `;
+            banner.innerHTML = `<h3>O tema de hoje é "${infoTema.titulo}"</h3><p>${infoTema.descricao}</p><div style="font-size:0.85em; color:#b0279a; margin-bottom:12px; font-weight:bold;">${infoTema.premio}</div><button class="btn-enviar-evento" onclick="openModal('modalEnvioEvento')">${infoTema.recompensa}</button>`;
         } else {
-            // COMPORTAMENTO PARA EVENTOS PASSADOS ENCERRADOS
             banner.style.opacity = "0.6";
-            banner.innerHTML = `
-                <h3>O tema foi "${infoTema.titulo}"</h3>
-                <p>${infoTema.descricao}</p>
-                <button class="btn-enviar-evento" style="background:#1a1a1f; color:#666; cursor:not-allowed; box-shadow:none;" disabled>
-                    ${infoTema.recompensa}
-                </button>
-            `;
+            banner.innerHTML = `<h3>O tema foi "${infoTema.titulo}"</h3><p>${infoTema.descricao}</p><button class="btn-enviar-evento" style="background:#1a1a1f; color:#666;" disabled>Submissões Encerradas</button>`;
         }
     }
-
-    renderizarFotosPorData();
+    renderizarGridsEventos();
 }
 
 /**
- * Carrega dinamicamente a galeria de imagens enviadas no formato de grade (Style Waifus)
+ * Renderiza dinamicamente as duas abas de imagens (Envio e Votação) no layout de 2 colunas
  */
-function renderizarFotosPorData() {
-    const grid = document.getElementById('eventosGridConteudo');
-    if (!grid) return;
+function renderizarGridsEventos() {
+    const gridEnvio = document.getElementById('eventosGridEnvio');
+    const gridVotacao = document.getElementById('eventosGridVotacao');
+    if (!gridEnvio || !gridVotacao) return;
 
-    grid.innerHTML = '';
+    gridEnvio.innerHTML = '';
+    gridVotacao.innerHTML = '';
+
     const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
-    const enviosFiltrados = todosEnvios.filter(envio => envio.dataRef === dataEventoSelecionada);
+    const filtrados = todosEnvios.filter(envio => envio.dataRef === dataEventoSelecionada);
 
-    if (enviosFiltrados.length === 0) {
-        grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">
-                            Nenhuma publicação para esta data ainda.
-                          </div>`;
+    if (filtrados.length === 0) {
+        const msgVazio = `<div style="grid-column: span 2; text-align: center; color: #555; padding: 40px 10px; font-size: 0.9em;">Nenhum registro para esta data.</div>`;
+        gridEnvio.innerHTML = msgVazio;
+        gridVotacao.innerHTML = msgVazio;
         return;
     }
 
-    enviosFiltrados.forEach(item => {
-        const cardWrapper = document.createElement('div');
-        cardWrapper.className = 'waifu-card-wrapper';
-        cardWrapper.innerHTML = `
-            <div class="waifu-card" style="aspect-ratio: 9/16;">
-                <img src="${item.url}" alt="User content" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="waifu-card-details-bottom" style="padding: 6px; background:#0f0f12;">
-                <div class="waifu-card-author">
-                    <span style="font-size: 0.75em; color: #888;">Anon_Oracle</span>
-                </div>
+    filtrados.forEach(item => {
+        // Gera conteúdo para Aba de Envio (Título abaixo da imagem)
+        const cardEnvio = document.createElement('div');
+        cardEnvio.className = 'seaart-card';
+        cardEnvio.innerHTML = `
+            <div class="seaart-card-img-box"><img src="${item.url}"></div>
+            <div class="seaart-card-info">
+                <div class="seaart-card-title">${item.titulo || 'Arte Sem Título'}</div>
+                <div class="seaart-card-metrics"><span>👍 ${item.votos || 0}</span><span>♡ ${item.favoritos || 0}</span></div>
             </div>
         `;
-        grid.appendChild(cardWrapper);
+        gridEnvio.appendChild(cardEnvio);
+
+        // Gera conteúdo para Aba de Votação (Contadores em cima e Botão "Voto" embaixo)
+        const cardVotacao = document.createElement('div');
+        cardVotacao.className = 'seaart-card';
+        cardVotacao.innerHTML = `
+            <div class="seaart-card-img-box"><img src="${item.url}"></div>
+            <div class="seaart-card-info">
+                <div class="seaart-card-metrics" style="justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color:#eee; font-size:1.1em;">🎨</span>
+                    <div><span>👍 ${item.votos || 0}</span><span>♡ ${item.favoritos || 0}</span></div>
+                </div>
+                <button class="btn-voto-roxo" onclick="computarVotoLocal(${item.id})">Voto</button>
+            </div>
+        `;
+        gridVotacao.appendChild(cardVotacao);
     });
 }
 
-/**
- * Salva localmente a URL enviada e vincula diretamente à aba de data selecionada
- */
 function salvarEnvioEvento() {
     const inputUrl = document.getElementById('inputUrlEvento');
-    const urlDigitada = inputUrl.value.trim();
-
-    if (!urlDigitada || !urlDigitada.startsWith('http')) {
-        alert('Por favor, insira uma URL de imagem válida.');
+    const inputTitulo = document.getElementById('inputTituloObra');
+    
+    if (!inputUrl.value.trim().startsWith('http')) {
+        alert('Insira uma URL de imagem válida.');
         return;
     }
 
     const novoEnvio = {
         id: Date.now(),
-        url: urlDigitada,
+        titulo: inputTitulo.value.trim() || 'Cheers to the good time...',
+        url: inputUrl.value.trim(),
         dataRef: dataEventoSelecionada,
-        dataEnvio: new Date().toISOString()
+        votos: Math.floor(Math.random() * 10), // Valores iniciais aleatórios para simular engajamento
+        favoritos: Math.floor(Math.random() * 5)
     };
 
-    const todosEnvios = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
-    todosEnvios.push(novoEnvio);
-    localStorage.setItem('oracle_envios_eventos', JSON.stringify(todosEnvios));
+    const todos = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
+    todos.push(novoEnvio);
+    localStorage.setItem('oracle_envios_eventos', JSON.stringify(todos));
 
     inputUrl.value = '';
+    inputTitulo.value = '';
     closeModal('modalEnvioEvento');
-    renderizarFotosPorData();
+    renderizarGridsEventos();
 }
 
-// Inicializador seguro executado ao iniciar o app
+function computarVotoLocal(idCard) {
+    let todos = JSON.parse(localStorage.getItem('oracle_envios_eventos')) || [];
+    todos = todos.map(item => {
+        if (item.id === idCard) item.votos = (item.votos || 0) + 1;
+        return item;
+    });
+    localStorage.setItem('oracle_envios_eventos', JSON.stringify(todos));
+    renderizarGridsEventos();
+}
+
+/**
+ * Gerenciamento Local da Aba de Comentários
+ */
+function renderizarComentariosDoTema() {
+    const box = document.getElementById('lista-comentarios-container');
+    if (!box) return;
+
+    box.innerHTML = '';
+    const todosComentarios = JSON.parse(localStorage.getItem('oracle_comentarios_eventos')) || [];
+    const filtrados = todosComentarios.filter(c => c.dataRef === dataEventoSelecionada);
+
+    document.getElementById('texto-contador-comentarios').innerText = `${filtrados.length + 1} comentário(s)`;
+
+    // Comentário padrão fixado do sistema (Igual ao seu print)
+    box.innerHTML = `
+        <div class="comentario-item-box">
+            <div class="avatar-studio-oficial">🌐</div>
+            <div class="comentario-item-content">
+                <div class="comentario-item-header"><span>Event Studio</span><span>•••</span></div>
+                <div class="comentario-item-text">Para garantir a ordem da seção de comentários, manifestações puramente emocionais, spam, ataques ou postagens repetitivas serão removidos. Participe ativamente e acumule pontos!</div>
+            </div>
+        </div>
+    `;
+
+    filtrados.forEach(c => {
+        const itemHtml = `
+            <div class="comentario-item-box">
+                <div class="avatar-comentario-placeholder" style="background:#673ab7; width:32px; height:32px; font-size:0.8em;">U</div>
+                <div class="comentario-item-content">
+                    <div class="comentario-item-header" style="color:#aaa;"><span>Usuário_Oracle</span></div>
+                    <div class="comentario-item-text">${c.texto}</div>
+                </div>
+            </div>
+        `;
+        box.innerHTML += itemHtml;
+    });
+}
+
+function postarComentarioLocal() {
+    const input = document.getElementById('campo-novo-comentario');
+    if (!input.value.trim()) return;
+
+    const novoC = {
+        id: Date.now(),
+        dataRef: dataEventoSelecionada,
+        texto: input.value.trim()
+    };
+
+    const todos = JSON.parse(localStorage.getItem('oracle_comentarios_eventos')) || [];
+    todos.push(novoC);
+    localStorage.setItem('oracle_comentarios_eventos', JSON.stringify(todos));
+
+    input.value = '';
+    renderizarComentariosDoTema();
+}
+
+// Inicializa o evento ativo ao abrir a página
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega o evento padrão do dia atual da lista
+    // Carrega o evento padrão e ativa a data de hoje ao iniciar o app
     mudarDataEvento('2026-05-26');
 });
+
+
 
 
 </script>

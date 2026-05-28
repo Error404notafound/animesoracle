@@ -809,6 +809,11 @@
             border-color: var(--primary);
             color: white;
         }
+/* Trava o fundo do site quando a gaveta hambúrguer estiver aberta */
+body.menu-aberto {
+    overflow: hidden !important;
+    touch-action: none; /* Bloqueia arrastos e toques no mobile */
+}
 
                 /* Menu do Usuário (Sidebar - Nova Estrutura) */
         #userMenu {
@@ -5471,19 +5476,32 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
-// 🍔 FECHAR MENU CLICANDO NO FUNDO (BLINDADO)
+// 🍔 CONTROLE BLINDADO DA GAVETA (TRAVA O ARRASTO DO FUNDO)
 const gavetaFundo = document.getElementById('userMenu');
+
 if (gavetaFundo) {
+    // 1. Escuta cliques no fundo escuro para fechar
     gavetaFundo.addEventListener('click', function(event) {
         const conteudo = document.getElementById('userMenu-content');
         
-        // Se o clique foi EXATAMENTE no fundo escuro (e não dentro do menu)
+        // Se o clique foi no fundo escuro (fora do menu)
         if (conteudo && !conteudo.contains(event.target)) {
             gavetaFundo.classList.remove('open');
-            console.log('Gaveta fechada pelo clique no fundo escuro!');
+            document.body.classList.remove('menu-aberto'); // Libera o fundo do site
         }
     });
+
+    // 2. Monitora quando o menu abre para travar o body na hora
+    const observer = new MutationObserver(function() {
+        if (gavetaFundo.classList.contains('open')) {
+            document.body.classList.add('menu-aberto'); // Prende o fundo
+        } else {
+            document.body.classList.remove('menu-aberto'); // Solta o fundo
+        }
+    });
+    observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class'] });
 }
+
 
 
 

@@ -5471,29 +5471,20 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
-// 🍔 FECHAMENTO DA GAVETA BLINDADO CONTRA ERROS
-document.addEventListener('click', function(event) {
-    const gaveta = document.getElementById('userMenu');
-    const conteudo = document.getElementById('userMenu-content');
-    
-    // Só roda se a gaveta existir e estiver com a classe 'open'
-    if (gaveta && gaveta.classList.contains('open')) {
+// 🍔 FECHAR MENU CLICANDO NO FUNDO (BLINDADO)
+const gavetaFundo = document.getElementById('userMenu');
+if (gavetaFundo) {
+    gavetaFundo.addEventListener('click', function(event) {
+        const conteudo = document.getElementById('userMenu-content');
         
-        // 🔍 MÁGICA: Pega o elemento exato que recebeu o clique
-        const clicouNoConteudo = conteudo.contains(event.target);
-        
-        // Verifica se o clique foi em algum botão que tenha svg ou classes de abrir menu
-        const clicouNoBotaoAbrir = event.target.closest('#menuBtn') || 
-                                   event.target.closest('.icon-btn') || 
-                                   event.target.tagName === 'header';
-
-        // Se NÃO clicou no conteúdo interno da gaveta E NÃO clicou no botão de abrir...
-        if (!clicouNoConteudo && !clicouNoBotaoAbrir) {
-            gaveta.classList.remove('open');
-            console.log('Gaveta fechada com sucesso pelo clique fora!');
+        // Se o clique foi EXATAMENTE no fundo escuro (e não dentro do menu)
+        if (conteudo && !conteudo.contains(event.target)) {
+            gavetaFundo.classList.remove('open');
+            console.log('Gaveta fechada pelo clique no fundo escuro!');
         }
-    }
-});
+    });
+}
+
 
 
     // Função para controlar a visibilidade da seção de comentários

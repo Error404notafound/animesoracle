@@ -5476,31 +5476,36 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
-// 🍔 CONTROLE BLINDADO DA GAVETA (TRAVA O ARRASTO DO FUNDO)
+// 🍔 CONTROLE DA GAVETA (BLOQUEIO DE ARRASTO DIRETO NO TOUCH)
 const gavetaFundo = document.getElementById('userMenu');
 
 if (gavetaFundo) {
-    // 1. Escuta cliques no fundo escuro para fechar
+    // 1. Função que cancela o arrasto do dedo
+    function bloquearArrasto(event) {
+        event.preventDefault();
+    }
+
+    // 2. Escuta cliques no fundo escuro para fechar
     gavetaFundo.addEventListener('click', function(event) {
         const conteudo = document.getElementById('userMenu-content');
-        
-        // Se o clique foi no fundo escuro (fora do menu)
         if (conteudo && !conteudo.contains(event.target)) {
             gavetaFundo.classList.remove('open');
-            document.body.classList.remove('menu-aberto'); // Libera o fundo do site
         }
     });
 
-    // 2. Monitora quando o menu abre para travar o body na hora
+    // 3. Monitora a gaveta: se abrir, desliga o arrasto do site. Se fechar, religa.
     const observer = new MutationObserver(function() {
         if (gavetaFundo.classList.contains('open')) {
-            document.body.classList.add('menu-aberto'); // Prende o fundo
+            // Trava o arrasto do dedo no celular em toda a página de trás
+            document.addEventListener('touchmove', bloquearArrasto, { passive: false });
         } else {
-            document.body.classList.remove('menu-aberto'); // Solta o fundo
+            // Devolve a rolagem normal para o usuário
+            document.removeEventListener('touchmove', bloquearArrasto, { passive: false });
         }
     });
     observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class'] });
 }
+
 
 
 

@@ -855,33 +855,33 @@
             top: 10px;
             z-index: 5001;
         }
-        /* 1. Transforma o bloco em linha e joga os itens para as pontas */
+        /* 1. Alinha os itens à esquerda, deixando a foto primeiro e o nome depois */
 #userInfoDisplay {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Nome na esquerda, foto na direita */
-    padding: 15px 20px; /* Ajusta o respiro interno do menu */
+    justify-content: flex-start; /* Foto primeiro, nome logo em seguida */
+    gap: 12px; /* Dá um espacinho maneiro entre a foto e o nome */
+    padding: 15px;
     border-bottom: 1px solid #333;
 }
 
-/* 2. Ajustes na foto de perfil (Fica do lado direito) */
+/* 2. Ajustes na foto de perfil (Fica na esquerda no fluxo padrão) */
 #userInfoDisplay .profile-pic-upload-area {
-    margin-bottom: 0; /* Remove margem antiga de quando era empilhado */
-    order: 2; /* Garante que a foto fique na direita */
+    margin-bottom: 0;
+    order: 1; /* Foto primeiro */
 }
 
 #userInfoDisplay .profile-pic-preview {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin: 0; /* Remove o 'margin: auto' que centralizava a foto */
+    margin: 0;
     overflow: hidden;
     border: 2px solid var(--primary);
     cursor: pointer;
     background-color: var(--secondary-bg);
 }
 
-/* 3.  */
 #userInfoDisplay .profile-pic-preview img {
             width: 100%;
             height: 100%;
@@ -904,17 +904,18 @@
             background-color: var(--primary);
             color: white;
         }
-        #userInfoDisplay .user-name {
+        /* 3. Ajustes no Nome do Usuário (Fica na direita da foto e com tamanho corrigido) */
+#userInfoDisplay .user-name {
     font-weight: bold;
-    font-size: 0.55em; /* Reduzido exatamente na metade (era 1.1em) */
-    margin-top: 0; /* Remove a margem superior antiga */
+    font-size: 0.9em; /* Tamanho ajustado (+ 2/3 em relação à metade) */
+    margin-top: 0;
     color: var(--text);
-    order: 1; /* Garante que o nome fique na esquerda */
+    order: 2; /* Nome depois da foto */
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Se o nome for gigante, ele não quebra o layout */
-    max-width: 180px; /* Limita o tamanho do texto para não empurrar a foto */
+    text-overflow: ellipsis;
+    max-width: 180px; 
 }
         #userInfoDisplay .user-email {
     display: none; /* Deixa o topo mais limpo, ideal para o novo layout em linha */

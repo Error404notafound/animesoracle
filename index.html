@@ -866,22 +866,20 @@ body.menu-aberto {
             top: 10px;
             z-index: 5001;
         }
-        /* 1. Alinha os itens à esquerda, deixando a foto primeiro e o nome depois */
+        /* 1. Alinha todo mundo no centro da linha vertical */
 #userInfoDisplay {
     display: flex;
-    align-items: center;        /* 🎯 MÁGICA: Centraliza o nome verticalmente com o meio da foto */
-    justify-content: flex-start; /* Mantém a foto primeiro e o nome grudado nela */
-    gap: 12px;                  /* Distância exata entre a foto e o texto */
+    align-items: center;        /* Alinha verticalmente no meio */
+    justify-content: flex-start; /* Gruda um elemento no outro */
+    gap: 12px;                  /* Espaço maneiro entre a foto e o nome */
     padding: 15px 20px;
     border-bottom: 1px solid #333;
-    text-align: left;
 }
 
-
-/* 2. Ajustes na foto de perfil (Fica na esquerda no fluxo padrão) */
+/* 2. Força a foto a ir para a ESQUERDA */
 #userInfoDisplay .profile-pic-upload-area {
     margin-bottom: 0;
-    order: 1; /* Foto primeiro */
+    order: 1;                   /* 👈 Foto primeiro */
 }
 
 #userInfoDisplay .profile-pic-preview {
@@ -893,6 +891,7 @@ body.menu-aberto {
     border: 2px solid var(--primary);
     cursor: pointer;
     background-color: var(--secondary-bg);
+    flex-shrink: 0;
 }
 
 #userInfoDisplay .profile-pic-preview img {
@@ -917,13 +916,17 @@ body.menu-aberto {
             background-color: var(--primary);
             color: white;
         }
-        /* 3. Ajustes no Nome do Usuário (Fica na direita da foto e com tamanho corrigido) */
+        /* 3. Força o nome a ir para a DIREITA e centraliza na régua */
 #userInfoDisplay .user-name {
     font-weight: bold;
     font-size: 0.9em;
-    margin-top: 0 !important;   /* 🧼 Força a remoção de qualquer margem antiga */
-    margin-bottom: 0 !important;/* Garante que não há nenhuma folga empurrando o elemento */
+    margin-top: 0 !important;   /* Limpa qualquer margem antiga */
+    margin-bottom: 0 !important;
     color: var(--text);
+    order: 2;                   /* 👉 Nome depois da foto */
+    text-align: left;
+    
+    /* Trava dos três pontinhos (...) */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

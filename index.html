@@ -907,16 +907,21 @@
         /* 3. Ajustes no Nome do Usuário (Fica na direita da foto e com tamanho corrigido) */
 #userInfoDisplay .user-name {
     font-weight: bold;
-    font-size: 0.9em; /* Tamanho ajustado (+ 2/3 em relação à metade) */
+    font-size: 0.9em;
     margin-top: 0;
     color: var(--text);
-    order: 2; /* Nome depois da foto */
+    order: 2; /* Fica na direita da foto */
     text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px; 
+    
+    /* 🛡️ O COMBO LIMITADOR (MÁGICA DO RECORTE) */
+    white-space: nowrap;       /* Força o nome a ficar em uma linha só (não pula linha) */
+    overflow: hidden;          /* Esconde o pedaço do nome que passar do limite */
+    text-overflow: ellipsis;   /* Coloca os três pontinhos (...) no final automaticamente */
+    
+    /* 📏 COMPRIMENTO MÁXIMO DA LINHA */
+    max-width: 140px;          /* Se o nome passar de 140px, ele toma o corte com (...) */
 }
+
         #userInfoDisplay .user-email {
     display: none; /* Deixa o topo mais limpo, ideal para o novo layout em linha */
 }

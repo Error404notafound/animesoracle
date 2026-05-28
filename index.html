@@ -4114,27 +4114,6 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="eventos-tab-btn" onclick="alterarAbaEvento('criatividade')">Criatividade</button>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL DO EVENTO (Onde entra o formulário) -->
-    <div class="modal-page-content" style="padding-top: 75px; box-sizing: border-box;">
-        
-        <!-- Formulário Estilizado do SeaArt para Envio do Link -->
-        <div style="background: var(--card); padding: 20px; border-radius: 12px; margin: 15px; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-            <h3 style="color: var(--primary); margin-top: 0; font-size: 1.2em;">🎁 Envio de Mídia do Evento</h3>
-            <p style="font-size: 0.85em; color: var(--text-secondary); margin-bottom: 15px;">Cole o link/URL da imagem ou post do seu evento abaixo para coletar seus pontos de recompensa.</p>
-            
-            <input type="url" id="inputUrlFotoEvento" placeholder="https://github.com" style="width: 100%; padding: 12px; background: var(--secondary-bg); border: 1px solid #333; color: var(--text); border-radius: 8px; box-sizing: border-box; margin-bottom: 15px;">
-            
-            <button class="btn-post" onclick="processarEnvioLinkEvento()" style="width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
-                Validar Evento & Resgatar Pontos
-            </button>
-        </div>
-
-        <!-- Se você tiver outros elementos na página (como a lista de fotos enviadas), entram aqui embaixo -->
-
-    </div>
-</div>
-
-
     <!-- Conteúdo Interno Rolável -->
     <div class="modal-page-content">
         
@@ -4489,58 +4468,11 @@ body.light-mode .bottom-sheet-drag-handle {
 <div id="userMenu" class="modal">
     <div id="userMenu-content">
         <button class="userMenu-close-btn" onclick="toggleUserMenu()">&times;</button>
-        
-        <!-- O container agora vai carregar o Card Estilo SeaArt -->
-        <!-- SUBSTITUA SEU #userInfoDisplay POR ESTE BOX COMPLETO E BLINDADO -->
-<div id="userInfoDisplay" style="display: flex !important; flex-direction: column !important; width: 100% !important; padding: 15px 20px !important; border-bottom: 1px solid #333 !important; box-sizing: border-box !important; gap: 15px !important; background: transparent !important; margin: 0 !important; float: none !important;">
-    
-    <!-- Linha Superior: Foto do Lado Esquerdo, Nome e Botão Ativar à Direita -->
-    <div style="display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; background: transparent !important; gap: 10px !important; float: none !important;">
-        
-        <!-- Bloco Foto + Nome (Ficam na Mesma Linha na Esquerda) -->
-        <div style="display: flex !important; flex-direction: row !important; align-items: center !important; gap: 12px !important; background: transparent !important;">
-            <!-- Sua Foto de Perfil Atual -->
-            <div style="margin: 0 !important; padding: 0 !important; width: 45px !important; height: 45px !important; border-radius: 50% !important; border: 2px solid var(--primary, #8a2be2) !important; overflow: hidden !important; flex-shrink: 0 !important;">
-                <img id="userProfilePic" src="https://placeholder.com" alt="Perfil" style="width: 100% !important; height: 100% !important; object-fit: cover !important; margin: 0 !important; display: block !important;">
-            </div>
-            
-            <!-- Seu Nome de Usuário (Evita que o CSS jogue ele pra baixo) -->
-            <div style="display: flex !important; flex-direction: column !important; align-items: flex-start !important; margin: 0 !important; padding: 0 !important;">
-                <span id="displayNomeUser" style="max-width: 110px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; font-weight: bold !important; font-size: 0.95em !important; color: #fff !important; display: block !important; line-height: 1.2 !important; text-align: left !important;">error404notafound</span>
-                <span style="font-size: 0.75em !important; color: #888 !important; display: block !important; margin-top: 2px !important;">Membro Oracle</span>
-            </div>
+        <div id="userInfoDisplay">
+            <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
+            <!-- Ex: Foto, Nome, Email, Status -->
         </div>
-
-        <!-- Botão Ativar Estilo Dourado SeaArt (Fica no canto Direito) -->
-        <button class="btn-ativar-vip" style="background: linear-gradient(90deg, #ffe082, #ffb300) !important; color: #000 !important; border: none !important; padding: 6px 14px !important; font-size: 0.8em !important; font-weight: bold !important; border-radius: 20px !important; cursor: pointer !important; box-shadow: 0 2px 6px rgba(255,179,0,0.2) !important; flex-shrink: 0 !important; margin: 0 !important;">Ativar</button>
-    </div>
-
-    <!-- Linha Inferior: Carteira de Saldos (Pontos ★ e Energia ⚡) -->
-    <div style="display: flex !important; flex-direction: row !important; gap: 10px !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important;">
-        
-        <!-- Mostrador de Pontos (★) -->
-        <div style="display: flex !important; align-items: center !important; background: #121214 !important; padding: 6px 10px !important; border-radius: 20px !important; flex: 1 !important; justify-content: space-between !important; border: 1px solid #222 !important;">
-            <div style="display: flex !important; align-items: center !important; gap: 5px !important; font-size: 0.85em !important; font-weight: bold !important; color: #fff !important;">
-                <span style="color: var(--primary, #8a2be2) !important; font-size: 1.1em !important; line-height: 1 !important;">★</span>
-                <span id="saldoPontosUser" style="color: #fff !important;">1002.6</span>
-            </div>
-            <button style="background: #2a2a32 !important; color: #fff !important; border: none !important; width: 18px !important; height: 18px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.75em !important; cursor: pointer !important; padding: 0 !important; font-weight: bold !important;">+</button>
-        </div>
-        
-        <!-- Mostrador de Energia (⚡) -->
-        <div style="display: flex !important; align-items: center !important; background: #121214 !important; padding: 6px 10px !important; border-radius: 20px !important; flex: 1 !important; justify-content: space-between !important; border: 1px solid #222 !important;">
-            <div style="display: flex !important; align-items: center !important; gap: 5px !important; font-size: 0.85em !important; font-weight: bold !important; color: #fff !important;">
-                <span style="color: #ffb300 !important; font-size: 1.1em !important; line-height: 1 !important;">⚡</span>
-                <span id="saldoEnergiaUser" style="color: #fff !important;">130</span>
-            </div>
-            <button style="background: #2a2a32 !important; color: #fff !important; border: none !important; width: 18px !important; height: 18px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 0.75em !important; cursor: pointer !important; padding: 0 !important; font-weight: bold !important;">+</button>
-        </div>
-
-    </div>
-</div>
-
         <div class="userMenu-nav">
-
     <!-- COLA ESTE BLOCO ABAIXO DA LINHA ACIMA -->
     <a class="userMenu-nav-item" id="navHomeBtn">
         <svg viewBox="0 0 24 24">
@@ -5576,92 +5508,6 @@ if (gavetaFundo) {
     observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class', 'style'] });
 }
 
-    // <-- FIM DA SUA FUNÇÃO ATUAL
-
-    // ==========================================
-    // INTEGRAÇÃO DE RECOMPENSAS & SALDO (SEAART)
-    // ==========================================
-
-    // Listener em tempo real para carregar a foto, nome, pontos e energia do Firebase
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            // Atualiza os dados básicos visuais no painel
-            const displayNome = document.getElementById('displayNomeUser');
-            const userPic = document.getElementById('userProfilePic');
-            
-            if (displayNome) displayNome.innerText = user.displayName || "error404notafound";
-            if (userPic && user.photoURL) userPic.src = user.photoURL;
-
-            // Escuta as atualizações de Pontos e Energia direto na coleção "usuarios"
-            db.collection("usuarios").doc(user.uid).onSnapshot((doc) => {
-                if (doc.exists) {
-                    const dados = doc.data();
-                    const saldoPontos = document.getElementById('saldoPontosUser');
-                    const saldoEnergia = document.getElementById('saldoEnergiaUser');
-                    
-                    // Mostra com 1 casa decimal igual ao print do SeaArt (ex: 1002.6)
-                    if (saldoPontos) saldoPontos.innerText = (dados.pontos || 0).toFixed(1);
-                    if (saldoEnergia) saldoEnergia.innerText = dados.energia || 0;
-                } else {
-                    // Cria os saldos padrões se for o primeiro acesso do usuário no banco
-                    db.collection("usuarios").doc(user.uid).set({
-                        nome: user.displayName || "error404notafound",
-                        pontos: 1002.6,
-                        energia: 130
-                    });
-                }
-            });
-        } else {
-            // Valores padrão caso não tenha ninguém logado
-            const displayNome = document.getElementById('displayNomeUser');
-            const saldoPontos = document.getElementById('saldoPontosUser');
-            const saldoEnergia = document.getElementById('saldoEnergiaUser');
-            
-            if (displayNome) displayNome.innerText = "Visitante";
-            if (saldoPontos) saldoPontos.innerText = "0.0";
-            if (saldoEnergia) saldoEnergia.innerText = "0";
-        }
-    });
-
-    // Executa o envio e acrescenta as recompensas de fato
-    function processarEnvioLinkEvento() {
-        const user = firebase.auth().currentUser;
-        const urlInput = document.getElementById('inputUrlFotoEvento');
-        
-        if (!urlInput) return;
-        const urlDigitada = urlInput.value.trim();
-
-        if (!user) {
-            alert("🔒 Você precisa fazer login antes de resgatar recompensas!");
-            return;
-        }
-
-        if (urlDigitada === "" || !urlDigitada.startsWith("http")) {
-            alert("❌ Insira uma URL de imagem válida para o evento!");
-            return;
-        }
-
-        // Altera o saldo no banco incrementando os pontos recebidos
-        db.collection("usuarios").doc(user.uid).update({
-            energia: firebase.firestore.FieldValue.increment(20), // adiciona +20 de energia
-            pontos: firebase.firestore.FieldValue.increment(15.5)   // adiciona +15.5 pontos
-        })
-        .then(() => {
-            alert("🎉 Recompensa adicionada! Seus pontos e energias foram atualizados.");
-            urlInput.value = ""; // Limpa a barra de digitação
-            
-            // Registra o link enviado para auditoria se você precisar avaliar depois
-            db.collection("historico_eventos").add({
-                uid: user.uid,
-                urlMidia: urlDigitada,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        })
-        .catch((err) => {
-            console.error("Erro ao computar prêmio: ", err);
-            alert("Erro ao salvar recompensa. Verifique suas regras do Firebase.");
-        });
-    }
 
 
 

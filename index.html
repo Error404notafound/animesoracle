@@ -944,25 +944,7 @@
             fill: currentColor;
             margin-right: 15px;
         }
-                /* Estilos específicos para badges de status (mantidos do original) */
-        .user-status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .status-fantasma { background-color: #6c757d; color: white; } 
-        .status-novo { background-color: var(--primary); color: white; } 
-        .status-espectador { background-color: var(--info); color: white; } 
-        .status-colaborador { background-color: var(--success); color: white; } 
-        .status-comentador { background-color: var(--warning); color: black; } 
-        .status-especialista { background-color: var(--primary-light); color: white; } 
-        .status-exigente { background-color: var(--danger); color: white; } 
-        .status-critico { background-color: #343a40; color: white; } 
+                /* Estilos específicos para badges de status (mantidos do original) */ 
         
                 /* Toggle Switch para Modo Adulto / Tema */
         .toggle-switch-container {
@@ -5701,43 +5683,6 @@ body.light-mode .bottom-sheet-drag-handle {
             userInfoDisplay.appendChild(pEmail);
 
             // Exibe status do usuário
-            let userStatus = currentUserData.status || 'fantasma'; // Padrão
-            let statusIcon = '😶';
-            let statusClass = 'status-fantasma';
-
-            // Lógica para atualização do status (simplificada aqui)
-            if (userStatus === 'novo') {
-                statusIcon = '🙂';
-                statusClass = 'status-novo';
-                // Verifica se o status 'novo' expirou
-                if (currentUserData.statusExpiration && currentUserData.statusExpiration.toDate() < new Date()) {
-                    userStatus = 'espectador';
-                    await userDocRef.update({ status: userStatus, statusExpiration: null }); // Atualiza no Firestore
-                    currentUserData.status = userStatus; // Atualiza o dado local
-                }
-            } else if (userStatus === 'espectador') {
-                statusIcon = '😐';
-                statusClass = 'status-espectador';
-            } else if (userStatus === 'colaborador') {
-                statusIcon = '🤝';
-                statusClass = 'status-colaborador';
-            } else if (userStatus === 'comentador') {
-                statusIcon = '🤯';
-                statusClass = 'status-comentador';
-            } else if (userStatus === 'especialista') {
-                statusIcon = '🤓';
-                statusClass = 'status-especialista';
-            } else if (userStatus === 'exigente') {
-                statusIcon = '🤔';
-                statusClass = 'status-exigente';
-            } else if (userStatus === 'critico') {
-                statusIcon = '🧐';
-                statusClass = 'status-critico';
-            }
-            const statusBadge = document.createElement('div');
-            statusBadge.className = `user-status-badge ${statusClass}`;
-            statusBadge.innerHTML = `${statusIcon} ${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}`;
-            userInfoDisplay.appendChild(statusBadge);
 
             // Atualiza o estado dos toggles no menu
             const modoAdultoToggle = document.getElementById('modoAdultoToggle');

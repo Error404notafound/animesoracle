@@ -5480,19 +5480,31 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
-// 🍔 FECHAMENTO EXCLUSIVO PELO FUNDO ESCURO
+// 🍔 FECHAMENTO CIRÚRGICO DA GAVETA
 const gavetaFundo = document.getElementById('userMenu');
 
 if (gavetaFundo) {
+    // 1. Escuta o clique EXATAMENTE no fundo escuro
     gavetaFundo.addEventListener('click', function(event) {
-        // Se o clique foi EXATAMENTE na tag do fundo escuro (userMenu)
-        // e NÃO em qualquer elemento dentro dela (como o menu ou o botão X)
         if (event.target === gavetaFundo) {
             gavetaFundo.classList.remove('open');
-            console.log('Gaveta fechada clicando no fundo!');
+            gavetaFundo.style.display = 'none'; // Garante que some da tela
+            document.body.style.overflow = '';  // DEVOLVE A ROLAGEM DO SITE
         }
     });
+
+    // 2. Trava e destrava a rolagem monitorando a gaveta
+    const observer = new MutationObserver(function() {
+        // Se a gaveta estiver visível (aberta)
+        if (gavetaFundo.classList.contains('open') || gavetaFundo.style.display === 'flex') {
+            document.body.style.overflow = 'hidden'; // CONGELA O SITE LÁ ATRÁS
+        } else {
+            document.body.style.overflow = '';        // LIBERA O SITE
+        }
+    });
+    observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class', 'style'] });
 }
+
 
 
 

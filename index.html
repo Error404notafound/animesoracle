@@ -4114,6 +4114,27 @@ body.light-mode .bottom-sheet-drag-handle {
         <button class="eventos-tab-btn" onclick="alterarAbaEvento('criatividade')">Criatividade</button>
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL DO EVENTO (Onde entra o formulário) -->
+    <div class="modal-page-content" style="padding-top: 75px; box-sizing: border-box;">
+        
+        <!-- Formulário Estilizado do SeaArt para Envio do Link -->
+        <div style="background: var(--card); padding: 20px; border-radius: 12px; margin: 15px; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            <h3 style="color: var(--primary); margin-top: 0; font-size: 1.2em;">🎁 Envio de Mídia do Evento</h3>
+            <p style="font-size: 0.85em; color: var(--text-secondary); margin-bottom: 15px;">Cole o link/URL da imagem ou post do seu evento abaixo para coletar seus pontos de recompensa.</p>
+            
+            <input type="url" id="inputUrlFotoEvento" placeholder="https://github.com" style="width: 100%; padding: 12px; background: var(--secondary-bg); border: 1px solid #333; color: var(--text); border-radius: 8px; box-sizing: border-box; margin-bottom: 15px;">
+            
+            <button class="btn-post" onclick="processarEnvioLinkEvento()" style="width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
+                Validar Evento & Resgatar Pontos
+            </button>
+        </div>
+
+        <!-- Se você tiver outros elementos na página (como a lista de fotos enviadas), entram aqui embaixo -->
+
+    </div>
+</div>
+
+
     <!-- Conteúdo Interno Rolável -->
     <div class="modal-page-content">
         
@@ -4468,11 +4489,53 @@ body.light-mode .bottom-sheet-drag-handle {
 <div id="userMenu" class="modal">
     <div id="userMenu-content">
         <button class="userMenu-close-btn" onclick="toggleUserMenu()">&times;</button>
-        <div id="userInfoDisplay">
-            <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
-            <!-- Ex: Foto, Nome, Email, Status -->
+        
+        <!-- O container agora vai carregar o Card Estilo SeaArt -->
+        <div id="userInfoDisplay" style="display: flex; flex-direction: column; width: 100%; padding: 15px 20px; border-bottom: 1px solid #333; box-sizing: border-box; gap: 12px; margin-top: 20px;">
+            
+            <!-- Linha Superior: Foto, Nome e Botão Ativar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <!-- Espaço da Foto de Perfil -->
+                    <div class="profile-pic-upload-area" style="margin-bottom: 0; flex-shrink: 0;">
+                        <div class="profile-pic-preview" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); overflow: hidden; background: var(--secondary-bg);">
+                            <img id="userProfilePic" src="https://placeholder.com" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <!-- Nome do Usuário -->
+                    <div style="display: flex; flex-direction: column;">
+                        <span class="user-name" id="displayNomeUser" style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 0.95em; color: var(--text);">Carregando...</span>
+                        <span style="font-size: 0.75em; color: #888;">Membro Oracle</span>
+                    </div>
+                </div>
+                <!-- Botão Ativar Dourado -->
+                <button class="btn-ativar-vip" style="background: linear-gradient(90deg, #ffe082, #ffb300); color: #000; border: none; padding: 5px 14px; font-size: 0.8em; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 2px 6px rgba(255,179,0,0.2);">Ativar</button>
+            </div>
+
+            <!-- Linha Inferior: Carteira de Saldos (Pontos ★ e Energia ⚡) -->
+            <div class="seaart-balance-row" style="display: flex; gap: 10px; width: 100%;">
+                <!-- Mostrador de Pontos (★) -->
+                <div class="balance-item" style="display: flex; align-items: center; background: #121214; padding: 6px 10px; border-radius: 20px; flex: 1; justify-content: space-between;">
+                    <div class="balance-info" style="display: flex; align-items: center; gap: 5px; font-size: 0.85em; font-weight: bold; color: #fff;">
+                        <span style="color: var(--primary); font-size: 1.1em;">★</span>
+                        <span id="saldoPontosUser">0.0</span>
+                    </div>
+                    <button class="btn-add-balance" style="background: #2a2a32; color: #fff; border: none; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75em; cursor: pointer;">+</button>
+                </div>
+                
+                <!-- Mostrador de Energia (⚡) -->
+                <div class="balance-item" style="display: flex; align-items: center; background: #121214; padding: 6px 10px; border-radius: 20px; flex: 1; justify-content: space-between;">
+                    <div class="balance-info" style="display: flex; align-items: center; gap: 5px; font-size: 0.85em; font-weight: bold; color: #fff;">
+                        <span style="color: #ffb300; font-size: 1.1em;">⚡</span>
+                        <span id="saldoEnergiaUser">0</span>
+                    </div>
+                    <button class="btn-add-balance" style="background: #2a2a32; color: #fff; border: none; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75em; cursor: pointer;">+</button>
+                </div>
+            </div>
+
         </div>
         <div class="userMenu-nav">
+
     <!-- COLA ESTE BLOCO ABAIXO DA LINHA ACIMA -->
     <a class="userMenu-nav-item" id="navHomeBtn">
         <svg viewBox="0 0 24 24">
@@ -5508,6 +5571,92 @@ if (gavetaFundo) {
     observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class', 'style'] });
 }
 
+    // <-- FIM DA SUA FUNÇÃO ATUAL
+
+    // ==========================================
+    // INTEGRAÇÃO DE RECOMPENSAS & SALDO (SEAART)
+    // ==========================================
+
+    // Listener em tempo real para carregar a foto, nome, pontos e energia do Firebase
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // Atualiza os dados básicos visuais no painel
+            const displayNome = document.getElementById('displayNomeUser');
+            const userPic = document.getElementById('userProfilePic');
+            
+            if (displayNome) displayNome.innerText = user.displayName || "error404notafound";
+            if (userPic && user.photoURL) userPic.src = user.photoURL;
+
+            // Escuta as atualizações de Pontos e Energia direto na coleção "usuarios"
+            db.collection("usuarios").doc(user.uid).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const dados = doc.data();
+                    const saldoPontos = document.getElementById('saldoPontosUser');
+                    const saldoEnergia = document.getElementById('saldoEnergiaUser');
+                    
+                    // Mostra com 1 casa decimal igual ao print do SeaArt (ex: 1002.6)
+                    if (saldoPontos) saldoPontos.innerText = (dados.pontos || 0).toFixed(1);
+                    if (saldoEnergia) saldoEnergia.innerText = dados.energia || 0;
+                } else {
+                    // Cria os saldos padrões se for o primeiro acesso do usuário no banco
+                    db.collection("usuarios").doc(user.uid).set({
+                        nome: user.displayName || "error404notafound",
+                        pontos: 1002.6,
+                        energia: 130
+                    });
+                }
+            });
+        } else {
+            // Valores padrão caso não tenha ninguém logado
+            const displayNome = document.getElementById('displayNomeUser');
+            const saldoPontos = document.getElementById('saldoPontosUser');
+            const saldoEnergia = document.getElementById('saldoEnergiaUser');
+            
+            if (displayNome) displayNome.innerText = "Visitante";
+            if (saldoPontos) saldoPontos.innerText = "0.0";
+            if (saldoEnergia) saldoEnergia.innerText = "0";
+        }
+    });
+
+    // Executa o envio e acrescenta as recompensas de fato
+    function processarEnvioLinkEvento() {
+        const user = firebase.auth().currentUser;
+        const urlInput = document.getElementById('inputUrlFotoEvento');
+        
+        if (!urlInput) return;
+        const urlDigitada = urlInput.value.trim();
+
+        if (!user) {
+            alert("🔒 Você precisa fazer login antes de resgatar recompensas!");
+            return;
+        }
+
+        if (urlDigitada === "" || !urlDigitada.startsWith("http")) {
+            alert("❌ Insira uma URL de imagem válida para o evento!");
+            return;
+        }
+
+        // Altera o saldo no banco incrementando os pontos recebidos
+        db.collection("usuarios").doc(user.uid).update({
+            energia: firebase.firestore.FieldValue.increment(20), // adiciona +20 de energia
+            pontos: firebase.firestore.FieldValue.increment(15.5)   // adiciona +15.5 pontos
+        })
+        .then(() => {
+            alert("🎉 Recompensa adicionada! Seus pontos e energias foram atualizados.");
+            urlInput.value = ""; // Limpa a barra de digitação
+            
+            // Registra o link enviado para auditoria se você precisar avaliar depois
+            db.collection("historico_eventos").add({
+                uid: user.uid,
+                urlMidia: urlDigitada,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        })
+        .catch((err) => {
+            console.error("Erro ao computar prêmio: ", err);
+            alert("Erro ao salvar recompensa. Verifique suas regras do Firebase.");
+        });
+    }
 
 
 

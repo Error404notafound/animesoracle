@@ -816,18 +816,22 @@ body.menu-aberto {
 }
 
                 /* Menu do Usuário (Sidebar - Nova Estrutura) */
-        #userMenu {
+#userMenu {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.7);
-    z-index: 10001; /* ALTERADO: Agora é maior que o header principal (9999) e os popups modais (10000) */
-    display: none; /* Escondido por padrão */
+    z-index: 10001;
+    display: none;
     justify-content: flex-start;
     transition: background 0.3s ease-in-out;
+    
+    /* 📱 ADICIONE ESSA LINHA AQUI EMBAIXO */
+    touch-action: none; /* Impede o celular de arrastar o fundo */
 }
+
 
         #userMenu.open {
             display: flex;
@@ -5476,35 +5480,20 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
-// 🍔 CONTROLE DA GAVETA (BLOQUEIO DE ARRASTO DIRETO NO TOUCH)
+// 🍔 FECHAMENTO EXCLUSIVO PELO FUNDO ESCURO
 const gavetaFundo = document.getElementById('userMenu');
 
 if (gavetaFundo) {
-    // 1. Função que cancela o arrasto do dedo
-    function bloquearArrasto(event) {
-        event.preventDefault();
-    }
-
-    // 2. Escuta cliques no fundo escuro para fechar
     gavetaFundo.addEventListener('click', function(event) {
-        const conteudo = document.getElementById('userMenu-content');
-        if (conteudo && !conteudo.contains(event.target)) {
+        // Se o clique foi EXATAMENTE na tag do fundo escuro (userMenu)
+        // e NÃO em qualquer elemento dentro dela (como o menu ou o botão X)
+        if (event.target === gavetaFundo) {
             gavetaFundo.classList.remove('open');
+            console.log('Gaveta fechada clicando no fundo!');
         }
     });
-
-    // 3. Monitora a gaveta: se abrir, desliga o arrasto do site. Se fechar, religa.
-    const observer = new MutationObserver(function() {
-        if (gavetaFundo.classList.contains('open')) {
-            // Trava o arrasto do dedo no celular em toda a página de trás
-            document.addEventListener('touchmove', bloquearArrasto, { passive: false });
-        } else {
-            // Devolve a rolagem normal para o usuário
-            document.removeEventListener('touchmove', bloquearArrasto, { passive: false });
-        }
-    });
-    observer.observe(gavetaFundo, { attributes: true, attributeFilter: ['class'] });
 }
+
 
 
 

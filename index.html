@@ -849,7 +849,9 @@ body.menu-aberto {
             flex-direction: column;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-        }
+        overflow-y: auto;          /* Ativa a rolagem vertical se os botões passarem do tamanho da tela */
+    -webkit-overflow-scrolling: touch; /* Deixa o arrastar do dedo liso e suave no celular (iOS/Android) */
+}
         #userMenu.open #userMenu-content {
             transform: translateX(0); /* Desliza para dentro */
         }

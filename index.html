@@ -5471,6 +5471,18 @@ body.light-mode .bottom-sheet-drag-handle {
             showMessage("Erro ao fazer logout: " + error.message);
         }
     }
+// Fechar o menu hambúrguer ao clicar fora
+document.addEventListener('click', function(event) {
+    const gaveta = document.getElementById('userMenu');
+    const conteudo = document.getElementById('userMenu-content');
+    
+    if (gaveta && gaveta.classList.contains('open')) {
+        // Se o clique foi fora da gaveta e não foi no botão de abrir
+        if (!conteudo.contains(event.target) && !event.target.closest('.icon-btn')) {
+            gaveta.classList.remove('open');
+        }
+    }
+});
 
     // Função para controlar a visibilidade da seção de comentários
     function toggleCommentSection(isLoggedIn) {
@@ -10497,18 +10509,7 @@ function mudarConteudoDoDesafio(tipo) {
         if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Criação de Fanart / IP Famosa"';
     }
 }
-// Fechar o menu hambúrguer ao clicar fora
-document.addEventListener('click', function(event) {
-    const gaveta = document.getElementById('userMenu');
-    const conteudo = document.getElementById('userMenu-content');
-    
-    if (gaveta && gaveta.classList.contains('open')) {
-        // Se o clique foi fora da gaveta e não foi no botão de abrir
-        if (!conteudo.contains(event.target) && !event.target.closest('.icon-btn')) {
-            gaveta.classList.remove('open');
-        }
-    }
-});
+// Fechar
 
 
 

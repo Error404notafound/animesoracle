@@ -869,12 +869,14 @@ body.menu-aberto {
         /* 1. Alinha os itens à esquerda, deixando a foto primeiro e o nome depois */
 #userInfoDisplay {
     display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Foto primeiro, nome logo em seguida */
-    gap: 12px; /* Dá um espacinho maneiro entre a foto e o nome */
-    padding: 15px;
+    align-items: center;        /* 🎯 MÁGICA: Centraliza o nome verticalmente com o meio da foto */
+    justify-content: flex-start; /* Mantém a foto primeiro e o nome grudado nela */
+    gap: 12px;                  /* Distância exata entre a foto e o texto */
+    padding: 15px 20px;
     border-bottom: 1px solid #333;
+    text-align: left;
 }
+
 
 /* 2. Ajustes na foto de perfil (Fica na esquerda no fluxo padrão) */
 #userInfoDisplay .profile-pic-upload-area {
@@ -919,19 +921,15 @@ body.menu-aberto {
 #userInfoDisplay .user-name {
     font-weight: bold;
     font-size: 0.9em;
-    margin-top: 0;
+    margin-top: 0 !important;   /* 🧼 Força a remoção de qualquer margem antiga */
+    margin-bottom: 0 !important;/* Garante que não há nenhuma folga empurrando o elemento */
     color: var(--text);
-    order: 2; /* Fica na direita da foto */
-    text-align: left;
-    
-    /* 🛡️ O COMBO LIMITADOR (MÁGICA DO RECORTE) */
-    white-space: nowrap;       /* Força o nome a ficar em uma linha só (não pula linha) */
-    overflow: hidden;          /* Esconde o pedaço do nome que passar do limite */
-    text-overflow: ellipsis;   /* Coloca os três pontinhos (...) no final automaticamente */
-    
-    /* 📏 COMPRIMENTO MÁXIMO DA LINHA */
-    max-width: 140px;          /* Se o nome passar de 140px, ele toma o corte com (...) */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
 }
+
 
         #userInfoDisplay .user-email {
     display: none; /* Deixa o topo mais limpo, ideal para o novo layout em linha */

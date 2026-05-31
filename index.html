@@ -10555,7 +10555,6 @@ document.addEventListener('click', function(evento) {
                 .toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                 .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-            // Atualiza a URL do navegador deixando-a limpa: /animesoracle/assistir/nome-do-anime
             window.history.pushState({}, "", `/animesoracle/assistir/${slug}`);
         }
     }
@@ -10564,22 +10563,19 @@ document.addEventListener('click', function(evento) {
 // 2. CAPTURA A URL DO GOOGLE OU F5 (INTERCEPTADA PELO 404.HTML)
 function verificarRotaInicialAnimesOracle() {
     const parametros = new URLSearchParams(window.location.search);
-    const rotaInterceptada = parametros.get('p'); // Pega o caminho guardado (ex: "assistir/final-space-episodio-12")
+    const rotaInterceptada = parametros.get('p'); 
 
     if (rotaInterceptada && rotaInterceptada.startsWith('assistir/')) {
         const slugUrl = rotaInterceptada.replace('assistir/', '');
         const videoPage = document.getElementById('videoPage');
 
-        // Limpa os parâmetros feios da URL para o usuário ver o link 100% limpo no topo
         window.history.replaceState({}, "", `/animesoracle/assistir/${slugUrl}`);
 
-        // Abre a tela do player visualmente
         if (videoPage && !videoPage.classList.contains('active')) {
             videoPage.classList.add('active');
             videoPage.scrollTop = 0;
         }
 
-        // BUSCA DIRETA E PROFUNDA NO FIREBASE (IGUAL AO CONSOLE)
         db.collection("series").get().then((seriesSnapshot) => {
             seriesSnapshot.forEach((docSerie) => {
                 const dadosSerie = docSerie.data();
@@ -10588,19 +10584,15 @@ function verificarRotaInicialAnimesOracle() {
                     epSnapshot.forEach((docEp) => {
                         const dadosEp = docEp.data();
                         
-                        // Monta o nome para bater com a URL (Nome do Anime + Nome do Episódio)
                         const nomeCompleto = `${dadosSerie.nome || ''} ${dadosEp.nomeEpisodio || dadosEp.titulo || ''}`;
                         const slugFirebase = nomeCompleto
                             .toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                             .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-                        // Se a URL digitada for idêntica ao registro interno do Firebase, dá o play!
                         if (slugFirebase === slugUrl) {
                             if (typeof abrirVideoPage === "function") {
-                                // Envia o bloco de dados estruturado original para manter seus botões intactos
                                 abrirVideoPage({ ...dadosSerie, ...dadosEp });
                             } else {
-                                // Plano B: Se a função mudar de nome, injeta no Iframe padrão
                                 const iframe = document.getElementById('videoFrame');
                                 const urlReal = dadosEp.urlVideo || dadosEp.embed || dadosEp.link;
                                 if (iframe && urlReal) iframe.src = urlReal;
@@ -10613,14 +10605,29 @@ function verificarRotaInicialAnimesOracle() {
     }
 }
 
-// 3. SE O USUÁRIO CLICAR NO BOTÃO DE FECHAR DO SEU SITE, LIMPA A URL DE VOLTA PARA A HOME
+// 3. CORREÇÃO COMPLETA: FECHA O CONTAINER DO VÍDEO E LIMPA A URL DE VERDADE
 document.addEventListener('click', function(evento) {
+    // Se o usuário clicar no seu botão original de fechar o player
     if (evento.target.closest('.video-page-close-btn')) {
+        const videoPage = document.getElementById('videoPage');
+        
+        // A) Força o fechamento do container usando as classes padrões do seu site
+        if (videoPage) {
+            videoPage.classList.remove('active');
+        }
+        document.body.classList.remove('cinema-mode'); // Remove o borrão se ele existir
+
+        // B) Desliga o som do iframe limpando o link do vídeo antigo
+        const iframe = document.getElementById('videoFrame');
+        if (iframe) {
+            iframe.src = ''; 
+        }
+
+        // C) Reseta a URL na barra de endereços de volta para a Home limpa
         window.history.pushState({}, "", `/animesoracle/`);
     }
 });
 
-// Executa a checagem assim que o site termina de ler os scripts fundamentais
 window.addEventListener('DOMContentLoaded', verificarRotaInicialAnimesOracle);
 
 

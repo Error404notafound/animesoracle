@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -10540,12 +10540,11 @@ function mudarConteudoDoDesafio(tipo) {
     }
 }
 // =================================================================
-// CENTRAL DE ROTAS POR SIMULAÇÃO - ANIMESORACLE (Layout 100% Seguro)
+// CENTRAL DE ROTAS PREMIUM - ANIMESORACLE (CORREÇÃO DE CARREGAMENTO)
 // =================================================================
 
 // 1. APENAS ATUALIZA A URL NA BARRA QUANDO VOCÊ CLICA NO CARD ORIGINAL DO SITE
 document.addEventListener('click', function(evento) {
-    // Detecta se o clique foi em um card de episódio ou anime
     const cardAnime = evento.target.closest('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
     
     if (cardAnime) {
@@ -10567,7 +10566,7 @@ document.addEventListener('click', function(evento) {
     }
 });
 
-// 2. MONITOR DA URL (Resolve F5, link direto do Google e botão Voltar)
+// 2. MONITOR DA URL COM OBSERVAÇÃO DE ENTRADA (Resolve F5 e Links Diretos do Google)
 function gerenciarRotasAnimesOracle() {
     const hashAtual = window.location.hash;
     const videoPage = document.getElementById('videoPage');
@@ -10575,16 +10574,13 @@ function gerenciarRotasAnimesOracle() {
     if (hashAtual.startsWith('#/assistir/')) {
         const slugUrl = hashAtual.replace('#/assistir/', '');
 
-        // AGUARDA O CARREGAMENTO DOS CARDS NA TELA
-        // Como os cards vêm do Firebase, precisamos esperar eles aparecerem no HTML para poder clicar neles
-        const intervaloVerificacao = setInterval(() => {
-            // Pega todos os cards de episódios ou animes renderizados na tela
+        // Criamos um vigia (MutationObserver) que detecta quando o Firebase insere elementos novos na tela
+        const vigiaDeCards = new MutationObserver((mutacoes, observador) => {
             const todosOsCards = document.querySelectorAll('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
             
             if (todosOsCards.length > 0) {
                 let cardAlvo = null;
 
-                // Varre os cards da tela para achar qual deles tem o texto idêntico ao link da URL
                 todosOsCards.forEach((card) => {
                     const elementoTitulo = card.querySelector('.anime-card-title-below, .episode-grid-card-title-below, .episode-title');
                     if (elementoTitulo) {
@@ -10601,22 +10597,44 @@ function gerenciarRotasAnimesOracle() {
                     }
                 });
 
-                // Se achou o card correspondente na tela, simula o clique nele!
+                // Se o card vindo do Firebase finalmente apareceu no seu site, clica nele!
                 if (cardAlvo) {
-                    clearInterval(intervaloVerificacao); // Para de procurar
-                    
-                    // Dispara o clique original do seu site. Isso vai rodar a SUA função nativa,
-                    // trazendo os botões originais perfeitos e o vídeo sem quebrar nada.
-                    cardAlvo.click(); 
+                    observador.disconnect(); // Desliga o vigia para economizar memória
+                    cardAlvo.click();        // Simula o clique perfeito original do seu site
                 }
             }
-        }, 300); // Checa a cada 300 milissegundos se os cards já brotaram na tela
+        });
 
-        // Limita a busca em até 8 segundos para não ficar rodando infinito se o anime não existir
-        setTimeout(() => clearInterval(intervaloVerificacao), 8000);
+        // Configura o vigia para olhar todo o corpo do site procurando novos códigos carregados
+        vigiaDeCards.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Segurança secundária: tenta fazer uma checagem rápida a cada 500ms caso o observer falhe
+        let tentativas = 0;
+        const checagemReserva = setInterval(() => {
+            tentativas++;
+            const todosOsCards = document.querySelectorAll('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
+            
+            if (todosOsCards.length > 0) {
+                todosOsCards.forEach((card) => {
+                    const elementoTitulo = card.querySelector('.anime-card-title-below, .episode-grid-card-title-below, .episode-title');
+                    if (elementoTitulo) {
+                        const slugCard = elementoTitulo.innerText.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                        if (slugCard === slugUrl) {
+                            vigiaDeCards.disconnect();
+                            clearInterval(checagemReserva);
+                            card.click();
+                        }
+                    }
+                });
+            }
+            if (tentativas > 20) clearInterval(checagemReserva); // Para após 10 segundos
+        }, 500);
 
     } else if (hashAtual === '' || hashAtual === '#') {
-        // Se a hash sumir (botão voltar do navegador), fecha o player e limpa o frame com total segurança
+        // Se a hash sumir (botão voltar do navegador), fecha o player com total segurança
         if (videoPage && videoPage.classList.contains('active')) {
             videoPage.classList.remove('active');
             document.body.classList.remove('cinema-mode');
@@ -10633,7 +10651,7 @@ document.addEventListener('click', function(evento) {
     }
 });
 
-// Ativa os inicializadores de escuta da barra do navegador
+// Ativa os listeners de monitoramento
 window.addEventListener('hashchange', gerenciarRotasAnimesOracle);
 window.addEventListener('load', gerenciarRotasAnimesOracle);
 

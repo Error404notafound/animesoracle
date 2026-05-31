@@ -10540,11 +10540,12 @@ function mudarConteudoDoDesafio(tipo) {
     }
 }
 // =================================================================
-// CENTRAL DE ROTAS PREMIUM - ANIMESORACLE (CORRIGIDA)
+// CENTRAL DE ROTAS POR SIMULAÇÃO - ANIMESORACLE (Layout 100% Seguro)
 // =================================================================
 
-// 1. CAPTURA O CLIQUE NOS CARDS: Atualiza a URL com base no texto do elemento clicado
+// 1. APENAS ATUALIZA A URL NA BARRA QUANDO VOCÊ CLICA NO CARD ORIGINAL DO SITE
 document.addEventListener('click', function(evento) {
+    // Detecta se o clique foi em um card de episódio ou anime
     const cardAnime = evento.target.closest('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
     
     if (cardAnime) {
@@ -10552,6 +10553,8 @@ document.addEventListener('click', function(evento) {
         
         if (elementoTitulo) {
             const tituloOriginal = elementoTitulo.innerText;
+            
+            // Cria a URL limpa baseada no texto real do card (Ex: "episodio-12")
             const slug = tituloOriginal
                 .toLowerCase()
                 .trim()
@@ -10564,67 +10567,56 @@ document.addEventListener('click', function(evento) {
     }
 });
 
-// 2. LEITURA DA URL NO CARREGAMENTO (F5 / LINK DIRETO DO GOOGLE)
+// 2. MONITOR DA URL (Resolve F5, link direto do Google e botão Voltar)
 function gerenciarRotasAnimesOracle() {
     const hashAtual = window.location.hash;
     const videoPage = document.getElementById('videoPage');
 
     if (hashAtual.startsWith('#/assistir/')) {
         const slugUrl = hashAtual.replace('#/assistir/', '');
-        
-        // Faz a busca em lote na coleção principal "series" para localizar o anime pai
-        db.collection("series").get().then((seriesSnapshot) => {
-            seriesSnapshot.forEach((docSerie) => {
-                const dadosSerie = docSerie.data();
-                
-                // Mapeia a subcoleção de episódios vinculada a esta série específica
-                db.collection("series").doc(docSerie.id).collection("episodios").get().then((epSnapshot) => {
-                    epSnapshot.forEach((docEp) => {
-                        const dadosEp = docEp.data();
-                        
-                        // Consolida o título do episódio (ex: "Final Space Episodio 12")
-                        const nomeParaComparar = `${dadosSerie.nome || ''} ${dadosEp.nomeEpisodio || dadosEp.titulo || ''}`;
-                        const slugFirebase = nomeParaComparar
+
+        // AGUARDA O CARREGAMENTO DOS CARDS NA TELA
+        // Como os cards vêm do Firebase, precisamos esperar eles aparecerem no HTML para poder clicar neles
+        const intervaloVerificacao = setInterval(() => {
+            // Pega todos os cards de episódios ou animes renderizados na tela
+            const todosOsCards = document.querySelectorAll('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
+            
+            if (todosOsCards.length > 0) {
+                let cardAlvo = null;
+
+                // Varre os cards da tela para achar qual deles tem o texto idêntico ao link da URL
+                todosOsCards.forEach((card) => {
+                    const elementoTitulo = card.querySelector('.anime-card-title-below, .episode-grid-card-title-below, .episode-title');
+                    if (elementoTitulo) {
+                        const slugCard = elementoTitulo.innerText
                             .toLowerCase()
                             .trim()
                             .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                             .replace(/[^a-z0-9]+/g, '-')
                             .replace(/(^-|-$)/g, '');
 
-                        // Se a URL bater exatamente com o episódio estruturado no Firebase
-                        if (slugFirebase === slugUrl || slugUrl.includes(slugFirebase)) {
-                            
-                            // Ativa a página do player visualmente se ela estiver oculta
-                            if (videoPage && !videoPage.classList.contains('active')) {
-                                videoPage.classList.add('active');
-                                videoPage.scrollTop = 0;
-                            }
-
-                            // Joga os dados na sua função original do site (Plano A)
-                            if (typeof abrirVideoPage === "function") {
-                                abrirVideoPage({ ...dadosSerie, ...dadosEp });
-                            } else {
-                                // Plano B: Injeção direta no iframe caso as funções tenham outros nomes
-                                const iframe = document.getElementById('videoFrame');
-                                const skeleton = document.getElementById('videoSkeleton');
-                                const linkEmbed = dadosEp.urlVideo || dadosEp.embed || dadosEp.link;
-                                
-                                if (iframe && linkEmbed) {
-                                    iframe.src = linkEmbed;
-                                    iframe.style.display = 'block';
-                                    if (skeleton) skeleton.style.display = 'none';
-                                }
-                            }
+                        if (slugCard === slugUrl) {
+                            cardAlvo = card;
                         }
-                    });
+                    }
                 });
-            });
-        }).catch((erro) => {
-            console.error("Erro na leitura profunda de rotas do Firebase:", erro);
-        });
+
+                // Se achou o card correspondente na tela, simula o clique nele!
+                if (cardAlvo) {
+                    clearInterval(intervaloVerificacao); // Para de procurar
+                    
+                    // Dispara o clique original do seu site. Isso vai rodar a SUA função nativa,
+                    // trazendo os botões originais perfeitos e o vídeo sem quebrar nada.
+                    cardAlvo.click(); 
+                }
+            }
+        }, 300); // Checa a cada 300 milissegundos se os cards já brotaram na tela
+
+        // Limita a busca em até 8 segundos para não ficar rodando infinito se o anime não existir
+        setTimeout(() => clearInterval(intervaloVerificacao), 8000);
 
     } else if (hashAtual === '' || hashAtual === '#') {
-        // Se a hash sumir (botão voltar do navegador), limpa e fecha o player
+        // Se a hash sumir (botão voltar do navegador), fecha o player e limpa o frame com total segurança
         if (videoPage && videoPage.classList.contains('active')) {
             videoPage.classList.remove('active');
             document.body.classList.remove('cinema-mode');
@@ -10634,14 +10626,14 @@ function gerenciarRotasAnimesOracle() {
     }
 }
 
-// 3. CAPTURA O CLIQUE NO BOTÃO ORIGINAL DE FECHAR PARA LIMPAR A BARRA
+// 3. LIMPA A URL DE VOLTA PARA A HOME QUANDO CLICAR NO SEU BOTÃO ORIGINAL DE FECHAR
 document.addEventListener('click', function(evento) {
     if (evento.target.closest('.video-page-close-btn')) {
         window.location.hash = '';
     }
 });
 
-// Ativa os listeners responsáveis por monitorar a barra de endereços 24 horas por dia
+// Ativa os inicializadores de escuta da barra do navegador
 window.addEventListener('hashchange', gerenciarRotasAnimesOracle);
 window.addEventListener('load', gerenciarRotasAnimesOracle);
 

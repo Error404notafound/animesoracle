@@ -10539,7 +10539,61 @@ function mudarConteudoDoDesafio(tipo) {
         if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Criação de Fanart / IP Famosa"';
     }
 }
-// Fechar
+// =================================================================
+// CENTRAL DE ROTAS ULTRA-LEVE (ANTI-TRAVAMENTO) - ANIMESORACLE
+// =================================================================
+
+// 1. APENAS MUDA O TEXTO DA URL QUANDO VOCÊ CLICA NO CARD
+document.addEventListener('click', function(evento) {
+    const cardAnime = evento.target.closest('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
+    
+    if (cardAnime) {
+        const elementoTitulo = cardAnime.querySelector('.anime-card-title-below, .episode-grid-card-title-below, .episode-title');
+        
+        if (elementoTitulo) {
+            const tituloOriginal = elementoTitulo.innerText;
+            
+            // Cria o link limpo (Ex: "Final Space" vira "final-space")
+            const slug = tituloOriginal
+                .toLowerCase()
+                .trim()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') 
+                .replace(/[^a-z0-9]+/g, '-')                      
+                .replace(/(^-|-$)/g, '');                         
+
+            window.location.hash = `/assistir/${slug}`;
+        }
+    }
+});
+
+// 2. MONITOR DA URL: SÓ FECHA O PLAYER SE O USUÁRIO CLICAR EM VOLTAR
+function gerenciarRotasAnimesOracle() {
+    const hashAtual = window.location.hash;
+    const videoPage = document.getElementById('videoPage');
+
+    // Se o usuário clicar em voltar e a URL limpar, fecha o player e remove o borrão com segurança
+    if (hashAtual === '' || hashAtual === '#') {
+        if (videoPage && videoPage.classList.contains('active')) {
+            videoPage.classList.remove('active');
+            document.body.classList.remove('cinema-mode'); // Garante que tira o borrão
+            
+            const iframe = document.getElementById('videoFrame');
+            if (iframe) iframe.src = ''; 
+        }
+    }
+}
+
+// 3. LIMPA A URL QUANDO VOCÊ CLICA NO SEU BOTÃO ORIGINAL DE FECHAR
+document.addEventListener('click', function(evento) {
+    if (evento.target.closest('.video-page-close-btn')) {
+        window.location.hash = ''; // Limpa a barra e deixa ela normal
+    }
+});
+
+// Ativa os ouvintes de navegação
+window.addEventListener('hashchange', gerenciarRotasAnimesOracle);
+window.addEventListener('load', gerenciarRotasAnimesOracle);
+
 
 
 

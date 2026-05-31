@@ -10540,10 +10540,10 @@ function mudarConteudoDoDesafio(tipo) {
     }
 }
 // =================================================================
-// CENTRAL DE ROTAS ULTRA-LEVE (ANTI-TRAVAMENTO) - ANIMESORACLE
+// CENTRAL DE ROTAS PREMIUM - ANIMESORACLE (CORRIGIDA)
 // =================================================================
 
-// 1. APENAS MUDA O TEXTO DA URL QUANDO VOCÊ CLICA NO CARD
+// 1. CAPTURA O CLIQUE NOS CARDS: Atualiza a URL com base no texto do elemento clicado
 document.addEventListener('click', function(evento) {
     const cardAnime = evento.target.closest('.anime-card-wrapper, .episode-grid-card-wrapper, .episode-list-item, .see-also-item');
     
@@ -10552,8 +10552,6 @@ document.addEventListener('click', function(evento) {
         
         if (elementoTitulo) {
             const tituloOriginal = elementoTitulo.innerText;
-            
-            // Cria o link limpo (Ex: "Final Space" vira "final-space")
             const slug = tituloOriginal
                 .toLowerCase()
                 .trim()
@@ -10566,31 +10564,84 @@ document.addEventListener('click', function(evento) {
     }
 });
 
-// 2. MONITOR DA URL: SÓ FECHA O PLAYER SE O USUÁRIO CLICAR EM VOLTAR
+// 2. LEITURA DA URL NO CARREGAMENTO (F5 / LINK DIRETO DO GOOGLE)
 function gerenciarRotasAnimesOracle() {
     const hashAtual = window.location.hash;
     const videoPage = document.getElementById('videoPage');
 
-    // Se o usuário clicar em voltar e a URL limpar, fecha o player e remove o borrão com segurança
-    if (hashAtual === '' || hashAtual === '#') {
+    if (hashAtual.startsWith('#/assistir/')) {
+        const slugUrl = hashAtual.replace('#/assistir/', '');
+        
+        // Faz a busca em lote na coleção principal "series" para localizar o anime pai
+        db.collection("series").get().then((seriesSnapshot) => {
+            seriesSnapshot.forEach((docSerie) => {
+                const dadosSerie = docSerie.data();
+                
+                // Mapeia a subcoleção de episódios vinculada a esta série específica
+                db.collection("series").doc(docSerie.id).collection("episodios").get().then((epSnapshot) => {
+                    epSnapshot.forEach((docEp) => {
+                        const dadosEp = docEp.data();
+                        
+                        // Consolida o título do episódio (ex: "Final Space Episodio 12")
+                        const nomeParaComparar = `${dadosSerie.nome || ''} ${dadosEp.nomeEpisodio || dadosEp.titulo || ''}`;
+                        const slugFirebase = nomeParaComparar
+                            .toLowerCase()
+                            .trim()
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/(^-|-$)/g, '');
+
+                        // Se a URL bater exatamente com o episódio estruturado no Firebase
+                        if (slugFirebase === slugUrl || slugUrl.includes(slugFirebase)) {
+                            
+                            // Ativa a página do player visualmente se ela estiver oculta
+                            if (videoPage && !videoPage.classList.contains('active')) {
+                                videoPage.classList.add('active');
+                                videoPage.scrollTop = 0;
+                            }
+
+                            // Joga os dados na sua função original do site (Plano A)
+                            if (typeof abrirVideoPage === "function") {
+                                abrirVideoPage({ ...dadosSerie, ...dadosEp });
+                            } else {
+                                // Plano B: Injeção direta no iframe caso as funções tenham outros nomes
+                                const iframe = document.getElementById('videoFrame');
+                                const skeleton = document.getElementById('videoSkeleton');
+                                const linkEmbed = dadosEp.urlVideo || dadosEp.embed || dadosEp.link;
+                                
+                                if (iframe && linkEmbed) {
+                                    iframe.src = linkEmbed;
+                                    iframe.style.display = 'block';
+                                    if (skeleton) skeleton.style.display = 'none';
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+        }).catch((erro) => {
+            console.error("Erro na leitura profunda de rotas do Firebase:", erro);
+        });
+
+    } else if (hashAtual === '' || hashAtual === '#') {
+        // Se a hash sumir (botão voltar do navegador), limpa e fecha o player
         if (videoPage && videoPage.classList.contains('active')) {
             videoPage.classList.remove('active');
-            document.body.classList.remove('cinema-mode'); // Garante que tira o borrão
-            
+            document.body.classList.remove('cinema-mode');
             const iframe = document.getElementById('videoFrame');
             if (iframe) iframe.src = ''; 
         }
     }
 }
 
-// 3. LIMPA A URL QUANDO VOCÊ CLICA NO SEU BOTÃO ORIGINAL DE FECHAR
+// 3. CAPTURA O CLIQUE NO BOTÃO ORIGINAL DE FECHAR PARA LIMPAR A BARRA
 document.addEventListener('click', function(evento) {
     if (evento.target.closest('.video-page-close-btn')) {
-        window.location.hash = ''; // Limpa a barra e deixa ela normal
+        window.location.hash = '';
     }
 });
 
-// Ativa os ouvintes de navegação
+// Ativa os listeners responsáveis por monitorar a barra de endereços 24 horas por dia
 window.addEventListener('hashchange', gerenciarRotasAnimesOracle);
 window.addEventListener('load', gerenciarRotasAnimesOracle);
 

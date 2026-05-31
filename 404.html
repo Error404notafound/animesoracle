@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AnimesOracle - Carregando...</title>
+    <script type="text/javascript">
+        // Guarda a URL que o usuário tentou acessar e manda de volta para o index.html tratar
+        var pathDist = window.location.pathname;
+        var searchDist = window.location.search;
+        var hashDist = window.location.hash;
+        
+        // Redireciona de forma limpa injetando os dados na URL principal
+        window.location.replace(
+            window.location.protocol + '//' + window.location.hostname + 
+            (window.location.port ? ':' + window.location.port : '') + '/animesoracle/?p=' + 
+            pathDist.replace('/animesoracle/', '').replace(/\/$/, '') + searchDist + hashDist
+        );
+    </script>
+</head>
+<body>
+</body>
+</html>

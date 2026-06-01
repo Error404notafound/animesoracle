@@ -4337,43 +4337,51 @@ body.light-mode .bottom-sheet-drag-handle {
 </div>
 
 <!-- NOVA PÁGINA MODAL DO PLAYER DO ZERO -->
+<!-- NOVA PÁGINA MODAL DO PLAYER (COM COMPONENTES RESTAURADOS) -->
 <div id="videoPage" class="hidden" style="background: #0f0f0f; min-height: 100vh; color: #fff; font-family: sans-serif; padding-bottom: 30px;">
     
+    <!-- Elementos ocultos exigidos pelo script antigo para não dar erro de nulo -->
+    <p id="playerBreadcrumbs" style="display:none;"></p>
+    <h3 id="videoModalSerieTitle" style="display:none;"></h3>
+    <h4 id="videoModalEpisodeTitle" style="display:none;"></h4>
+    <div id="inProgressBanner" style="display:none;"><span id="inProgressMessage"></span></div>
+    <div id="likeDislikeSection" style="display:none;"><span id="likeCount">0</span><span id="dislikeCount">0</span></div>
+
     <!-- 1. Container Fixo do Player de Vídeo -->
     <div id="videoPlayerContainer" style="width: 100%; background: #000; position: sticky; top: 0; z-index: 100;">
-        <!-- Seu iframe ou tag video original vai aqui dentro via JS -->
         <div id="playerTarget"></div>
     </div>
 
-    <!-- 2. Conteúdo que Rola Abaixo do Player -->
+    <!-- 2. Conteúdo Abaixo do Player -->
     <div class="player-content-wrapper" style="padding: 12px; box-sizing: border-box;">
         
-        <!-- Botões Dublado/Legendado e Modo Cinema -->
-        <div class="player-options-pills" style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;">
+        <!-- Opções Dublado/Legendado Exigidas pelo script -->
+        <div class="player-options-pills" style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto;">
             <button id="playerOptionDublado" onclick="switchPlayerType('dublado')" style="background: #272727; color: #fff; border: none; padding: 6px 12px; border-radius: 16px; font-size: 0.85em; cursor: pointer;">Dublado</button>
             <button id="playerOptionLegendado" onclick="switchPlayerType('legendado')" style="background: #272727; color: #fff; border: none; padding: 6px 12px; border-radius: 16px; font-size: 0.85em; cursor: pointer;">Legendado</button>
         </div>
 
         <!-- Caixa de Detalhes Estilo YouTube (Cinza e Clicável) -->
         <div class="player-serie-details" id="youtubeDetailsBox" style="background: #272727; padding: 12px; border-radius: 12px; cursor: pointer; margin-bottom: 20px;">
-            <div style="display: flex; gap: 6px; align-items: center; color: #aaa; font-size: 0.85em; margin-bottom: 4px;">
-                <span id="playerSerieViews">0 visualizações</span> • 
-                <span id="playerSerieDate">Há 1 ano</span>
-            </div>
+            <img id="playerSerieCapa" src="" style="display:none;">
+            <span id="playerSerieContentRating" style="display:none;"></span>
+            <p id="playerSerieGeneros" style="display:none;"></p>
+            <h3 id="playerSerieTitleDetail" style="display:none;"></h3>
+            <p id="playerSerieViews" style="margin: 0 0 4px 0; color: #aaa; font-size: 0.85em;">0 visualizações</p>
             
-            <!-- Texto da Biografia/Descrição Cortado por Padrão -->
+            <!-- Descrição Oficial Onde o Script joga o Texto -->
             <p id="playerEpisodeInfo" style="margin: 0; font-size: 0.9em; line-height: 1.4; color: #f1f1f1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
                 Carregando descrição...
             </p>
             <span id="btnMaisMenos" style="color: #fff; font-weight: bold; font-size: 0.85em; margin-top: 4px; display: block;">...mais</span>
         </div>
 
-        <!-- ÚNICA Seção de Comentários da Página -->
+        <!-- Seção de Comentários -->
         <div class="comments-section" style="border-top: 1px solid #272727; padding-top: 15px; margin-bottom: 25px;">
             <h3 style="font-size: 1em; margin: 0 0 12px 0;">Comentários</h3>
             
             <div id="commentsList" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
-                <!-- Comentários reais renderizados dinamicamente pelo JS -->
+                <!-- Comentários do Firebase entram aqui -->
             </div>
             
             <div class="comment-form" id="commentForm">
@@ -4381,18 +4389,20 @@ body.light-mode .bottom-sheet-drag-handle {
                 <button class="btn-post" onclick="postComment()" style="background: #fff; color: #000; border: none; padding: 6px 12px; border-radius: 16px; font-weight: bold; font-size: 0.85em; margin-top: 8px; float: right; cursor: pointer;">Comentar</button>
                 <div style="clear: both;"></div>
             </div>
+            <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">Faça login para comentar.</p>
         </div>
 
-        <!-- Seção de Próximos Vídeos (Idêntico ao App do YouTube) -->
+        <!-- Seção de Próximos Vídeos (YouTube) -->
         <div class="recommended-section" style="border-top: 1px solid #272727; padding-top: 20px;">
             <h3 style="font-size: 1em; margin: 0 0 15px 0; color: #fff;">Próximos Vídeos</h3>
             <div id="recommendedList" style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- Apenas os cards de recomendação vão nascer aqui dentro -->
+                <!-- Recomendações nascem aqui -->
             </div>
         </div>
 
     </div>
 </div>
+
 
 
 

@@ -4424,28 +4424,29 @@ body.light-mode .bottom-sheet-drag-handle {
             </button>
         </div>
 
-                <!-- Seção de Comentários -->
+                        <!-- Seção de Comentários Corrigida -->
         <div class="comments-section">
             <h3>Comentários</h3>
             <div id="commentsList">
-                <!-- Comentários serão carregados aqui -->
+                <!-- Os comentários reais do Firebase vão brotar aqui -->
             </div>
             
-            <!-- FORMULÁRIO DE ENVIO DE COMENTÁRIOS (Adicionado) -->
+            <!-- Caixa de Texto para Comentar -->
             <div class="comment-form" id="commentForm">
                 <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
                 <button class="btn-post" onclick="postComment()">Comentar</button>
             </div>
-            <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px;">Faça login para comentar.</p>
+            <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">Faça login para comentar.</p>
         </div>
 
-        <!-- SEÇÃO DE VÍDEOS RECOMENDADOS ESTILO YOUTUBE (Adicionado) -->
+        <!-- SEÇÃO DE VÍDEOS RECOMENDADOS ESTILO YOUTUBE -->
         <div class="recommended-section" style="margin-top: 25px; border-top: 1px solid #222; padding-top: 20px;">
             <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.1em;">Próximos Vídeos</h3>
             <div id="recommendedList">
-                <!-- Vídeos recomendados do Firestore vão aparecer aqui -->
+                <!-- APENAS as miniaturas e títulos dos outros animes vão aparecer aqui -->
             </div>
         </div>
+
 
             <!-- Formulário para Comentar -->
             <div class="comment-form" id="commentForm">
@@ -7754,29 +7755,35 @@ async function carregarRecomendados(animeAtualId) {
     const recommendedList = document.getElementById('recommendedList');
     if (!recommendedList) return;
 
+    recommendedList.innerHTML = '<p style="color: #666; font-size: 0.9em;">Carregando sugestões...</p>';
+
     try {
         const snapshotSeries = await firebase.firestore().collection('series').limit(6).get();
         let htmlContent = '';
 
         for (const docSerie of snapshotSeries.docs) {
-            if (docSerie.id === animeAtualId) continue; // Ignora o anime aberto na tela
+            if (docSerie.id === animeAtualId) continue; 
 
             const dadosSerie = docSerie.data();
+            
+            // Busca o primeiro episódio desta outra série
             const snapshotEpisodios = await firebase.firestore()
                 .collection('series').doc(docSerie.id)
                 .collection('episodios').orderBy('numero', 'asc').limit(1).get();
 
             if (!snapshotEpisodios.empty) {
-                const dadosEp = snapshotEpisodios.docs[0].data();
-                const epId = snapshotEpisodios.docs[0].id;
+                // CORREÇÃO AQUI: Acessando o primeiro documento do array de episódios
+                const docEp = snapshotEpisodios.docs[0];
+                const dadosEp = docEp.data();
+                const epId = docEp.id;
                 const imagemCapa = dadosEp.capa || dadosSerie.capa;
 
                 htmlContent += `
-                    <div class="recommendation-card" onclick="assistirVideo('${docSerie.id}', '${epId}')">
-                        <img class="recommendation-thumb" src="${imagemCapa}">
-                        <div class="recommendation-info">
-                            <h4 class="recommendation-title">${dadosEp.nome || 'Episódio 1'}</h4>
-                            <p class="recommendation-anime">${dadosSerie.nome}</p>
+                    <div class="recommendation-card" onclick="assistirVideo('${docSerie.id}', '${epId}')" style="display: flex; gap: 12px; margin-bottom: 15px; cursor: pointer;">
+                        <img src="${imagemCapa}" style="width: 140px; height: 78px; border-radius: 8px; object-fit: cover; background: #222; flex-shrink: 0;">
+                        <div class="recommendation-info" style="display: flex; flex-direction: column; justify-content: center;">
+                            <h4 class="recommendation-title" style="color: #fff; font-size: 0.95em; font-weight: 500; margin: 0 0 4px 0; line-height: 1.3;">${dadosEp.nome || 'Episódio 1'}</h4>
+                            <p class="recommendation-anime" style="color: #aaa; font-size: 0.8em; margin: 0;">${dadosSerie.nome}</p>
                         </div>
                     </div>
                 `;
@@ -7785,8 +7792,10 @@ async function carregarRecomendados(animeAtualId) {
         recommendedList.innerHTML = htmlContent || '<p style="color: #666;">Sem recomendações no momento.</p>';
     } catch (error) {
         console.error("Erro ao carregar recomendados:", error);
+        recommendedList.innerHTML = '<p style="color: #ff4d4d;">Erro ao carregar os próximos vídeos.</p>';
     }
 }
+
 
 
     // Função para formatar links de embed de vários provedores

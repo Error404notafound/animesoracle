@@ -1802,6 +1802,72 @@ body.menu-aberto {
         .hidden {
             display: none !important;
         }
+        /* --- ESTILO ESTILO YOUTUBE (DESCRIÇÃO E RECOMENDAÇÕES) --- */
+        /* Força o texto da bio a ficar cortado em uma linha só */
+        .player-serie-info p.episode-info {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 65%;
+            margin: 0 !important;
+            vertical-align: middle;
+        }
+        /* Quando clicado, expande a descrição por completo */
+        .player-serie-info p.episode-info.expanded {
+            white-space: normal;
+            display: block;
+            max-width: 100%;
+            margin-top: 5px !important;
+        }
+        /* Caixa cinza interativa dos detalhes da série */
+        .player-serie-details {
+            cursor: pointer;
+            background: #1a1a1a !important;
+            padding: 12px !important;
+            border-radius: 12px !important;
+            transition: background 0.2s;
+        }
+        .player-serie-details:hover {
+            background: #262626 !important;
+        }
+        /* Container dos cards de vídeos recomendados abaixo */
+        .recommendation-card {
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 0;
+            text-decoration: none;
+        }
+        .recommendation-thumb {
+            width: 140px;
+            height: 78px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #222;
+            flex-shrink: 0;
+        }
+        .recommendation-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .recommendation-title {
+            color: #ffffff;
+            font-size: 0.95em;
+            font-weight: 500;
+            margin: 0 0 4px 0;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .recommendation-anime {
+            color: #aaa;
+            font-size: 0.8em;
+            margin: 0;
+        }
 
         /* Rating Stars (componente de avaliação, pode ser reutilizado) */
         .rating-star {
@@ -4358,12 +4424,29 @@ body.light-mode .bottom-sheet-drag-handle {
             </button>
         </div>
 
-        <!-- Seção de Comentários -->
+                <!-- Seção de Comentários -->
         <div class="comments-section">
             <h3>Comentários</h3>
             <div id="commentsList">
                 <!-- Comentários serão carregados aqui -->
             </div>
+            
+            <!-- FORMULÁRIO DE ENVIO DE COMENTÁRIOS (Adicionado) -->
+            <div class="comment-form" id="commentForm">
+                <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
+                <button class="btn-post" onclick="postComment()">Comentar</button>
+            </div>
+            <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px;">Faça login para comentar.</p>
+        </div>
+
+        <!-- SEÇÃO DE VÍDEOS RECOMENDADOS ESTILO YOUTUBE (Adicionado) -->
+        <div class="recommended-section" style="margin-top: 25px; border-top: 1px solid #222; padding-top: 20px;">
+            <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.1em;">Próximos Vídeos</h3>
+            <div id="recommendedList">
+                <!-- Vídeos recomendados do Firestore vão aparecer aqui -->
+            </div>
+        </div>
+
             <!-- Formulário para Comentar -->
             <div class="comment-form" id="commentForm">
                 <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
@@ -7620,6 +7703,90 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
             btnModoCinema.style.pointerEvents = 'all';
         }
     }
+// 1. Lógica estilo YouTube para Expandir/Recolher a Biografia ao clicar na área cinza
+document.querySelector('.player-serie-details')?.addEventListener('click', function(e) {
+    const infoText = document.getElementById('playerEpisodeInfo');
+    const viewsCount = document.querySelector('.views-count');
+    if (!infoText) return;
+
+    const isExpanded = infoText.classList.contains('expanded');
+
+    if (isExpanded) {
+        infoText.classList.remove('expanded');
+        if (viewsCount) viewsCount.innerHTML = viewsCount.innerHTML.replace('...menos', '...mais');
+    } else {
+        infoText.classList.add('expanded');
+        if (viewsCount) viewsCount.innerHTML = viewsCount.innerHTML.replace('...mais', '...menos');
+    }
+});
+
+// 2. Lógica para Enviar Comentários para a Subcoleção do Firestore
+async function postComment() {
+    const user = firebase.auth().currentUser;
+    const commentInput = document.getElementById('commentInput');
+    const text = commentInput.value.trim();
+
+    if (!user) { alert("Você precisa estar logado para comentar!"); return; }
+    if (!text) { alert("Escreva um comentário antes de enviar!"); return; }
+
+    // Altere para as variáveis globais que guardam o ID do anime e ep ativo no seu player
+    const serieId = currentSerieId; 
+    const episodioId = currentEpisodeId; 
+
+    try {
+        await firebase.firestore()
+            .collection('series').doc(serieId)
+            .collection('episodios').doc(episodioId)
+            .collection('comments').add({
+                text: text,
+                userId: user.uid,
+                userName: user.displayName || "Usuário Anonimo",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        commentInput.value = "";
+    } catch (error) {
+        console.error("Erro ao salvar comentário: ", error);
+    }
+}
+
+// 3. Lógica para buscar animes no Firestore e listar como Recomendados abaixo
+async function carregarRecomendados(animeAtualId) {
+    const recommendedList = document.getElementById('recommendedList');
+    if (!recommendedList) return;
+
+    try {
+        const snapshotSeries = await firebase.firestore().collection('series').limit(6).get();
+        let htmlContent = '';
+
+        for (const docSerie of snapshotSeries.docs) {
+            if (docSerie.id === animeAtualId) continue; // Ignora o anime aberto na tela
+
+            const dadosSerie = docSerie.data();
+            const snapshotEpisodios = await firebase.firestore()
+                .collection('series').doc(docSerie.id)
+                .collection('episodios').orderBy('numero', 'asc').limit(1).get();
+
+            if (!snapshotEpisodios.empty) {
+                const dadosEp = snapshotEpisodios.docs[0].data();
+                const epId = snapshotEpisodios.docs[0].id;
+                const imagemCapa = dadosEp.capa || dadosSerie.capa;
+
+                htmlContent += `
+                    <div class="recommendation-card" onclick="assistirVideo('${docSerie.id}', '${epId}')">
+                        <img class="recommendation-thumb" src="${imagemCapa}">
+                        <div class="recommendation-info">
+                            <h4 class="recommendation-title">${dadosEp.nome || 'Episódio 1'}</h4>
+                            <p class="recommendation-anime">${dadosSerie.nome}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        recommendedList.innerHTML = htmlContent || '<p style="color: #666;">Sem recomendações no momento.</p>';
+    } catch (error) {
+        console.error("Erro ao carregar recomendados:", error);
+    }
+}
 
 
     // Função para formatar links de embed de vários provedores

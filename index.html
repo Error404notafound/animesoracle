@@ -4424,28 +4424,28 @@ body.light-mode .bottom-sheet-drag-handle {
             </button>
         </div>
 
-                        <!-- Seção de Comentários Corrigida -->
-        <div class="comments-section">
-            <h3>Comentários</h3>
-            <div id="commentsList">
-                <!-- Os comentários reais do Firebase vão brotar aqui -->
-            </div>
-            
-            <!-- Caixa de Texto para Comentar -->
-            <div class="comment-form" id="commentForm">
-                <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
-                <button class="btn-post" onclick="postComment()">Comentar</button>
-            </div>
-            <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">Faça login para comentar.</p>
-        </div>
+                        <!-- ÚNICA SEÇÃO DE COMENTÁRIOS DA PÁGINA -->
+<div class="comments-section" style="margin-bottom: 30px;">
+    <h3 style="color: #fff; font-size: 1.1em; margin-bottom: 15px;">Comentários</h3>
+    <div id="commentsList">
+        <!-- Os comentários do Firestore entram aqui -->
+    </div>
+    
+    <div class="comment-form" id="commentForm">
+        <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
+        <button class="btn-post" onclick="postComment()">Comentar</button>
+    </div>
+    <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">Faça login para comentar.</p>
+</div>
 
-        <!-- SEÇÃO DE VÍDEOS RECOMENDADOS ESTILO YOUTUBE -->
-        <div class="recommended-section" style="margin-top: 25px; border-top: 1px solid #222; padding-top: 20px;">
-            <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.1em;">Próximos Vídeos</h3>
-            <div id="recommendedList">
-                <!-- APENAS as miniaturas e títulos dos outros animes vão aparecer aqui -->
-            </div>
-        </div>
+<!-- CONTAINER BLINDADO PARA OS PRÓXIMOS VÍDEOS -->
+<div id="containerRecomendadosYoutube" style="margin-top: 35px; border-top: 1px solid #2c2c2c; padding-top: 20px; width: 100%;">
+    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1em; font-family: sans-serif;">Próximos Vídeos</h3>
+    <div id="recommendedList" style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+        <!-- Aqui entrará estritamente a lista de miniaturas e títulos via JS -->
+    </div>
+</div>
+
 
 
             <!-- Formulário para Comentar -->
@@ -7755,7 +7755,7 @@ async function carregarRecomendados(animeAtualId) {
     const recommendedList = document.getElementById('recommendedList');
     if (!recommendedList) return;
 
-    recommendedList.innerHTML = '<p style="color: #666; font-size: 0.9em;">Carregando sugestões...</p>';
+    recommendedList.innerHTML = '<p style="color: #888; font-size: 0.9em; padding: 10px 0;">Carregando sugestões do YouTube...</p>';
 
     try {
         const snapshotSeries = await firebase.firestore().collection('series').limit(6).get();
@@ -7772,29 +7772,30 @@ async function carregarRecomendados(animeAtualId) {
                 .collection('episodios').orderBy('numero', 'asc').limit(1).get();
 
             if (!snapshotEpisodios.empty) {
-                // CORREÇÃO AQUI: Acessando o primeiro documento do array de episódios
+                // CORREÇÃO EXATA: Acessando o primeiro índice [0] do array docs
                 const docEp = snapshotEpisodios.docs[0];
                 const dadosEp = docEp.data();
                 const epId = docEp.id;
                 const imagemCapa = dadosEp.capa || dadosSerie.capa;
 
                 htmlContent += `
-                    <div class="recommendation-card" onclick="assistirVideo('${docSerie.id}', '${epId}')" style="display: flex; gap: 12px; margin-bottom: 15px; cursor: pointer;">
+                    <div class="youtube-rec-card" onclick="assistirVideo('${docSerie.id}', '${epId}')" style="display: flex; gap: 12px; width: 100%; cursor: pointer; align-items: center; text-decoration: none;">
                         <img src="${imagemCapa}" style="width: 140px; height: 78px; border-radius: 8px; object-fit: cover; background: #222; flex-shrink: 0;">
-                        <div class="recommendation-info" style="display: flex; flex-direction: column; justify-content: center;">
-                            <h4 class="recommendation-title" style="color: #fff; font-size: 0.95em; font-weight: 500; margin: 0 0 4px 0; line-height: 1.3;">${dadosEp.nome || 'Episódio 1'}</h4>
-                            <p class="recommendation-anime" style="color: #aaa; font-size: 0.8em; margin: 0;">${dadosSerie.nome}</p>
+                        <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1; min-width: 0;">
+                            <h4 style="color: #ffffff; font-size: 0.95em; font-weight: 500; margin: 0 0 4px 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: sans-serif;">${dadosEp.nome || 'Episódio 1'}</h4>
+                            <p style="color: #aaaaaa; font-size: 0.8em; margin: 0; font-family: sans-serif;">${dadosSerie.nome}</p>
                         </div>
                     </div>
                 `;
             }
         }
-        recommendedList.innerHTML = htmlContent || '<p style="color: #666;">Sem recomendações no momento.</p>';
+        recommendedList.innerHTML = htmlContent || '<p style="color: #666;">Nenhuma sugestão encontrada no banco.</p>';
     } catch (error) {
         console.error("Erro ao carregar recomendados:", error);
-        recommendedList.innerHTML = '<p style="color: #ff4d4d;">Erro ao carregar os próximos vídeos.</p>';
+        recommendedList.innerHTML = '<p style="color: #ff4d4d; font-size: 0.9em;">Erro ao carregar os próximos vídeos.</p>';
     }
 }
+
 
 
 

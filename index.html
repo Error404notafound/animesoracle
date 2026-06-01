@@ -4336,115 +4336,64 @@ body.light-mode .bottom-sheet-drag-handle {
     </div>
 </div>
 
-<!-- Página do Player de Vídeo -->
-<div id="videoPage" class="modal-page">
-    <div id="videoPlayerContainer">
-        <div id="videoSkeleton">Carregando Vídeo...</div>
-        <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <!-- Botão de fechar o vídeo, agora dentro do container do player -->
-        <button class="video-page-close-btn" onclick="closeCurrentPage('videoPage')">&times;</button>
+<!-- NOVA PÁGINA MODAL DO PLAYER DO ZERO -->
+<div id="videoPage" class="hidden" style="background: #0f0f0f; min-height: 100vh; color: #fff; font-family: sans-serif; padding-bottom: 30px;">
+    
+    <!-- 1. Container Fixo do Player de Vídeo -->
+    <div id="videoPlayerContainer" style="width: 100%; background: #000; position: sticky; top: 0; z-index: 100;">
+        <!-- Seu iframe ou tag video original vai aqui dentro via JS -->
+        <div id="playerTarget"></div>
     </div>
 
-    <div class="player-nav-buttons">
-        <button class="player-nav-button" onclick="previousEpisode()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-        </button>
-        <button class="player-nav-button" onclick="openEpisodeListForCurrentSerie()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </button>
-        <button class="player-nav-button" onclick="nextEpisode()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-        </button>
-    </div>
-
-    <div class="player-content-wrapper">
-        <!-- Breadcrumbs -->
-        <p class="player-breadcrumbs" id="playerBreadcrumbs"></p>
-
-        <!-- Título do Episódio e Série (no player) -->
-        <h3 class="anime-title" id="videoModalSerieTitle"></h3>
-        <h4 class="episode-title" id="videoModalEpisodeTitle"></h4>
-
-        <!-- Banner "Em Progresso" - Scheduler -->
-        <div id="inProgressBanner" class="in-progress-banner">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-.5-5h1V8h-1v7zm.5-9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/></svg>
-            <span id="inProgressMessage"></span>
-            <button class="close-banner-btn" onclick="document.getElementById('inProgressBanner').style.display='none'">&times;</button>
+    <!-- 2. Conteúdo que Rola Abaixo do Player -->
+    <div class="player-content-wrapper" style="padding: 12px; box-sizing: border-box;">
+        
+        <!-- Botões Dublado/Legendado e Modo Cinema -->
+        <div class="player-options-pills" style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;">
+            <button id="playerOptionDublado" onclick="switchPlayerType('dublado')" style="background: #272727; color: #fff; border: none; padding: 6px 12px; border-radius: 16px; font-size: 0.85em; cursor: pointer;">Dublado</button>
+            <button id="playerOptionLegendado" onclick="switchPlayerType('legendado')" style="background: #272727; color: #fff; border: none; padding: 6px 12px; border-radius: 16px; font-size: 0.85em; cursor: pointer;">Legendado</button>
         </div>
 
-        <!-- Opções Dublado/Legendado -->
-        <div class="player-options-pills">
-            <button id="playerOptionDublado" class="player-option-btn" onclick="switchPlayerType('dublado')">Dublado</button>
-            <button id="playerOptionLegendado" class="player-option-btn" onclick="switchPlayerType('legendado')">Legendado</button>
-            <!-- Botão de Modo Cinema (Lâmpada) -->
-            <button id="btnModoCinema" class="player-option-btn" onclick="toggleModoCinema()">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="var(--text)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-1 12H5V7h14v10zm-9-1c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>
-                Modo Cinema
-            </button>
+        <!-- Caixa de Detalhes Estilo YouTube (Cinza e Clicável) -->
+        <div class="player-serie-details" id="youtubeDetailsBox" style="background: #272727; padding: 12px; border-radius: 12px; cursor: pointer; margin-bottom: 20px;">
+            <div style="display: flex; gap: 6px; align-items: center; color: #aaa; font-size: 0.85em; margin-bottom: 4px;">
+                <span id="playerSerieViews">0 visualizações</span> • 
+                <span id="playerSerieDate">Há 1 ano</span>
+            </div>
+            
+            <!-- Texto da Biografia/Descrição Cortado por Padrão -->
+            <p id="playerEpisodeInfo" style="margin: 0; font-size: 0.9em; line-height: 1.4; color: #f1f1f1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                Carregando descrição...
+            </p>
+            <span id="btnMaisMenos" style="color: #fff; font-weight: bold; font-size: 0.85em; margin-top: 4px; display: block;">...mais</span>
         </div>
 
-        <!-- Detalhes da Série (Biografia, Gêneros, Classificação, Avaliação) -->
-        <div class="player-serie-details">
-            <img id="playerSerieCapa" src="" alt="Capa da Série">
-            <div class="player-serie-info">
-                <div class="flex-row items-center">
-                    <span id="playerSerieContentRating" class="content-rating-badge"></span>
-                    <p class="anime-genres" id="playerSerieGeneros"></p>
-                </div>
-                <h3 id="playerSerieTitleDetail"></h3>
-                <p class="episode-info" id="playerEpisodeInfo"></p>
-                <p class="views-count" id="playerSerieViews"></p>
-
-                <!-- Avaliação por estrelas -->
-                <div id="starRating" class="star-rating">
-                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrelas">★</label>
-                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrelas">★</label>
-                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrelas">★</label>
-                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrelas">★</label>
-                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
-                </div>
-                
-                                <!-- Botão Favoritar (Marca Páginas) -->
-                <button class="favorite-btn" id="btnSalvarAnime" onclick="toggleSalvarAnime()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>
-                    <span>Salvar Anime</span>
-                </button>
+        <!-- ÚNICA Seção de Comentários da Página -->
+        <div class="comments-section" style="border-top: 1px solid #272727; padding-top: 15px; margin-bottom: 25px;">
+            <h3 style="font-size: 1em; margin: 0 0 12px 0;">Comentários</h3>
+            
+            <div id="commentsList" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
+                <!-- Comentários reais renderizados dinamicamente pelo JS -->
+            </div>
+            
+            <div class="comment-form" id="commentForm">
+                <textarea id="commentInput" placeholder="Adicione um comentário..." rows="2" style="width: 100%; background: #0f0f0f; color: #fff; border: 1px solid #3f3f3f; border-radius: 8px; padding: 8px; box-sizing: border-box; resize: none; font-size: 0.9em;"></textarea>
+                <button class="btn-post" onclick="postComment()" style="background: #fff; color: #000; border: none; padding: 6px 12px; border-radius: 16px; font-weight: bold; font-size: 0.85em; margin-top: 8px; float: right; cursor: pointer;">Comentar</button>
+                <div style="clear: both;"></div>
             </div>
         </div>
 
-        <!-- Seção Curtir/Descurtir -->
-        <div class="like-dislike-buttons" id="likeDislikeSection">
-            <button id="likeButton" onclick="toggleLike(true)">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="var(--text)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/></svg>
-                <span id="likeCount">0</span>
-            </button>
-            <button id="dislikeButton" onclick="toggleLike(false)">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="var(--text)"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H8c-1.66 0-3 1.34-3 3v9H1v2h4v4h2v-4h11c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 10H7V5h11v8z"/></svg>
-                <span id="dislikeCount">0</span>
-            </button>
+        <!-- Seção de Próximos Vídeos (Idêntico ao App do YouTube) -->
+        <div class="recommended-section" style="border-top: 1px solid #272727; padding-top: 20px;">
+            <h3 style="font-size: 1em; margin: 0 0 15px 0; color: #fff;">Próximos Vídeos</h3>
+            <div id="recommendedList" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Apenas os cards de recomendação vão nascer aqui dentro -->
+            </div>
         </div>
 
-                        <!-- ÚNICA SEÇÃO DE COMENTÁRIOS DA PÁGINA -->
-<div class="comments-section" style="margin-bottom: 30px;">
-    <h3 style="color: #fff; font-size: 1.1em; margin-bottom: 15px;">Comentários</h3>
-    <div id="commentsList">
-        <!-- Os comentários do Firestore entram aqui -->
     </div>
-    
-    <div class="comment-form" id="commentForm">
-        <textarea id="commentInput" placeholder="Escreva seu comentário aqui..." rows="3"></textarea>
-        <button class="btn-post" onclick="postComment()">Comentar</button>
-    </div>
-    <p id="commentLoginPrompt" style="text-align: center; color: #ccc; margin-top: 20px; display: none;">Faça login para comentar.</p>
 </div>
 
-<!-- CONTAINER BLINDADO PARA OS PRÓXIMOS VÍDEOS -->
-<div id="containerRecomendadosYoutube" style="margin-top: 35px; border-top: 1px solid #2c2c2c; padding-top: 20px; width: 100%;">
-    <h3 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1em; font-family: sans-serif;">Próximos Vídeos</h3>
-    <div id="recommendedList" style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
-        <!-- Aqui entrará estritamente a lista de miniaturas e títulos via JS -->
-    </div>
-</div>
 
 
 
@@ -10707,7 +10656,95 @@ function mudarConteudoDoDesafio(tipo) {
         if(tituloTema) tituloTema.textContent = 'O tema de hoje é "Criação de Fanart / IP Famosa"';
     }
 }
-// Fechar
+// 1. Alterna a expansão da caixinha cinza ao clicar (Estilo YouTube Mobile)
+document.getElementById('youtubeDetailsBox')?.addEventListener('click', function() {
+    const p = document.getElementById('playerEpisodeInfo');
+    const btn = document.getElementById('btnMaisMenos');
+    if (!p || !btn) return;
+
+    if (p.style.display === "block") {
+        // Modo Compacto
+        p.style.display = "-webkit-box";
+        btn.textContent = "...mais";
+    } else {
+        // Modo Expandido
+        p.style.display = "block";
+        btn.textContent = "Mostrar menos";
+    }
+});
+
+// 2. Envia os comentários direto para a subcoleção do seu Firestore (Firebase v8)
+async function postComment() {
+    const user = firebase.auth().currentUser;
+    const input = document.getElementById('commentInput');
+    if (!input) return;
+    const text = input.value.trim();
+
+    if (!user) { alert("Faça login para comentar!"); return; }
+    if (!text) return;
+
+    // Garanta que essas duas variáveis globais do seu app guardem os IDs ativos
+    const serieId = currentSerieId; 
+    const episodioId = currentEpisodeId; 
+
+    try {
+        await firebase.firestore()
+            .collection('series').doc(serieId)
+            .collection('episodios').doc(episodioId)
+            .collection('comments').add({
+                text: text,
+                userId: user.uid,
+                userName: user.displayName || "Usuário Anonimo",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        input.value = "";
+    } catch (e) {
+        console.error("Erro ao comentar:", e);
+    }
+}
+
+// 3. Renderiza os Próximos Vídeos buscando de outras coleções do seu Firestore
+async function carregarRecomendados(animeAtualId) {
+    const container = document.getElementById('recommendedList');
+    if (!container) return;
+
+    container.innerHTML = '<p style="color: #aaa; font-size: 0.85em;">Buscando vídeos...</p>';
+
+    try {
+        const snapshotSeries = await firebase.firestore().collection('series').limit(5).get();
+        let html = '';
+
+        for (const docSerie of snapshotSeries.docs) {
+            if (docSerie.id === animeAtualId) continue; // Pula o anime aberto na tela
+
+            const dadosSerie = docSerie.data();
+            const snapshotEps = await firebase.firestore()
+                .collection('series').doc(docSerie.id)
+                .collection('episodios').orderBy('numero', 'asc').limit(1).get();
+
+            if (!snapshotEps.empty) {
+                const docEp = snapshotEps.docs[0];
+                const dadosEp = docEp.data();
+                const imagem = dadosEp.capa || dadosSerie.capa;
+
+                html += `
+                    <div onclick="assistirVideo('${docSerie.id}', '${docEp.id}')" style="display: flex; gap: 10px; cursor: pointer; align-items: center;">
+                        <img src="${imagem}" style="width: 120px; height: 68px; border-radius: 8px; object-fit: cover; background: #222; flex-shrink: 0;">
+                        <div style="min-width: 0;">
+                            <h4 style="color: #fff; font-size: 0.9em; font-weight: 500; margin: 0 0 2px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.2;">${dadosEp.nome || 'Episódio 1'}</h4>
+                            <p style="color: #aaa; font-size: 0.75em; margin: 0;">${dadosSerie.nome}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        container.innerHTML = html || '<p style="color: #666; font-size: 0.85em;">Nenhuma sugestão encontrada.</p>';
+    } catch (err) {
+        console.error("Erro nos recomendados:", err);
+        container.innerHTML = '<p style="color: #ff4d4d; font-size: 0.85em;">Erro ao carregar próximos vídeos.</p>';
+    }
+}
+
 
 
 

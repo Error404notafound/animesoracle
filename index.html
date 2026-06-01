@@ -1154,31 +1154,31 @@ body.menu-aberto {
 
         /* Página do Player de Vídeo */
         #videoPage {
-    display: none; /* Escondido por padrão, ativado via JS */
+    display: none; 
     flex-direction: column;
     position: fixed;
-    top: 60px; /* ALTERADO: Começa exatamente onde termina o header fixo */
+    top: 0px !important; /* ALTERADO: Abre desde o topo absoluto da tela */
     left: 0;
     width: 100%;
-    height: calc(100% - 60px); /* ALTERADO: Desconta o cabeçalho para o scroll funcionar perfeitamente */
+    height: 100% !important; /* ALTERADO: Ocupa a tela toda */
     background: var(--bg);
-    z-index: 9996; /* ALTERADO: Fica abaixo do azCatalog (9997) e acima do resto da home */
-    overflow-y: auto; /* A página inteira rola, mas o player fica fixo */
+    z-index: 9996; 
+    overflow-y: auto; 
+    padding-top: 60px; /* ADICIONADO: Empurra o conteúdo interno para não sumir sob o header */
     -webkit-overflow-scrolling: touch;
 }
 
         #videoPage.active {
             display: flex;
         }
-        #videoPlayerContainer { /* Onde o iframe do vídeo fica fixo */
+        #videoPlayerContainer { 
     width: 100%;
-    position: sticky; /* Fixa o player no topo */
-    top: 0; /* ALTERADO: Cola no topo interno da videoPage, respeitando o fluxo */
-    left: 0;
-    z-index: 50; /* ALTERADO: Alto o suficiente para barrar o texto que rola por baixo */
+    position: sticky; 
+    top: 0; 
+    z-index: 50; 
     background-color: #000;
-    margin-top: 43px; /* ADICIONADO: Abre o espaço exato para a barra roxa do Catálogo A-Z flutuar livremente */
-    margin-bottom: 10px; /* ADICIONADO: Dá um respiro para os botões aparecerem logo abaixo */
+    margin-top: 35px !important; /* ALTERADO: Abre espaço exato para o texto acima dele */
+    margin-bottom: 10px; 
 }
 
 
@@ -1228,10 +1228,18 @@ body.menu-aberto {
 
         /* Breadcrumbs do player */
         .player-breadcrumbs {
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            color: var(--text-secondary);
-        }
+    position: fixed !important;
+    top: 60px !important; /* Cola logo abaixo do cabeçalho de 60px */
+    left: 0;
+    width: 100%;
+    background: var(--bg); /* Mantém o fundo escuro atrás do texto */
+    padding: 8px 15px;
+    z-index: 9998; /* Garante que fique acima do player ao rolar a página */
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    box-sizing: border-box;
+}
         .player-breadcrumbs a {
             color: var(--primary); /* Roxo */
             text-decoration: none;

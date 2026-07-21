@@ -7477,9 +7477,14 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const inProgressBanner = document.getElementById('inProgressBanner');
         const inProgressMessage = document.getElementById('inProgressMessage');
         const playerBreadcrumbs = document.getElementById('playerBreadcrumbs');
-        const likeDislikeSection = document.getElementById('likeDislikeSection');
+                const likeDislikeSection = document.getElementById('likeDislikeSection');
         const starRating = document.getElementById('starRating');
-        
+
+        // 👉 ADICIONE ESTAS LINHAS EXATAMENTE AQUI:
+        if (playerBreadcrumbs) {
+            playerBreadcrumbs.innerHTML = `Animes Oracle » Episódios » <span style="color: var(--primary);">${serie.title} - ${episodio.title}</span>`;
+        }
+
         // Adicionando verificações para garantir que os elementos existem
         if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !videoModalEpisodeTitle ||
             !playerSerieTitleDetail || !playerSerieGeneros || !playerSerieCapa || !playerSerieContentRating ||

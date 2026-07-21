@@ -179,7 +179,22 @@
             z-index: 1001; /* Garante que fique acima da barra de busca */
         }
 
-                /* Catálogo A-Z */
+                /* 1. O Novo Texto "Animes Oracle" */
+.home-breadcrumbs {
+    position: fixed;
+    top: 60px; /* Grudado na base do seu header roxo de 60px */
+    left: 0;
+    width: 100%;
+    background: var(--bg);
+    padding: 8px 15px; /* Mesmo espaçamento interno do site de referência */
+    font-size: 0.9em;
+    color: var(--text-secondary, #888); /* Cor cinza discreta */
+    z-index: 9998; /* Fica acima do catálogo */
+    box-sizing: border-box;
+    height: 35px; /* Altura travada para o cálculo do catálogo */
+}
+
+/* 2. O Catálogo A-Z */
 #azCatalog {
     display: flex;
     flex-wrap: nowrap;
@@ -193,11 +208,13 @@
     gap: 2px;
     font-size: 0.9em;
     position: fixed; 
-    top: 60px; /* ALTERADO: Cola ele exatamente na base do seu header de 60px */
+    top: 95px; /* ALTERADO: 60px (header) + 35px (home-breadcrumbs) */
     left: 0;
     width: 100%;
     box-sizing: border-box;
 }
+
+/* 3. tu é gay man? tá lendo o codigin do pai?*/
 
                         /* Ajuste do top para quando a searchbar estiver escondida */
         #azCatalog::-webkit-scrollbar {
@@ -243,8 +260,8 @@
     aspect-ratio: 1280 / 650;
     border-bottom: 1px solid #333;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    /* ALTERADO: 60px do header + 35px do catálogo + 15px de margem de respiro */
-    margin-top: 110px !important; 
+    /* ALTERADO: 60px (header) + 35px (texto) + 33px (catálogo) + 15px (respiro) */
+    margin-top: 143px !important; 
     margin-bottom: 25px; 
 }
 

@@ -179,41 +179,33 @@
             z-index: 1001; /* Garante que fique acima da barra de busca */
         }
 
-                /* 1. Trava a estrutura das suas Breadcrumbs padrão */
-.player-breadcrumbs {
-    position: fixed !important;
-    top: 60px !important; /* Cola abaixo do cabeçalho de 60px */
-    left: 0;
-    width: 100%;
-    background: var(--bg);
-    padding: 8px 15px;
-    font-size: 0.9em;
-    color: var(--text-secondary, #888);
-    z-index: 9998 !important;
-    box-sizing: border-box;
-    height: 35px; /* Altura exata para o cálculo */
-}
-
-/* 2. Garante o posicionamento fixo do Catálogo A-Z */
-#azCatalog {
+                /* Catálogo A-Z */
+        #azCatalog {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    justify-content: flex-start;
-    padding: 5px 15px;
+    flex-wrap: nowrap; /* Impede quebras de linha */
+    overflow-x: auto; /* Permite rolagem horizontal */
+    -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    padding: 5px 15px; /* Reduz padding */
     background: var(--bg);
     border-bottom: 1px solid #333;
-    z-index: 9997;
-    gap: 2px;
-    font-size: 0.9em;
-    position: fixed !important; 
-    top: 95px !important; /* 60px do header + 35px do texto fixo */
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
+    z-index: 9997; /* ALTERADO: Abaixo da search-container (9998) */
+    gap: 2px; /* Reduz espaçamento entre as letras */
+    font-size: 0.9em; /* Reduz tamanho da fonte */
+    position: fixed; /* ALTERADO: de não especificado para 'fixed' */
+    top: 95px; /* MODIFICADO: Agora começa abaixo do texto vermelho */
+    left: 0; /* ADICIONADO */
+    width: 100%; /* ADICIONADO */
+    box-sizing: border-box; /* ADICIONADO */
 }
-/*  tu é gay man? tá lendo o codigin do pai?*/
+/* Remova esta regra, ela se tornou redundante */
+/*
+#azCatalog.top-60 {
+    top: 60px;
+}
+*/
+
+
 
                         /* Ajuste do top para quando a searchbar estiver escondida */
         #azCatalog::-webkit-scrollbar {
@@ -228,21 +220,15 @@
             border-radius: 10px;
         }
         #azCatalog span {
-    color: var(--primary); 
-    font-weight: bold;
-    font-size: 1.1em; /* Aumentado levemente para melhorar a leitura no celular */
-    cursor: pointer;
-    /* ALTERADO: Aumenta a área de toque vertical (6px) e horizontal (10px) */
-    padding: 6px 10px; 
-    transition: background-color 0.2s, color 0.2s;
-    border-radius: 4px;
-    flex-shrink: 0; 
-    /* ADICIONADO: Força o alinhamento perfeito no centro da linha vertical do catálogo */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
+            color: var(--primary); 
+            font-weight: bold;
+            font-size: 1em; 
+            cursor: pointer;
+            padding: 2px 5px; 
+            transition: background-color 0.2s, color 0.2s;
+            border-radius: 4px;
+            flex-shrink: 0; 
+        }
         #azCatalog span:hover {
             background-color: var(--primary);
             color: var(--text);
@@ -259,8 +245,7 @@
     aspect-ratio: 1280 / 650;
     border-bottom: 1px solid #333;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    /* Força o banner a começar depois do cabeçalho, texto e catálogo */
-    margin-top: 145px !important; 
+    margin-top: 43px; /* ALTERADO: Empurra mais 10px para baixo */
     margin-bottom: 25px; 
 }
 
@@ -7477,14 +7462,9 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const inProgressBanner = document.getElementById('inProgressBanner');
         const inProgressMessage = document.getElementById('inProgressMessage');
         const playerBreadcrumbs = document.getElementById('playerBreadcrumbs');
-                const likeDislikeSection = document.getElementById('likeDislikeSection');
+        const likeDislikeSection = document.getElementById('likeDislikeSection');
         const starRating = document.getElementById('starRating');
-
-        // 👉 ADICIONE ESTAS LINHAS EXATAMENTE AQUI:
-        if (playerBreadcrumbs) {
-            playerBreadcrumbs.innerHTML = `Animes Oracle » Episódios » <span style="color: var(--primary);">${serie.title} - ${episodio.title}</span>`;
-        }
-
+        
         // Adicionando verificações para garantir que os elementos existem
         if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !videoModalEpisodeTitle ||
             !playerSerieTitleDetail || !playerSerieGeneros || !playerSerieCapa || !playerSerieContentRating ||

@@ -180,32 +180,24 @@
         }
 
                 /* Catálogo A-Z */
-        #azCatalog {
+#azCatalog {
     display: flex;
-    flex-wrap: nowrap; /* Impede quebras de linha */
-    overflow-x: auto; /* Permite rolagem horizontal */
-    -webkit-overflow-scrolling: touch; /* Melhora o scroll em iOS */
-    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
-    padding: 5px 15px; /* Reduz padding */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 5px 15px;
     background: var(--bg);
     border-bottom: 1px solid #333;
-    z-index: 9997; /* ALTERADO: Abaixo da search-container (9998) */
-    gap: 2px; /* Reduz espaçamento entre as letras */
-    font-size: 0.9em; /* Reduz tamanho da fonte */
-    position: fixed; /* ALTERADO: de não especificado para 'fixed' */
-    top: 95px; /* MODIFICADO: Agora começa abaixo do texto vermelho */
-    left: 0; /* ADICIONADO */
-    width: 100%; /* ADICIONADO */
-    box-sizing: border-box; /* ADICIONADO */
+    z-index: 9997;
+    gap: 2px;
+    font-size: 0.9em;
+    position: fixed; 
+    top: 60px; /* ALTERADO: Cola ele exatamente na base do seu header de 60px */
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
-/* Remova esta regra, ela se tornou redundante */
-/*
-#azCatalog.top-60 {
-    top: 60px;
-}
-*/
-
-
 
                         /* Ajuste do top para quando a searchbar estiver escondida */
         #azCatalog::-webkit-scrollbar {
@@ -220,15 +212,21 @@
             border-radius: 10px;
         }
         #azCatalog span {
-            color: var(--primary); 
-            font-weight: bold;
-            font-size: 1em; 
-            cursor: pointer;
-            padding: 2px 5px; 
-            transition: background-color 0.2s, color 0.2s;
-            border-radius: 4px;
-            flex-shrink: 0; 
-        }
+    color: var(--primary); 
+    font-weight: bold;
+    font-size: 1.1em; /* Aumentado levemente para melhorar a leitura no celular */
+    cursor: pointer;
+    /* ALTERADO: Aumenta a área de toque vertical (6px) e horizontal (10px) */
+    padding: 6px 10px; 
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 4px;
+    flex-shrink: 0; 
+    /* ADICIONADO: Força o alinhamento perfeito no centro da linha vertical do catálogo */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
         #azCatalog span:hover {
             background-color: var(--primary);
             color: var(--text);
@@ -245,7 +243,8 @@
     aspect-ratio: 1280 / 650;
     border-bottom: 1px solid #333;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    margin-top: 43px; /* ALTERADO: Empurra mais 10px para baixo */
+    /* ALTERADO: 60px do header + 35px do catálogo + 15px de margem de respiro */
+    margin-top: 110px !important; 
     margin-bottom: 25px; 
 }
 

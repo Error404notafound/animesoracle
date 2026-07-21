@@ -179,22 +179,22 @@
             z-index: 1001; /* Garante que fique acima da barra de busca */
         }
 
-                /* 1. O Novo Texto "Animes Oracle" */
-.home-breadcrumbs {
-    position: fixed;
-    top: 60px; /* Grudado na base do seu header roxo de 60px */
+                /* 1. Trava a estrutura das suas Breadcrumbs padrão */
+.player-breadcrumbs {
+    position: fixed !important;
+    top: 60px !important; /* Cola abaixo do cabeçalho de 60px */
     left: 0;
     width: 100%;
     background: var(--bg);
-    padding: 8px 15px; /* Mesmo espaçamento interno do site de referência */
+    padding: 8px 15px;
     font-size: 0.9em;
-    color: var(--text-secondary, #888); /* Cor cinza discreta */
-    z-index: 9998; /* Fica acima do catálogo */
+    color: var(--text-secondary, #888);
+    z-index: 9998 !important;
     box-sizing: border-box;
-    height: 35px; /* Altura travada para o cálculo do catálogo */
+    height: 35px; /* Altura exata para o cálculo */
 }
 
-/* 2. O Catálogo A-Z */
+/* 2. Garante o posicionamento fixo do Catálogo A-Z */
 #azCatalog {
     display: flex;
     flex-wrap: nowrap;
@@ -207,14 +207,13 @@
     z-index: 9997;
     gap: 2px;
     font-size: 0.9em;
-    position: fixed; 
-    top: 95px; /* ALTERADO: 60px (header) + 35px (home-breadcrumbs) */
+    position: fixed !important; 
+    top: 95px !important; /* 60px do header + 35px do texto fixo */
     left: 0;
     width: 100%;
     box-sizing: border-box;
 }
-
-/* 3. tu é gay man? tá lendo o codigin do pai?*/
+/*  tu é gay man? tá lendo o codigin do pai?*/
 
                         /* Ajuste do top para quando a searchbar estiver escondida */
         #azCatalog::-webkit-scrollbar {
@@ -260,8 +259,8 @@
     aspect-ratio: 1280 / 650;
     border-bottom: 1px solid #333;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    /* ALTERADO: 60px (header) + 35px (texto) + 33px (catálogo) + 15px (respiro) */
-    margin-top: 143px !important; 
+    /* Força o banner a começar depois do cabeçalho, texto e catálogo */
+    margin-top: 145px !important; 
     margin-bottom: 25px; 
 }
 

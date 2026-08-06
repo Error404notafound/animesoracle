@@ -7444,14 +7444,15 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const starRating = document.getElementById('starRating');
         
         // Adicionando verificações para garantir que os elementos existem
-        if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !videoModalEpisodeTitle ||
-            !playerSerieTitleDetail || !playerSerieGeneros || !playerSerieCapa || !playerSerieContentRating ||
-            !playerEpisodeInfo || !playerSerieViews || !btnSalvarAnime ||
-            !inProgressBanner || !inProgressMessage || !playerBreadcrumbs || !likeDislikeSection || !starRating) {
-            console.error("Erro: Um ou mais elementos da página de vídeo ou seus sub-elementos não encontrados no DOM.");
-            showMessage("Erro ao abrir o player: Componentes essenciais não encontrados.");
-            return;
-        }
+if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !videoModalEpisodeTitle ||
+    !playerSerieTitleDetail || !playerSerieGeneros || !playerSerieCapa || !playerSerieContentRating ||
+    !playerEpisodeInfo || !playerSerieViews || !btnSalvarAnime ||
+    !inProgressBanner || !inProgressMessage || !likeDislikeSection || !starRating) { // <-- TIREI O !playerBreadcrumbs DAQUI
+    console.error("Erro: Um ou mais elementos da página de vídeo ou seus sub-elementos não encontrados no DOM.");
+    showMessage("Erro ao abrir o player: Componentes essenciais não encontrados.");
+    return;
+}
+
 
         // Remove modo cinema anterior
         document.body.classList.remove('cinema-mode');

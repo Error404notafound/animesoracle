@@ -1227,26 +1227,6 @@ body.menu-aberto {
 
 
         /* Breadcrumbs do player */
-        .player-breadcrumbs {
-    position: fixed !important;
-    top: 60px !important; /* Gruda logo abaixo do header */
-    left: 0;
-    width: 100%;
-    background: var(--bg); 
-    padding: 8px 15px;
-    z-index: 9999 !important; /* Prioridade máxima para ficar visível */
-    margin: 0;
-    font-size: 0.9em;
-    color: var(--text-secondary);
-    box-sizing: border-box;
-}
-        .player-breadcrumbs a {
-            color: var(--primary); /* Roxo */
-            text-decoration: none;
-        }
-        .player-breadcrumbs a:hover {
-            text-decoration: underline;
-        }
 
         /* Banner "Em Progresso" */
         .in-progress-banner {
@@ -4301,8 +4281,6 @@ body.light-mode .bottom-sheet-drag-handle {
 
     <div class="player-content-wrapper">
         <!-- Breadcrumbs -->
-        <p class="player-breadcrumbs" id="playerBreadcrumbs"></p>
-
         <!-- Título do Episódio e Série (no player) -->
         <h3 class="anime-title" id="videoModalSerieTitle"></h3>
         <h4 class="episode-title" id="videoModalEpisodeTitle"></h4>
@@ -7461,7 +7439,7 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const btnSalvarAnime = document.getElementById('btnSalvarAnime');
         const inProgressBanner = document.getElementById('inProgressBanner');
         const inProgressMessage = document.getElementById('inProgressMessage');
-        const playerBreadcrumbs = document.getElementById('playerBreadcrumbs');
+        // const playerBreadcrumbs = document.getElementById('playerBreadcrumbs');
         const likeDislikeSection = document.getElementById('likeDislikeSection');
         const starRating = document.getElementById('starRating');
         
@@ -7483,11 +7461,7 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         videoSkeleton.style.display = 'flex';
 
         // Breadcrumbs
-        playerBreadcrumbs.innerHTML = `
-            <a href="#" onclick="openPage('main')">AnimesOracle</a> &raquo;
-            <a href="#" onclick="openEpisodeListPage('${serie.id}')">Episódios</a> &raquo;
-            ${serie.nome} Episódio ${episodio.numero}
-        `;
+
 
         // Títulos
         videoModalSerieTitle.textContent = serie.nome;

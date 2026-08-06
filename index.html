@@ -51,6 +51,18 @@
     padding-top: 60px; /* Adiciona um padding no body para compensar o header fixo */
 }
 
+/* Oculta a barra de rolagem vertical no Chrome, Safari e Opera (Mobile/Desktop) */
+body::-webkit-scrollbar, 
+#videoPage::-webkit-scrollbar,
+.modal-page::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Oculta a barra de rolagem no Firefox e IE/Edge */
+body, #videoPage, .modal-page {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE e Edge */
+}
 
         /* Modo Escuro/Claro */
         body.light-mode {

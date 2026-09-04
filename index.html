@@ -7453,7 +7453,7 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
     }
 
 
-        // Funções do Player de Vídeo
+        // Funções do Player de Vídeo (Versão Estilo YouTube)
     async function openVideoPlayer(serie, episodio, playerIndex = 0) {
         currentPlayingSerie = serie;
         currentPlayingEpisode = episodio;
@@ -7465,142 +7465,80 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
         const videoModalSerieTitle = document.getElementById('videoModalSerieTitle');
         const videoModalEpisodeTitle = document.getElementById('videoModalEpisodeTitle');
         const playerSerieTitleDetail = document.getElementById('playerSerieTitleDetail');
-        const playerSerieBiografia = document.getElementById('playerSerieBiografia'); // Agora não mais aqui
-        const playerSerieGeneros = document.getElementById('playerSerieGeneros');
         const playerSerieCapa = document.getElementById('playerSerieCapa');
-        const playerSerieContentRating = document.getElementById('playerSerieContentRating');
-        const playerEpisodeInfo = document.getElementById('playerEpisodeInfo');
         const playerSerieViews = document.getElementById('playerSerieViews');
         const btnSalvarAnime = document.getElementById('btnSalvarAnime');
-        const inProgressBanner = document.getElementById('inProgressBanner');
-        const inProgressMessage = document.getElementById('inProgressMessage');
-        // const playerBreadcrumbs = document.getElementById('playerBreadcrumbs');
-        const likeDislikeSection = document.getElementById('likeDislikeSection');
-        const starRating = document.getElementById('starRating');
-        
-        // Adicionando verificações para garantir que os elementos existem
-if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !videoModalEpisodeTitle ||
-    !playerSerieTitleDetail || !playerSerieGeneros || !playerSerieCapa || !playerSerieContentRating ||
-    !playerEpisodeInfo || !playerSerieViews || !btnSalvarAnime ||
-    !inProgressBanner || !inProgressMessage || !likeDislikeSection || !starRating) { // <-- TIREI O !playerBreadcrumbs DAQUI
-    console.error("Erro: Um ou mais elementos da página de vídeo ou seus sub-elementos não encontrados no DOM.");
-    showMessage("Erro ao abrir o player: Componentes essenciais não encontrados.");
-    return;
-}
-
+        const playerEpisodeBadge = document.getElementById('playerEpisodeBadge');
 
         // Remove modo cinema anterior
         document.body.classList.remove('cinema-mode');
 
         // Esconde o iframe e mostra o skeleton enquanto carrega
-        videoFrame.style.display = 'none';
-        videoSkeleton.style.display = 'flex';
+        if (videoFrame) videoFrame.style.display = 'none';
+        if (videoSkeleton) videoSkeleton.style.display = 'flex';
 
-        // Breadcrumbs
+        // Títulos e informações do Anime
+        if (videoModalSerieTitle) videoModalSerieTitle.textContent = serie.nome;
+        if (videoModalEpisodeTitle) videoModalEpisodeTitle.textContent = `Episódio ${episodio.numero} - ${episodio.nome}`;
+        if (playerSerieTitleDetail) playerSerieTitleDetail.textContent = serie.nome;
 
-
-        // Títulos
-        videoModalSerieTitle.textContent = serie.nome;
-        videoModalEpisodeTitle.textContent = `Episódio ${episodio.numero} - ${episodio.nome}`;
-        playerSerieTitleDetail.textContent = serie.nome;
-        playerEpisodeInfo.textContent = `${episodio.links[playerIndex].type.charAt(0).toUpperCase() + episodio.links[playerIndex].type.slice(1)} | Temporada 1 - Episódio ${episodio.numero}`; // Assumindo temporada 1 por enquanto
-
-        // Capa da série
-        playerSerieCapa.src = serie.capa;
-        playerSerieCapa.alt = serie.nome;
-
-                // Classificação Indicativa
-        // Garante que serie.contentRating não é undefined antes de usar .replace()
-        const serieContentRatingValue = serie.contentRating ? serie.contentRating : 'L'; // Usa 'L' (Livre) se contentRating não existir
-        const ratingBadgeClass = `rating-${serieContentRatingValue.replace('+', '')}`; // Agora, serieContentRatingValue nunca será undefined
-        playerSerieContentRating.className = `content-rating-badge ${ratingBadgeClass}`;
-        playerSerieContentRating.textContent = serieContentRatingValue; // Atualiza aqui também
-
-        // Gêneros
-        playerSerieGeneros.innerHTML = serie.generos.map(g => `<span>${g}</span>`).join(', ');
-
-        // Views
-        playerSerieViews.textContent = `${serie.visualizacoes.toLocaleString()} visualizações`;
-
-        // Gerencia o banner "Em Progresso"
-        if (serie.nextEpisodeReleaseDate) {
-            const releaseDate = serie.nextEpisodeReleaseDate.toDate();
-            const now = new Date();
-            if (releaseDate > now) {
-                inProgressBanner.style.display = 'flex';
-                // Adaptei esta linha para remover a dependência de 'date-fns' que não está incluída no código fornecido.
-                // Se você tiver a biblioteca 'date-fns' importada, pode reativar a versão original:
-                // inProgressMessage.textContent = `EM PROGRESSO - PRÓXIMO EPISÓDIO EM ${formatDistanceToNow(releaseDate, { addSuffix: true, locale: ptBR })}!`;
-                
-                // Versão simplificada sem date-fns:
-                const diffMs = releaseDate.getTime() - now.getTime();
-                const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-                inProgressMessage.textContent = `EM PROGRESSO - PRÓXIMO EPISÓDIO EM ${diffDays} DIAS!`;
-
-            } else {
-                inProgressBanner.style.display = 'none';
-            }
-        } else {
-            inProgressBanner.style.display = 'none';
+        // Capa do canal
+        if (playerSerieCapa) {
+            playerSerieCapa.src = serie.capa || 'https://via.placeholder.com/36';
+            playerSerieCapa.alt = serie.nome;
         }
 
-        // Carrega a lista de players para o episódio (se houver)
-        updatePlayerOptions(episodio.links, playerIndex);
+        // Tag de tipo (Dublado / Legendado) no topo do vídeo
+        if (playerEpisodeBadge && episodio.links && episodio.links[playerIndex]) {
+            playerEpisodeBadge.textContent = episodio.links[playerIndex].type === 'dublado' ? 'Dublado' : 'Legendado';
+        }
 
-        // Processa o link do embed
-        let embedLink = episodio.links[playerIndex] ? episodio.links[playerIndex].url : '';
+        // Contagem de visualizações
+        if (playerSerieViews) {
+            playerSerieViews.textContent = `${(serie.visualizacoes || 0).toLocaleString()} visualizações`;
+        }
+
+        // Processa o link do embed do vídeo
+        let embedLink = (episodio.links && episodio.links[playerIndex]) ? episodio.links[playerIndex].url : '';
         embedLink = formatEmbedLink(embedLink);
 
-                // Adiciona ?autoplay=1 AQUI, ANTES de definir o src do iframe
-        if (!embedLink.includes('autoplay=')) { 
+        if (embedLink && !embedLink.includes('autoplay=')) { 
             embedLink += (embedLink.includes('?') ? '&' : '?') + 'autoplay=1';
         }
         
-        videoFrame.src = embedLink;
+        if (videoFrame) {
+            videoFrame.src = embedLink;
+            videoFrame.onload = () => {
+                if (videoSkeleton) videoSkeleton.style.display = 'none';
+                videoFrame.style.display = 'block';
+            };
+        }
 
-        // Quando o iframe carregar, esconde o skeleton
-        videoFrame.onload = () => {
-            videoSkeleton.style.display = 'none';
-            videoFrame.style.display = 'block';
-        };
-
-
-        // Marca o episódio como assistido (se não for convidado)
+        // Marca o episódio como assistido
         if (auth.currentUser) {
             marcarEpisodioComoAssistido(serie.id, episodio.id);
         }
 
-        // Atualiza o botão Salvar Anime
-        if (auth.currentUser && currentUserData && currentUserData.animesSalvos.includes(serie.id)) {
-            btnSalvarAnime.querySelector('span').textContent = "Remover da Lista";
-            btnSalvarAnime.classList.add('saved');
-        } else {
-            btnSalvarAnime.querySelector('span').textContent = "Salvar Anime";
-            btnSalvarAnime.classList.remove('saved');
-        }
-        
-        // Visibilidade dos botões de ação e formulário de comentário
-        if (auth.currentUser) {
-            toggleCommentSection(true); // Mostra os campos de comentário
-            likeDislikeSection.style.display = 'flex'; // Mostra botões de like/dislike
-        } else {
-            toggleCommentSection(false); // Esconde os campos de comentário
-            likeDislikeSection.style.display = 'none';
+        // Atualiza botão Salvar
+        if (btnSalvarAnime) {
+            if (auth.currentUser && currentUserData && currentUserData.animesSalvos && currentUserData.animesSalvos.includes(serie.id)) {
+                btnSalvarAnime.textContent = "✓ Salvo";
+            } else {
+                btnSalvarAnime.textContent = "✦ Salvar";
+            }
         }
 
-                // Carrega os comentários para o episódio
+        // Carrega comentários do episódio
         loadComments(serie.id, episodio.id);
-        // Atualiza os botões de navegação (próximo/anterior)
-        updatePlayerControls(serie.id, episodio.numero);
-        // Atualiza os likes/dislikes
-        updateLikesDislikes(serie.id);
-        // Carrega a avaliação do usuário e da série
-        loadSerieRating(serie.id);
 
-        // 👇 LINHA ADICIONADA AQUI:
+        // Atualiza curtidas
+        updateLikesDislikes(serie.id);
+
+        // Carrega lista de próximos episódios recomendados abaixo
         popularEpisodiosAbaixoDoPlayer(serie.id);
 
-        openPage('videoPage'); // Abre a página do vídeo
+        // Abre a página do vídeo
+        openPage('videoPage');
     }
 
     // Função para alternar o modo cinema
@@ -8272,23 +8210,36 @@ if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !vid
                                                                 // Funções de Comentários
     async function loadComments(serieId, episodeId) {
         const commentsListDiv = document.getElementById('commentsList');
-        if (!commentsListDiv) {
-            console.error("Erro: Elemento 'commentsListDiv' não encontrado no DOM.");
-            return;
-        }
-        commentsListDiv.innerHTML = 'Carregando comentários...';
+        const contadorComentarios = document.getElementById('texto-contador-comentarios');
+        const previewComentario = document.getElementById('ytPreviewCommentText');
+
+        if (!commentsListDiv) return;
+        commentsListDiv.innerHTML = '<p style="color:#777; padding: 10px;">Carregando comentários...</p>';
 
         try {
             const commentsSnapshot = await db.collection("series").doc(serieId).collection("episodios").doc(episodeId).collection("comments")
-                                                .orderBy("timestamp", "asc")
+                                                .orderBy("timestamp", "desc")
                                                 .get();
             
+            // Atualiza a contagem no card de comentários estilo YouTube
+            if (contadorComentarios) {
+                contadorComentarios.textContent = commentsSnapshot.size;
+            }
+
             commentsListDiv.innerHTML = '';
             if (commentsSnapshot.empty) {
-                commentsListDiv.innerHTML = '<p>Nenhum comentário ainda. Seja o primeiro a comentar!</p>';
+                if (previewComentario) previewComentario.textContent = "Seja o primeiro a comentar...";
+                commentsListDiv.innerHTML = '<p style="color:#777; padding: 10px;">Nenhum comentário ainda.</p>';
                 return;
             }
 
+            // Atualiza a prévia com o comentário mais recente
+            const primeiroComentario = commentsSnapshot.docs[0].data();
+            if (previewComentario) {
+                previewComentario.textContent = `${primeiroComentario.userName || 'Usuário'}: ${primeiroComentario.text}`;
+            }
+
+            // Lista todos os comentários reais
             commentsSnapshot.forEach(doc => {
                 const comment = { id: doc.id, ...doc.data() };
                 const commentItem = document.createElement('div');
@@ -8301,7 +8252,7 @@ if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !vid
                             <button onclick="replyToComment('${doc.id}', '${comment.userName || 'Usuário Anônimo'}')">Responder</button>
                             <button style="color:var(--danger);" onclick="deleteComment('${serieId}', '${episodeId}', '${doc.id}')">Excluir</button>
                         </div>` 
-                        : (auth.currentUser ? `<div class="comment-actions"><button onclick="replyToComment('${doc.id}', '${comment.userName || 'Usuário Anônimo'}')">Responder</button></div>` : '')
+                        : ''
                     }
                 `;
                 commentsListDiv.appendChild(commentItem);
@@ -8309,7 +8260,7 @@ if (!videoPage || !videoFrame || !videoSkeleton || !videoModalSerieTitle || !vid
 
         } catch (error) {
             console.error("Erro ao carregar comentários:", error);
-            commentsListDiv.innerHTML = '<p>Erro ao carregar comentários.</p>';
+            commentsListDiv.innerHTML = '<p style="color:#777; padding: 10px;">Erro ao carregar comentários.</p>';
         }
     }
 

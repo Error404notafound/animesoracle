@@ -1165,14 +1165,15 @@ body.menu-aberto {
         }
 
         /* Página do Player de Vídeo Estilo YouTube */
+        /* Página do Player de Vídeo Estilo YouTube */
         #videoPage {
             display: none; 
             flex-direction: column;
             position: fixed;
-            top: 60px !important;
+            top: 95px !important; /* Começa exatamente abaixo do Catálogo A-Z para não cobrir */
             left: 0;
             width: 100%;
-            height: calc(100% - 60px) !important;
+            height: calc(100% - 95px) !important;
             background: #0f0f0f;
             z-index: 9996;
             overflow-y: auto; 
@@ -1184,9 +1185,70 @@ body.menu-aberto {
         }
         #videoPlayerContainer { 
             width: 100%;
-            position: relative;
+            position: sticky; /* TRAVA O VÍDEO NO TOPO AO ROLAR */
+            top: 0;
+            z-index: 100; /* Fica acima do conteúdo rolável */
             background-color: #000;
             aspect-ratio: 16/9;
+        }
+
+        /* GAVETA DE COMENTÁRIOS ESTILO YOUTUBE (SLIDE UP) */
+        .yt-comments-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65vh; /* Ocupa 65% da tela de baixo para cima */
+            background: #18181f;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            z-index: 10005;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .yt-comments-drawer.open {
+            display: flex;
+        }
+        .yt-drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #333;
+        }
+        .yt-drawer-close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 26px;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        .yt-drawer-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #282828;
+        }
+        .yt-drawer-input-row input {
+            flex-grow: 1;
+            background: #25252c;
+            border: 1px solid #383842;
+            border-radius: 20px;
+            padding: 8px 14px;
+            color: #fff;
+            font-size: 0.9em;
+            outline: none;
+        }
+        .yt-drawer-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-top: 10px;
         }
         #videoSkeleton {
             width: 100%;
@@ -4365,8 +4427,8 @@ body.light-mode .bottom-sheet-drag-handle {
             <button class="yt-action-pill" id="btnModoCinema" onclick="toggleModoCinema()" title="Modo Cinema">💡 Cinema</button>
         </div>
 
-        <!-- CAIXA DE COMENTÁRIOS ESTILO YOUTUBE -->
-        <div class="yt-comment-card" onclick="focarComentario()">
+        <!-- CAIXA DE COMENTÁRIOS (Tocar aqui abre a gaveta) -->
+        <div class="yt-comment-card" onclick="abrirGavetaComentarios()">
             <div class="yt-comment-card-header">
                 Comentários <span id="texto-contador-comentarios" style="color:#aaa; font-weight:normal;">0</span>
             </div>
@@ -4376,16 +4438,24 @@ body.light-mode .bottom-sheet-drag-handle {
             </div>
         </div>
 
-        <!-- CAMPO DE DIGITAR COMENTÁRIO -->
-        <div class="comment-form" id="commentForm" style="margin-bottom: 20px;">
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="commentInput" placeholder="Escreva seu comentário aqui..." style="flex-grow: 1; background: #1f1f1f; border: 1px solid #333; border-radius: 20px; padding: 10px 15px; color: #fff;" onkeydown="if(event.key === 'Enter') postComment()">
-                <button class="btn-post" style="width: auto; padding: 8px 16px; border-radius: 20px;" onclick="postComment()">Enviar</button>
+        <!-- GAVETA DESLIZANTE DE COMENTÁRIOS (SUBIR DE BAIXO ESTILO YOUTUBE) -->
+        <div id="ytCommentsDrawer" class="yt-comments-drawer">
+            <div class="yt-drawer-header">
+                <div style="font-weight: bold; color: #fff; font-size: 1.1em;">
+                    Comentários <span id="texto-contador-gaveta" style="color:#aaa; font-size: 0.85em; font-weight: normal;">0</span>
+                </div>
+                <button class="yt-drawer-close-btn" onclick="fecharGavetaComentarios()">&times;</button>
             </div>
-        </div>
 
-        <!-- LISTA REAL DE COMENTÁRIOS -->
-        <div id="commentsList"></div>
+            <!-- Input de Comentário dentro da gaveta -->
+            <div class="yt-drawer-input-row">
+                <div class="avatar-comentario-placeholder" style="width: 32px; height: 32px; font-size: 0.8em; flex-shrink: 0;">U</div>
+                <input type="text" id="commentInput" placeholder="Adicione um comentário..." onkeydown="if(event.key === 'Enter') postComment()">
+            </div>
+
+            <!-- Lista de Comentários dentro da gaveta -->
+            <div id="commentsList" class="yt-drawer-list"></div>
+        </div>
 
         <!-- PRÓXIMOS EPISÓDIOS (RECOMENDAÇÕES ESTILO YOUTUBE) -->
         <div style="margin-top: 30px;">
@@ -10515,11 +10585,23 @@ function toggleVideoInternalNav() {
     }
 }
 
-function focarComentario() {
-    const input = document.getElementById('commentInput');
-    if (input) input.focus();
+// Abre a gaveta de comentários deslizando de baixo
+function abrirGavetaComentarios() {
+    const drawer = document.getElementById('ytCommentsDrawer');
+    if (drawer) {
+        drawer.classList.add('open');
+    }
 }
 
+// Fecha a gaveta de comentários
+function fecharGavetaComentarios() {
+    const drawer = document.getElementById('ytCommentsDrawer');
+    if (drawer) {
+        drawer.classList.remove('open');
+    }
+}
+
+// CARDS GRANDES DE VÍDEO ESTILO YOUTUBE
 async function popularEpisodiosAbaixoDoPlayer(serieId) {
     const container = document.getElementById('playerEpisodeListGridContainer');
     if (!container) return;
@@ -10530,14 +10612,15 @@ async function popularEpisodiosAbaixoDoPlayer(serieId) {
         snap.forEach(doc => {
             const ep = { id: doc.id, ...doc.data() };
             const card = document.createElement('div');
-            card.style.cssText = "display: flex; gap: 12px; cursor: pointer;";
+            // CARD GRANDE EM LARGURA TOTAL (IGUAL AO YOUTUBE)
+            card.style.cssText = "display: flex; flex-direction: column; gap: 8px; cursor: pointer; margin-bottom: 18px;";
             card.innerHTML = `
-                <div style="width: 140px; aspect-ratio: 16/9; background: #222; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
-                    <img src="${ep.capa || 'https://via.placeholder.com/140x78'}" style="width: 100%; height: 100%; object-fit: cover;">
+                <div style="width: 100%; aspect-ratio: 16/9; background: #1a1a1a; border-radius: 10px; overflow: hidden;">
+                    <img src="${ep.capa || 'https://via.placeholder.com/640x360'}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div>
-                    <div style="font-size: 0.9em; font-weight: bold; color: #fff;">Episódio ${ep.numero} - ${ep.nome}</div>
-                    <div style="font-size: 0.75em; color: #aaa; margin-top: 4px;">AnimesOracle</div>
+                <div style="padding: 0 4px;">
+                    <div style="font-size: 1em; font-weight: bold; color: #fff; line-height: 1.3;">Episódio ${ep.numero} - ${ep.nome}</div>
+                    <div style="font-size: 0.8em; color: #888; margin-top: 4px;">AnimesOracle • Episódio da Série</div>
                 </div>
             `;
             card.onclick = () => openVideoPlayer(currentPlayingSerie, ep);

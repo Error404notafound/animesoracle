@@ -1372,11 +1372,25 @@ body.menu-aberto {
             background: #fff;
             color: #000;
             border: none;
-            padding: 6px 14px;
+            padding: 7px 15px;
             border-radius: 18px;
             font-size: 0.85em;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        /* Visual quando o usuário já estiver acompanhando */
+        .yt-btn-subscribe.subscribed {
+            background: #272727;
+            color: #aaa;
+            border: 1px solid #3e3e3e;
+        }
+        .yt-action-pill.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .yt-action-pill svg {
+            vertical-align: middle;
         }
 
         /* Barra de Ações (Gostei, Compartilhar, etc.) */
@@ -4411,20 +4425,47 @@ body.light-mode .bottom-sheet-drag-handle {
             <span id="playerSerieViews">0 visualizações</span>
         </div>
 
-        <!-- Canal / Acompanhar -->
+        <!-- Canal / Acompanhar com Notificação -->
         <div class="yt-channel-row">
             <img class="yt-channel-avatar" id="playerSerieCapa" src="https://via.placeholder.com/36" alt="Canal">
             <span style="font-weight: bold; font-size: 0.9em; color: #fff; flex-grow: 1;" id="playerSerieTitleDetail">Anime</span>
-            <button class="yt-btn-subscribe">ACOMPANHAR</button>
+            <button class="yt-btn-subscribe" id="btnAcompanharSerie" onclick="toggleAcompanharSerie()">ACOMPANHAR</button>
         </div>
 
-        <!-- Barra de Ações (Gostei / Compartilhar / Salvar / Cinema) -->
+        <!-- Barra de Ações Estilo YouTube com SVGs Oficiais -->
         <div class="yt-actions-bar">
-            <button class="yt-action-pill" id="likeButton" onclick="toggleLike(true)">👍 <span id="likeCount">0</span></button>
-            <button class="yt-action-pill" id="dislikeButton" onclick="toggleLike(false)">👎 <span id="dislikeCount">0</span></button>
-            <button class="yt-action-pill" onclick="openShareModal('current_episode')">↗ Compartilhar</button>
-            <button class="yt-action-pill" id="btnSalvarAnime" onclick="toggleSalvarAnime()">✦ Salvar</button>
-            <button class="yt-action-pill" id="btnModoCinema" onclick="toggleModoCinema()" title="Modo Cinema">💡 Cinema</button>
+            <!-- BOTÃO GOSTEI (SVG YOUTUBE) -->
+            <button class="yt-action-pill" id="likeButton" onclick="toggleLike(true)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.5-.46 1.83-1.14l3.12-7.05c.17-.45.28-.92.28-1.31V10z"/>
+                </svg>
+                <span id="likeCount">0</span>
+            </button>
+
+            <!-- BOTÃO NÃO GOSTEI (SVG YOUTUBE) -->
+            <button class="yt-action-pill" id="dislikeButton" onclick="toggleLike(false)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 3H6c-.83 0-1.5.46-1.83 1.14L1.05 11.2c-.17.45-.28.92-.28 1.31V14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                </svg>
+                <span id="dislikeCount">0</span>
+            </button>
+
+            <!-- COMPARTILHAR -->
+            <button class="yt-action-pill" onclick="openShareModal('current_episode')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+                Compartilhar
+            </button>
+
+            <!-- SALVAR EPISÓDIO -->
+            <button class="yt-action-pill" id="btnSalvarEpisodio" onclick="toggleSalvarEpisodio()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                <span id="labelSalvarEpisodio">Salvar</span>
+            </button>
+
+            <!-- MODO CINEMA -->
+            <button class="yt-action-pill" id="btnModoCinema" onclick="toggleModoCinema()" title="Modo Cinema">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.28c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/></svg>
+            </button>
         </div>
 
         <!-- CAIXA DE COMENTÁRIOS (Tocar aqui abre a gaveta) -->
@@ -5434,6 +5475,9 @@ body.light-mode .bottom-sheet-drag-handle {
                 postedBy: auth.currentUser.uid,
                 isAdult: isAdultSerie,
             });
+
+            // Notifica todos os usuários que acompanham esta série
+            notificarInscritosNovoEpisodio(serieId, serieData.nome, proximoNumero, nomeEpisodio);
 
             showMessage(`Episódio ${proximoNumero} adicionado à série com sucesso!`);
             closeCurrentPage(); // Fecha a página
@@ -7589,14 +7633,9 @@ async function deleteContribution(serieId, type, itemId, itemName = null) {
             marcarEpisodioComoAssistido(serie.id, episodio.id);
         }
 
-        // Atualiza botão Salvar
-        if (btnSalvarAnime) {
-            if (auth.currentUser && currentUserData && currentUserData.animesSalvos && currentUserData.animesSalvos.includes(serie.id)) {
-                btnSalvarAnime.textContent = "✓ Salvo";
-            } else {
-                btnSalvarAnime.textContent = "✦ Salvar";
-            }
-        }
+        // Atualiza estado do botão Salvar Episódio e do botão Acompanhar
+        atualizarEstadoBotaoSalvarEp(episodio.id);
+        atualizarEstadoBotaoAcompanhar(serie.id);
 
         // Carrega comentários do episódio
         loadComments(serie.id, episodio.id);
@@ -10631,7 +10670,124 @@ async function popularEpisodiosAbaixoDoPlayer(serieId) {
     }
 }
 // Fechar
+// --- LÓGICA DE SALVAR EPISÓDIO ---
+async function toggleSalvarEpisodio() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para salvar episódios.");
+        openModal('authModal');
+        return;
+    }
+    if (!currentPlayingEpisode) return;
 
+    const epId = currentPlayingEpisode.id;
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+
+    try {
+        await db.runTransaction(async (t) => {
+            const doc = await t.get(userRef);
+            let salvos = doc.data().episodiosSalvos || [];
+            if (salvos.includes(epId)) {
+                salvos = salvos.filter(id => id !== epId);
+                showMessage("Episódio removido dos salvos.");
+            } else {
+                salvos.push(epId);
+                showMessage("Episódio salvo com sucesso!");
+            }
+            t.update(userRef, { episodiosSalvos: salvos });
+            if (currentUserData) currentUserData.episodiosSalvos = salvos;
+        });
+        atualizarEstadoBotaoSalvarEp(epId);
+    } catch (e) {
+        console.error("Erro ao salvar episódio:", e);
+    }
+}
+
+function atualizarEstadoBotaoSalvarEp(epId) {
+    const btn = document.getElementById('btnSalvarEpisodio');
+    const label = document.getElementById('labelSalvarEpisodio');
+    if (!btn || !label) return;
+
+    if (currentUserData && currentUserData.episodiosSalvos && currentUserData.episodiosSalvos.includes(epId)) {
+        btn.classList.add('active');
+        label.textContent = "Salvo";
+    } else {
+        btn.classList.remove('active');
+        label.textContent = "Salvar";
+    }
+}
+
+// --- LÓGICA DE ACOMPANHAR SÉRIE (SEGUIR) ---
+async function toggleAcompanharSerie() {
+    if (!auth.currentUser) {
+        showMessage("Você precisa estar logado para acompanhar este anime.");
+        openModal('authModal');
+        return;
+    }
+    if (!currentPlayingSerie) return;
+
+    const serieId = currentPlayingSerie.id;
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+
+    try {
+        await db.runTransaction(async (t) => {
+            const doc = await t.get(userRef);
+            let series = doc.data().seriesAcompanhadas || [];
+            if (series.includes(serieId)) {
+                series = series.filter(id => id !== serieId);
+                showMessage(`Você deixou de acompanhar ${currentPlayingSerie.nome}.`);
+            } else {
+                series.push(serieId);
+                showMessage(`Agora você está acompanhando ${currentPlayingSerie.nome}! Você será notificado sobre novos episódios.`);
+            }
+            t.update(userRef, { seriesAcompanhadas: series });
+            if (currentUserData) currentUserData.seriesAcompanhadas = series;
+        });
+        atualizarEstadoBotaoAcompanhar(serieId);
+    } catch (e) {
+        console.error("Erro ao acompanhar série:", e);
+    }
+}
+
+function atualizarEstadoBotaoAcompanhar(serieId) {
+    const btn = document.getElementById('btnAcompanharSerie');
+    if (!btn) return;
+
+    if (currentUserData && currentUserData.seriesAcompanhadas && currentUserData.seriesAcompanhadas.includes(serieId)) {
+        btn.classList.add('subscribed');
+        btn.textContent = "ACOMPANHANDO";
+    } else {
+        btn.classList.remove('subscribed');
+        btn.textContent = "ACOMPANHAR";
+    }
+}
+
+// --- DISPARO DE NOTIFICAÇÃO PARA TODOS QUE ACOMPANHAM ---
+async function notificarInscritosNovoEpisodio(serieId, serieNome, epNumero, epNome) {
+    try {
+        // Encontra todos os usuários que acompanham esta série
+        const snap = await db.collection("users").where("seriesAcompanhadas", "array-contains", serieId).get();
+        if (snap.empty) return;
+
+        const novaNotificacao = {
+            title: `Novo Episódio de ${serieNome}!`,
+            message: `O Episódio ${epNumero} (${epNome}) já está disponível para assistir.`,
+            timestamp: firebase.firestore.Timestamp.now()
+        };
+
+        // Envia para o painel de notificações de cada um deles
+        const batch = db.batch();
+        snap.forEach(userDoc => {
+            batch.update(userDoc.ref, {
+                notifications: firebase.firestore.FieldValue.arrayUnion(novaNotificacao)
+            });
+        });
+        await batch.commit();
+        console.log("Notificações enviadas aos inscritos com sucesso.");
+    } catch (err) {
+        console.error("Erro ao enviar notificações de novos episódios:", err);
+    }
+    }
+    
 </script>
 </body>
     </html>

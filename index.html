@@ -3692,7 +3692,99 @@ body.light-mode .bottom-sheet-drag-handle {
 .animate-slide-up {
     animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+/* --- GAVETA SALVAR EM... (ESTILO YOUTUBE) --- */
+.yt-playlist-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 70vh;
+    background: #1f1f1f;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    z-index: 10006;
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    box-sizing: border-box;
+    animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.yt-playlist-drawer.open { display: flex; }
+.yt-playlist-list {
+    overflow-y: auto;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+.yt-playlist-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.yt-playlist-item-row:hover { background: #2a2a2a; }
+.yt-playlist-thumb-mini {
+    width: 48px;
+    height: 36px;
+    border-radius: 4px;
+    background: #333;
+    object-fit: cover;
+}
+.yt-btn-nova-playlist {
+    background: #2a2a2a;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+}
 
+/* --- TELA DA PLAYLIST DETALHADA (2º PRINT) --- */
+.yt-playlist-detail-header {
+    background: linear-gradient(180deg, #1b261e 0%, #0f0f0f 100%);
+    padding: 16px;
+    border-radius: 16px;
+}
+.yt-playlist-cover-box {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+.yt-playlist-cover-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.yt-btn-play-all {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 0.95em;
+    cursor: pointer;
+    margin-top: 14px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+        }
 
     </style>
 </head>
@@ -4456,8 +4548,8 @@ body.light-mode .bottom-sheet-drag-handle {
                 Compartilhar
             </button>
 
-            <!-- SALVAR EPISÓDIO -->
-            <button class="yt-action-pill" id="btnSalvarEpisodio" onclick="toggleSalvarEpisodio()">
+            <!-- SALVAR EPISÓDIO (ABRE A GAVETA DE PASTAS) -->
+            <button class="yt-action-pill" id="btnSalvarEpisodio" onclick="abrirModalSalvarEmPlaylist()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
                 <span id="labelSalvarEpisodio">Salvar</span>
             </button>
@@ -4498,11 +4590,27 @@ body.light-mode .bottom-sheet-drag-handle {
             <div id="commentsList" class="yt-drawer-list"></div>
         </div>
 
-        <!-- PRÓXIMOS EPISÓDIOS (RECOMENDAÇÕES ESTILO YOUTUBE) -->
+        <!-- LISTA DE EPISÓDIOS RECOMENDADOS LOGO ABAIXO -->
         <div style="margin-top: 30px;">
             <h4 style="color: #fff; margin-bottom: 12px;">Próximos Episódios</h4>
             <div id="playerEpisodeListGridContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
         </div>
+    </div>
+
+    <!-- GAVETA "SALVAR EM..." (ESTILO YOUTUBE) -->
+    <div id="modalSalvarEmPlaylist" class="yt-playlist-drawer">
+        <div class="yt-drawer-header">
+            <span style="font-weight: bold; color: #fff; font-size: 1.1em;">Salvar em...</span>
+            <button class="yt-drawer-close-btn" onclick="fecharModalSalvarEmPlaylist()">&times;</button>
+        </div>
+        
+        <!-- Lista de Pastas/Playlists do Usuário -->
+        <div id="listaPlaylistsParaSalvar" class="yt-playlist-list"></div>
+
+        <!-- Botão Criar Nova Playlist -->
+        <button class="yt-btn-nova-playlist" onclick="criarNovaPlaylistPrompt()">
+            <span style="font-size: 1.3em; margin-right: 8px;">+</span> Nova playlist
+        </button>
     </div>
 </div>
 
@@ -4734,27 +4842,38 @@ body.light-mode .bottom-sheet-drag-handle {
     </div>
 </div>
 
-<!-- Página de Animes Salvos -->
+<!-- Página de Animes Salvos (Pastas e Playlists Estilo YouTube) -->
 <div id="savedAnimesPage" class="content-page">
     <div class="page-header">
-        <button class="back-btn" onclick="closeCurrentPage()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
-        <div class="page-title">Meus Salvos</div>
+        <button class="back-btn" onclick="voltarPaginaSalvos()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg></button>
+        <div class="page-title" id="tituloPaginaSalvos">Playlists</div>
         <div></div>
     </div>
-    <div class="page-content"> 
-        <div class="saved-content-toggle">
-            <button id="toggleSavedAnimesBtn" class="active" onclick="toggleSavedContent('animes')">Animes</button>
-            <button id="toggleSavedWaifusBtn" onclick="toggleSavedContent('waifus')">Waifus</button>
+    <div class="page-content" style="padding: 15px;"> 
+        <!-- TELA 1: LISTA DAS SUAS PASTAS -->
+        <div id="visaoListaPlaylists">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: #fff; margin: 0;">Suas Pastas</h3>
+                <button class="btn-post" style="width: auto; padding: 6px 14px; border-radius: 18px; margin: 0;" onclick="criarNovaPlaylistPrompt()">+ Nova pasta</button>
+            </div>
+            <div id="containerPastasPlaylists" style="display: flex; flex-direction: column; gap: 12px;"></div>
         </div>
 
-        <!-- Área para Animes Salvos -->
-        <div id="savedAnimesContent" class="category-grid">
-            <p class="no-content-message">Você não tem animes salvos.</p>
-        </div>
+        <!-- TELA 2: DENTRO DA PASTA SELECIONADA (IGUAL AO SEU 2º PRINT) -->
+        <div id="visaoDetalhePlaylist" style="display: none;">
+            <div class="yt-playlist-detail-header">
+                <div class="yt-playlist-cover-box">
+                    <img id="playlistDetailCapa" src="https://via.placeholder.com/640x360" alt="Capa da Playlist">
+                </div>
+                <h2 id="playlistDetailNome" style="color: #fff; margin: 12px 0 4px 0;">Nome da Pasta</h2>
+                <div style="font-size: 0.85em; color: #aaa;" id="playlistDetailInfo">Playlist • Particular • 0 vídeos</div>
+                <button class="yt-btn-play-all" onclick="reproduzirTudoPlaylist()">
+                    ▶ Reproduzir tudo
+                </button>
+            </div>
 
-        <!-- Área para Waifus Salvas -->
-        <div id="savedWaifusContent" class="waifu-grid" style="display: none;">
-            <p class="no-content-message">Você não tem waifus salvas.</p>
+            <!-- Lista dos episódios dentro da pasta -->
+            <div id="playlistDetailListaEpisodios" style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;"></div>
         </div>
     </div>
 </div>
@@ -10787,7 +10906,235 @@ async function notificarInscritosNovoEpisodio(serieId, serieNome, epNumero, epNo
         console.error("Erro ao enviar notificações de novos episódios:", err);
     }
     }
-    
+// --- SISTEMA DE PASTAS / PLAYLISTS ESTILO YOUTUBE ---
+
+let playlistAbertaAtual = null;
+
+// Abre a gaveta "Salvar em..."
+function abrirModalSalvarEmPlaylist() {
+    if (!auth.currentUser) {
+        showMessage("Faça login para salvar em playlists.");
+        openModal('authModal');
+        return;
+    }
+    const modal = document.getElementById('modalSalvarEmPlaylist');
+    if (modal) modal.classList.add('open');
+    renderizarListaParaSalvar();
+}
+
+function fecharModalSalvarEmPlaylist() {
+    const modal = document.getElementById('modalSalvarEmPlaylist');
+    if (modal) modal.classList.remove('open');
+}
+
+// Renderiza a lista de pastas para marcar/desmarcar o episódio atual
+async function renderizarListaParaSalvar() {
+    const container = document.getElementById('listaPlaylistsParaSalvar');
+    if (!container || !currentPlayingEpisode) return;
+    container.innerHTML = '<p style="color:#aaa;">Carregando pastas...</p>';
+
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+    const doc = await userRef.get();
+    const playlists = doc.data().playlists || [];
+
+    container.innerHTML = '';
+    if (playlists.length === 0) {
+        container.innerHTML = '<p style="color:#777; font-size:0.85em;">Nenhuma pasta criada ainda.</p>';
+        return;
+    }
+
+    playlists.forEach(pl => {
+        const jaSalvo = pl.itens && pl.itens.some(i => i.episodeId === currentPlayingEpisode.id);
+        const capaMini = (pl.itens && pl.itens.length > 0) ? pl.itens[0].capa : 'https://via.placeholder.com/48x36?text=Pasta';
+
+        const row = document.createElement('div');
+        row.className = 'yt-playlist-item-row';
+        row.innerHTML = `
+            <img src="${capaMini}" class="yt-playlist-thumb-mini">
+            <div style="flex-grow: 1;">
+                <div style="font-weight: bold; color: #fff; font-size: 0.9em;">${pl.nome}</div>
+                <div style="font-size: 0.75em; color: #888;">Particular</div>
+            </div>
+            <span style="font-size: 1.4em; color: ${jaSalvo ? 'var(--primary)' : '#666'};">${jaSalvo ? '☑' : '☐'}</span>
+        `;
+        row.onclick = () => toggleEpisodioNaPlaylist(pl.id);
+        container.appendChild(row);
+    });
+}
+
+// Cria uma nova playlist pelo prompt
+async function criarNovaPlaylistPrompt() {
+    if (!auth.currentUser) return;
+    const nome = prompt("Nome da nova playlist/pasta:");
+    if (!nome || !nome.trim()) return;
+
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+    const novaPl = {
+        id: "pl_" + Date.now(),
+        nome: nome.trim(),
+        itens: []
+    };
+
+    await db.runTransaction(async t => {
+        const d = await t.get(userRef);
+        const pls = d.data().playlists || [];
+        pls.push(novaPl);
+        t.update(userRef, { playlists: pls });
+        if (currentUserData) currentUserData.playlists = pls;
+    });
+
+    renderizarListaParaSalvar();
+    carregarPlaylistsNaPaginaSalvos();
+}
+
+// Salva ou remove o episódio da pasta
+async function toggleEpisodioNaPlaylist(playlistId) {
+    if (!currentPlayingSerie || !currentPlayingEpisode) return;
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+
+    await db.runTransaction(async t => {
+        const d = await t.get(userRef);
+        const pls = d.data().playlists || [];
+        const pl = pls.find(p => p.id === playlistId);
+        if (!pl) return;
+
+        if (!pl.itens) pl.itens = [];
+        const index = pl.itens.findIndex(i => i.episodeId === currentPlayingEpisode.id);
+
+        if (index > -1) {
+            pl.itens.splice(index, 1);
+            showMessage(`Removido de ${pl.nome}`);
+        } else {
+            pl.itens.push({
+                episodeId: currentPlayingEpisode.id,
+                serieId: currentPlayingSerie.id,
+                serieNome: currentPlayingSerie.nome,
+                numero: currentPlayingEpisode.numero,
+                nome: currentPlayingEpisode.nome,
+                capa: currentPlayingEpisode.capa || currentPlayingSerie.capa
+            });
+            showMessage(`Salvo em ${pl.nome}!`);
+        }
+
+        t.update(userRef, { playlists: pls });
+        if (currentUserData) currentUserData.playlists = pls;
+    });
+
+    renderizarListaParaSalvar();
+}
+
+// --- PÁGINA "SALVOS" (LISTAGEM DAS PASTAS NO MENU HAMBÚRGUER) ---
+
+// Substitua a sua função openSavedAnimesPage por esta:
+async function openSavedAnimesPage() {
+    if (!auth.currentUser) {
+        showMessage("Faça login para ver seus salvos.");
+        openModal('authModal');
+        return;
+    }
+    openPage('savedAnimesPage');
+    voltarPaginaSalvos();
+    carregarPlaylistsNaPaginaSalvos();
+}
+
+async function carregarPlaylistsNaPaginaSalvos() {
+    const container = document.getElementById('containerPastasPlaylists');
+    if (!container) return;
+    container.innerHTML = '<p style="color:#aaa;">Carregando suas pastas...</p>';
+
+    const doc = await db.collection("users").doc(auth.currentUser.uid).get();
+    const playlists = doc.data().playlists || [];
+
+    container.innerHTML = '';
+    if (playlists.length === 0) {
+        container.innerHTML = '<p style="color:#888;">Nenhuma pasta criada. Salve vídeos para criá-las!</p>';
+        return;
+    }
+
+    playlists.forEach(pl => {
+        const qtd = pl.itens ? pl.itens.length : 0;
+        const capa = qtd > 0 ? pl.itens[0].capa : 'https://via.placeholder.com/640x360?text=Vazio';
+
+        const card = document.createElement('div');
+        card.style.cssText = "display: flex; gap: 12px; background: #1a1a1a; padding: 10px; border-radius: 10px; cursor: pointer; border: 1px solid #333;";
+        card.innerHTML = `
+            <div style="width: 120px; aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden; flex-shrink: 0;">
+                <img src="${capa}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <div style="font-weight: bold; color: #fff; font-size: 1em;">${pl.nome}</div>
+                <div style="font-size: 0.8em; color: #aaa; margin-top: 4px;">Playlist • ${qtd} vídeo(s)</div>
+            </div>
+        `;
+        card.onclick = () => abrirDetalhesPlaylist(pl);
+        container.appendChild(card);
+    });
+}
+
+// Abre a tela de detalhes da pasta selecionada (Igual ao seu 2º print)
+function abrirDetalhesPlaylist(pl) {
+    playlistAbertaAtual = pl;
+    document.getElementById('visaoListaPlaylists').style.display = 'none';
+    document.getElementById('visaoDetalhePlaylist').style.display = 'block';
+
+    const qtd = pl.itens ? pl.itens.length : 0;
+    const primeiraCapa = qtd > 0 ? pl.itens[0].capa : 'https://via.placeholder.com/640x360?text=Sem+Videos';
+
+    document.getElementById('playlistDetailCapa').src = primeiraCapa;
+    document.getElementById('playlistDetailNome').textContent = pl.nome;
+    document.getElementById('playlistDetailInfo').textContent = `Playlist • Particular • ${qtd} vídeos`;
+
+    const lista = document.getElementById('playlistDetailListaEpisodios');
+    lista.innerHTML = '';
+
+    if (qtd === 0) {
+        lista.innerHTML = '<p style="color:#888;">Esta pasta está vazia.</p>';
+        return;
+    }
+
+    pl.itens.forEach((it, idx) => {
+        const itemRow = document.createElement('div');
+        itemRow.style.cssText = "display: flex; gap: 12px; cursor: pointer;";
+        itemRow.innerHTML = `
+            <div style="width: 120px; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #222; flex-shrink: 0;">
+                <img src="${it.capa}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <div style="font-weight: bold; color: #fff; font-size: 0.9em; line-height: 1.3;">${it.serieNome} - Ep. ${it.numero}</div>
+                <div style="font-size: 0.75em; color: #aaa; margin-top: 4px;">${it.nome}</div>
+            </div>
+        `;
+        itemRow.onclick = async () => {
+            const sDoc = await db.collection("series").doc(it.serieId).get();
+            const epDoc = await db.collection("series").doc(it.serieId).collection("episodios").doc(it.episodeId).get();
+            if (sDoc.exists && epDoc.exists) {
+                openVideoPlayer({ id: sDoc.id, ...sDoc.data() }, { id: epDoc.id, ...epDoc.data() });
+            }
+        };
+        lista.appendChild(itemRow);
+    });
+}
+
+function voltarPaginaSalvos() {
+    document.getElementById('visaoListaPlaylists').style.display = 'block';
+    document.getElementById('visaoDetalhePlaylist').style.display = 'none';
+}
+
+function reproduzirTudoPlaylist() {
+    if (!playlistAbertaAtual || !playlistAbertaAtual.itens || playlistAbertaAtual.itens.length === 0) {
+        showMessage("Nenhum vídeo para reproduzir.");
+        return;
+    }
+    const primeiro = playlistAbertaAtual.itens[0];
+    db.collection("series").doc(primeiro.serieId).get().then(sDoc => {
+        db.collection("series").doc(primeiro.serieId).collection("episodios").doc(primeiro.episodeId).get().then(epDoc => {
+            if (sDoc.exists && epDoc.exists) {
+                openVideoPlayer({ id: sDoc.id, ...sDoc.data() }, { id: epDoc.id, ...epDoc.data() });
+            }
+        });
+    });
+}
+
 </script>
 </body>
     </html>

@@ -3785,7 +3785,90 @@ body.light-mode .bottom-sheet-drag-handle {
     justify-content: center;
     gap: 8px;
         }
+/* --- GAVETA DE CONFIGURAÇÕES DO PLAYER (PRINT 2) --- */
+.yt-settings-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 75vh;
+    background: #18181f;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    z-index: 10007;
+    box-shadow: 0 -5px 30px rgba(0,0,0,0.9);
+    display: none;
+    flex-direction: column;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.yt-settings-drawer.open { display: flex; }
 
+.yt-settings-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 14px;
+}
+.yt-settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 6px 0;
+}
+.yt-settings-row-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.95em;
+    color: #eee;
+}
+
+/* --- GRADE DE ÍCONES DE HOSPEDAGEM ESTILO GOOGLE APPS (PRINT 3) --- */
+.yt-hosts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 10px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+.yt-host-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: #25252c;
+    border-radius: 16px;
+    padding: 14px 8px;
+    cursor: pointer;
+    border: 1px solid #333;
+    transition: transform 0.2s, background 0.2s;
+}
+.yt-host-card:hover {
+    background: #32323c;
+    transform: translateY(-3px);
+}
+.yt-host-card.active {
+    border-color: var(--primary);
+    background: rgba(98, 0, 234, 0.2);
+}
+.yt-host-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.yt-host-label {
+    font-size: 0.8em;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+}
+    
     </style>
 </head>
 <body>
@@ -4490,8 +4573,11 @@ body.light-mode .bottom-sheet-drag-handle {
             <button class="yt-icon-btn" title="Legendas">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-4a1 1 0 011-1h3a1 1 0 011 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1a1 1 0 01-1 1h-3a1 1 0 01-1-1v-4a1 1 0 011-1h3a1 1 0 011 1v1z"/></svg>
             </button>
-            <button class="yt-icon-btn" title="Configurações">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.488.488 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            <!-- BOTÃO ENGRENAGEM (ABRE AS CONFIGURAÇÕES DO PLAYER) -->
+            <button class="yt-icon-btn" onclick="abrirConfiguracoesPlayer()" title="Configurações">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.488.488 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
             </button>
             <button class="yt-icon-btn" onclick="closeCurrentPage('videoPage')" title="Fechar">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -4613,7 +4699,68 @@ body.light-mode .bottom-sheet-drag-handle {
         </button>
     </div>
 </div>
+<!-- 1º MODAL: MENU DE CONFIGURAÇÕES (PRINT 2) -->
+        <div id="modalConfiguracoesPlayer" class="yt-settings-drawer">
+            <div class="yt-drawer-header">
+                <span style="font-weight: bold; color: #fff; font-size: 1.1em;">Configurações</span>
+                <button class="yt-drawer-close-btn" onclick="fecharConfiguracoesPlayer()">&times;</button>
+            </div>
+            <div class="yt-settings-menu-list">
+                <!-- Pular Abertura -->
+                <div class="yt-settings-row">
+                    <div class="yt-settings-row-left">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                        <span>Pular abertura</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="togglePularAbertura">
+                        <span class="slider"></span>
+                    </label>
+                </div>
 
+                <!-- Modo Maratona -->
+                <div class="yt-settings-row">
+                    <div class="yt-settings-row-left">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                        <span>Modo maratona</span>
+                    </div>
+                    <span style="color: #aaa; font-size: 0.9em;">Sim &gt;</span>
+                </div>
+
+                <!-- HOSPEDAGEM (CLIQUE ABRE A GRADE DE APPS/PLAYERS) -->
+                <div class="yt-settings-row" onclick="abrirModalHospedagens()" style="cursor: pointer;">
+                    <div class="yt-settings-row-left">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                        <span>Hospedagem</span>
+                    </div>
+                    <span style="color: #aaa; font-size: 0.9em;" id="txtNomeHospedagemAtual">Opções &gt;</span>
+                </div>
+
+                <!-- Volume Estável -->
+                <div class="yt-settings-row">
+                    <div class="yt-settings-row-left">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                        <span>Volume estável</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2º MODAL: GRADE DE HOSPEDAGENS/PLAYERS (ESTILO GOOGLE APPS - PRINT 3) -->
+        <div id="modalHospedagensPlayer" class="yt-settings-drawer" style="z-index: 10008;">
+            <div class="yt-drawer-header">
+                <span style="font-weight: bold; color: #fff; font-size: 1.1em;">Selecione o Player</span>
+                <button class="yt-drawer-close-btn" onclick="fecharModalHospedagens()">&times;</button>
+            </div>
+            <div id="gridHospedagensDisponiveis" class="yt-hosts-grid">
+                <!-- Injetado dinamicamente com ícones do YouTube, Drive, etc. -->
+            </div>
+        </div>
+    </div>
 <!-- Modal de Autenticação (Login/Cadastro - ainda é um modal popup) -->
 <div id="authModal" class="modal">
     <div class="modal-card">
@@ -11133,6 +11280,98 @@ function reproduzirTudoPlaylist() {
             }
         });
     });
+}
+// --- CONTROLE DAS CONFIGURAÇÕES E HOSPEDAGENS (PRINTS 2 E 3) ---
+
+function abrirConfiguracoesPlayer() {
+    const modal = document.getElementById('modalConfiguracoesPlayer');
+    if (modal) modal.classList.add('open');
+    atualizarLabelHospedagemAtual();
+}
+
+function fecharConfiguracoesPlayer() {
+    const modal = document.getElementById('modalConfiguracoesPlayer');
+    if (modal) modal.classList.remove('open');
+}
+
+function abrirModalHospedagens() {
+    const modal = document.getElementById('modalHospedagensPlayer');
+    if (modal) modal.classList.add('open');
+    renderizarGradeHospedagens();
+}
+
+function fecharModalHospedagens() {
+    const modal = document.getElementById('modalHospedagensPlayer');
+    if (modal) modal.classList.remove('open');
+}
+
+// Atualiza o texto "Facebook-1 >" ou "YouTube >" na linha de Hospedagem
+function atualizarLabelHospedagemAtual() {
+    const lbl = document.getElementById('txtNomeHospedagemAtual');
+    if (!lbl || !currentPlayingEpisode || !currentPlayingEpisode.links) return;
+    const linkAtual = currentPlayingEpisode.links[currentPlayingPlayerIndex || 0];
+    const info = identificarProvedorLink(linkAtual ? linkAtual.url : '');
+    lbl.textContent = `${info.nome} >`;
+}
+
+// Identifica se o link é YouTube, Google Drive, Facebook, etc. e devolve o ícone correspondente
+function identificarProvedorLink(url) {
+    const u = (url || '').toLowerCase();
+    if (u.includes('youtube') || u.includes('youtu.be')) {
+        return {
+            nome: 'YouTube',
+            svg: `<svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2s-.2-1.7-1-2.4c-.9-1-2-1-2.5-1.1C16.4 2.4 12 2.4 12 2.4s-4.4 0-8 .3c-.5.1-1.6.1-2.5 1.1-.7.7-1 2.4-1 2.4S.2 8.1.2 10.1v1.8c0 1.9.3 3.9.3 3.9s.2 1.7 1 2.4c.9 1 2.2 1 2.8 1.1 2 .2 7.7.3 7.7.3s4.4 0 8-.3c.5-.1 1.6-.1 2.5-1.1.7-.7 1-2.4 1-2.4s.3-1.9.3-3.9v-1.8c0-2-.3-3.9-.3-3.9zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>`
+        };
+    } else if (u.includes('drive.google.com')) {
+        return {
+            nome: 'Drive',
+            svg: `<svg width="36" height="36" viewBox="0 0 24 24"><path fill="#FFC107" d="M8.5 3.5l-6 10.5 3.5 6 6-10.5z"/><path fill="#4CAF50" d="M15.5 3.5H8.5l6 10.5h7z"/><path fill="#2196F3" d="M14.5 14h-7L4 20h14.5z"/></svg>`
+        };
+    } else if (u.includes('facebook') || u.includes('fb.')) {
+        return {
+            nome: 'Facebook',
+            svg: `<svg width="36" height="36" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`
+        };
+    } else {
+        return {
+            nome: 'Player Nuvem',
+            svg: `<svg width="36" height="36" viewBox="0 0 24 24" fill="var(--primary)"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>`
+        };
+    }
+}
+
+// Renderiza a grade de ícones no estilo da grade de aplicativos do Google (Print 3)
+function renderizarGradeHospedagens() {
+    const grid = document.getElementById('gridHospedagensDisponiveis');
+    if (!grid || !currentPlayingEpisode || !currentPlayingEpisode.links) return;
+    grid.innerHTML = '';
+
+    currentPlayingEpisode.links.forEach((linkObj, index) => {
+        const info = identificarProvedorLink(linkObj.url);
+        const card = document.createElement('div');
+        const isActive = (currentPlayingPlayerIndex || 0) === index;
+
+        card.className = `yt-host-card ${isActive ? 'active' : ''}`;
+        card.innerHTML = `
+            <div class="yt-host-icon">${info.svg}</div>
+            <span class="yt-host-label">${info.nome} ${index + 1}</span>
+        `;
+        card.onclick = () => selecionarHospedagem(index);
+        grid.appendChild(card);
+    });
+}
+
+// Troca o vídeo na hora ao tocar no ícone desejado
+function selecionarHospedagem(index) {
+    if (!currentPlayingSerie || !currentPlayingEpisode) return;
+    currentPlayingPlayerIndex = index;
+    
+    // Recarrega o player de vídeo com o novo link
+    openVideoPlayer(currentPlayingSerie, currentPlayingEpisode, index);
+    
+    fecharModalHospedagens();
+    fecharConfiguracoesPlayer();
+    showMessage("Player alterado com sucesso!");
 }
 
 </script>
